@@ -54,33 +54,40 @@
           </header>
 
           <section class="grade grade--2" aria-label="Formulário de contato e informações">
-            <article class="cartao">
-              <h2 class="h2">Envie uma mensagem</h2>
-              <form>
-                <div class="campo">
-                  <label for="nome" class="obrigatorio">Nome</label>
-                  <input id="nome" class="entrada" type="text" placeholder="Digite seu nome" required>
-                </div>
-                <div class="campo">
-                  <label for="email" class="obrigatorio">Email</label>
-                  <input id="email" class="entrada" type="email" placeholder="Digite seu email" required>
-                </div>
-                <div class="campo">
-                  <label for="mensagem" class="obrigatorio">Mensagem</label>
-                  <textarea id="mensagem" class="area-texto" placeholder="Digite sua mensagem" required></textarea>
-                </div>
-                <button type="submit" class="botao botao--primario">Enviar Mensagem</button>
-              </form>
-            </article>
+               <article class="cartao">
+                <h2 class="h2">Envie uma mensagem</h2>
 
-            <aside class="cartao">
-              <h2 class="h2">Informações de contato</h2>
-              <p class="p">📧 Email: DataInsight@gmail.com</p>
-              <p class="p">📞 Telefone: (82) 99999-9999</p>
-              <p class="p">📍 Localização: Maceió - AL</p>
-              <p class="p">Nosso sistema ajuda usuários a interpretar dados com mais facilidade através de dashboards e análises inteligentes.</p>
-            </aside>
-          </section>
+                <form>
+                    <div class="campo">
+                    <label for="nome" class="obrigatorio">Nome</label>
+                    <input id="nome" class="entrada" type="text" placeholder="Digite seu nome" required />
+                    </div>
+
+                    <div class="campo">
+                    <label for="email" class="obrigatorio">Email</label>
+                    <input id="email" class="entrada" type="email" placeholder="Digite seu email" required />
+                    </div>
+
+                    <div class="campo">
+                    <label for="mensagem" class="obrigatorio">Mensagem</label>
+                    <textarea id="mensagem" class="area-texto" placeholder="Digite sua mensagem" required></textarea>
+                    </div>
+
+                    <div style="display:flex; gap: 12px; flex-wrap: wrap; margin-top: 16px;">
+                    <button class="botao botao--primario" type="submit">Enviar Mensagem</button>
+                    <button class="botao botao--delet" type="reset">Limpar</button>
+                    </div>
+                </form>
+                </article>
+
+                <aside class="cartao">
+                <h2 class="h2">Informações de contato</h2>
+                <p class="p">📧 Email: DataInsight@gmail.com</p>
+                <p class="p">📞 Telefone: (82) 99999-9999</p>
+                <p class="p">📍 Localização: Maceió - AL</p>
+                <p class="p">Nosso sistema ajuda usuários a interpretar dados com mais facilidade através de dashboards e análises inteligentes.</p>
+                </aside>
+            </section>
         </div>
       </main>
     </div>

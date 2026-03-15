@@ -61,7 +61,6 @@
 
               <div style="display:flex; gap: 12px; flex-wrap: wrap; margin-top: 16px;">
                 <button class="botao botao--primario" type="button" aria-label="Alternar modo claro/escuro" onclick="alternarTema()">Alternar</button>
-                <button class="botao botao--suave" type="button" aria-label="Ativar alto contraste" onclick="document.documentElement.classList.toggle('alto-contraste')">Alto contraste</button>
               </div>
             </article>
 
@@ -86,6 +85,16 @@
                 <button id="botaoAumentar" class="botao botao-func" type="button" aria-label="Aumentar fonte">A+</button>
                 <button id="botaoDiminuir" class="botao botao-func" type="button" aria-label="Diminuir fonte">A-</button>
                 <button class="botao botao--suave" type="button" aria-label="Redefinir fonte" onclick="localStorage.removeItem('escalaFonte'); location.reload();">Reset</button>
+              </div>
+            </article>
+
+            
+            <article class="cartao">
+              <h2 class="h2">Contato</h2>
+              <p class="p" style="margin-top:6px;">Clique para entrar em contato.</p>
+
+              <div style="display:flex; gap: 12px; flex-wrap: wrap; margin-top: 16px;">
+                <button class="botao botao--primario" type="button" aria-label="Abrir página de contato" onclick="window.location.href='contato.html'">Entrar em Contato</button>
               </div>
             </article>
           </section>
