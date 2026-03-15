@@ -4,7 +4,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>DataInsight • Configurações</title>
+  <title>DataInsight • Contato</title>
   <link rel="stylesheet" href="css/estilo.css" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 </head>
@@ -23,7 +23,6 @@
         </a>
       </div>
 
-  
       <nav>
         <a href="home.html"><i class="fa-solid fa-house"></i> Início</a>
         <a href="dados.html"><i class="fa-solid fa-table-list"></i> Dados</a>
@@ -49,61 +48,54 @@
       <main id="conteudo" class="pagina" role="main">
         <div class="container">
           <header class="pagina__cabecalho">
-            <div class="migalhas">Início &gt; Configurações</div>
-            <h1 class="h1">Acessibilidade e preferências</h1>
-            <p class="p">Ajuste o site para melhor leitura e navegação.</p>
+            <div class="migalhas">Início &gt; Contato</div>
+            <h1 class="h1">Contato</h1>
+            <p class="p">Entre em contato conosco para dúvidas, sugestões ou suporte sobre a plataforma DataInsight.</p>
           </header>
 
-          <section class="grade grade--2" aria-label="Preferências">
+          <section class="grade grade--2" aria-label="Formulário de contato e informações">
             <article class="cartao">
-              <h2 class="h2">Tema</h2>
-              <p class="p" style="margin-top:6px;">Controle de Tema.</p>
-
-              <div style="display:flex; gap: 12px; flex-wrap: wrap; margin-top: 16px;">
-                <button class="botao botao--primario" type="button" aria-label="Alternar modo claro/escuro" onclick="alternarTema()">Alternar</button>
-                <button class="botao botao--suave" type="button" aria-label="Ativar alto contraste" onclick="document.documentElement.classList.toggle('alto-contraste')">Alto contraste</button>
-              </div>
+              <h2 class="h2">Envie uma mensagem</h2>
+              <form>
+                <div class="campo">
+                  <label for="nome" class="obrigatorio">Nome</label>
+                  <input id="nome" class="entrada" type="text" placeholder="Digite seu nome" required>
+                </div>
+                <div class="campo">
+                  <label for="email" class="obrigatorio">Email</label>
+                  <input id="email" class="entrada" type="email" placeholder="Digite seu email" required>
+                </div>
+                <div class="campo">
+                  <label for="mensagem" class="obrigatorio">Mensagem</label>
+                  <textarea id="mensagem" class="area-texto" placeholder="Digite sua mensagem" required></textarea>
+                </div>
+                <button type="submit" class="botao botao--primario">Enviar Mensagem</button>
+              </form>
             </article>
 
-            <article class="cartao">
-              <h2 class="h2">Modo acessibilidade</h2>
-              <p class="p" style="margin-top:6px;">Ative ou desative todos os recursos de acessibilidade.</p>
-
-              <div style="display:flex; align-items:center; gap: 12px; margin-top: 16px;">
-                <span>Ativar acessibilidade</span>
-                <label class="switch">
-                  <input type="checkbox" id="toggleAcessibilidade">
-                  <span class="slider"></span>
-                </label>
-              </div>
-            </article>
-
-            <article class="cartao">
-              <h2 class="h2">Leitura</h2>
-              <p class="p" style="margin-top:6px;">Controle de fonte.</p>
-
-              <div style="display:flex; gap: 12px; flex-wrap: wrap; margin-top: 16px;">
-                <button id="botaoAumentar" class="botao botao-func" type="button" aria-label="Aumentar fonte">A+</button>
-                <button id="botaoDiminuir" class="botao botao-func" type="button" aria-label="Diminuir fonte">A-</button>
-                <button class="botao botao--suave" type="button" aria-label="Redefinir fonte" onclick="localStorage.removeItem('escalaFonte'); location.reload();">Reset</button>
-              </div>
-            </article>
+            <aside class="cartao">
+              <h2 class="h2">Informações de contato</h2>
+              <p class="p">📧 Email: DataInsight@gmail.com</p>
+              <p class="p">📞 Telefone: (82) 99999-9999</p>
+              <p class="p">📍 Localização: Maceió - AL</p>
+              <p class="p">Nosso sistema ajuda usuários a interpretar dados com mais facilidade através de dashboards e análises inteligentes.</p>
+            </aside>
           </section>
-
         </div>
       </main>
     </div>
   </div>
 
-  <!-- <footer class="rodape" role="contentinfo">
+  <footer class="rodape" role="contentinfo">
     <div class="container rodape__interno">
       <span>© DataInsight</span>
+      <p>O site a seguir contém acessibilidade disponível NIVEL AA segundo as diretrizes da WCAG 2.1</p>
+      <p>E-mail para contato: <a href="#">DataInsight@gmail.com</a>.</p>
     </div>
-  </footer> -->
+  </footer>
 
   <div class="acessibilidade-flutuante" aria-label="Ferramentas de acessibilidade">
-    <div id="painelAcessibilidade" class="acessibilidade-painel" role="dialog" aria-modal="false"
-      aria-labelledby="tituloAcessibilidade">
+    <div id="painelAcessibilidade" class="acessibilidade-painel" role="dialog" aria-modal="false" aria-labelledby="tituloAcessibilidade">
       <h2 id="tituloAcessibilidade" class="acessibilidade-titulo">Acessibilidade</h2>
 
       <div class="acessibilidade-acoes">
@@ -118,27 +110,24 @@
       </p>
     </div>
 
-    <button id="alternarAcessibilidade" class="acessibilidade-alternar" type="button" aria-expanded="false"
-      aria-controls="painelAcessibilidade">
+    <button id="alternarAcessibilidade" class="acessibilidade-alternar" type="button" aria-expanded="false" aria-controls="painelAcessibilidade">
       <img src="img/Logo acessibilidade.png" alt="img-acessibilidade">
     </button>
   </div>
 
-<div vw class="enabled" id="Vlibras">
-  <div vw-access-button class="active"></div>
-  <div vw-plugin-wrapper>
-    <div class="vw-plugin-top-wrapper"></div>
+  <div vw class="enabled" id="Vlibras"> 
+    <div vw-access-button class="active"></div>
+    <div vw-plugin-wrapper>
+      <div class="vw-plugin-top-wrapper"></div>
+    </div>
   </div>
-</div>
 
-<script src="https://vlibras.gov.br/app/vlibras-plugin.js"></script>
-
-<script>
-  new window.VLibras.Widget('https://vlibras.gov.br/app');
-</script>
+  <script src="https://vlibras.gov.br/app/vlibras-plugin.js"></script>
+  <script>
+    new window.VLibras.Widget('https://vlibras.gov.br/app');
+  </script>
 
   <script src="acessibilidade/acessibilidade.js"></script>
-
   <script src="js/script.js"></script>
 </body>
 

@@ -5,7 +5,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>DataInsight • Gráficos</title>
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+ <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
   <link rel="stylesheet" href="css/estilo.css" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
   <style>
@@ -127,9 +127,6 @@
             <div class="chart-card__header">
               <div class="chart-card__title">Comparativo mensal</div>
               <div class="chart-card__actions">
-                <button type="button" class="botao botao--suave" onclick="document.getElementById('grafico').focus()" aria-label="Ir para o gráfico">
-                  <i class="fa-solid fa-eye"></i>
-                </button>
               </div>
             </div>
 
@@ -184,7 +181,7 @@
     </button>
   </div>
 
-<div vw class="enabled">
+<div vw class="enabled" id="Vlibras">
   <div vw-access-button class="active"></div>
   <div vw-plugin-wrapper>
     <div class="vw-plugin-top-wrapper"></div>

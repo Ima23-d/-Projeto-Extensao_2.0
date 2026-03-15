@@ -146,191 +146,93 @@ function initChatbot() {
 // =============================
 //     Inicialização da página
 // =============================
-
-document.addEventListener("DOMContentLoaded", () => {
+window.addEventListener("load", () => {
   setTema()
   initChatbot()
   initChartSelection()
 
-  // charts
-  initChart(
-    "grafico",
-    {
-      type: "bar",
-      data: {
-        labels: ["Set", "Out", "Nov", "Dez", "Jan", "Fev"],
-        datasets: [
-          {
-            label: "Volume",
-            data: [8, 10, 14, 12, 16, 15],
-            backgroundColor: "#3B82F6"
-          },
-          {
-            label: "Tendência",
-            data: [8, 9, 11, 11, 14, 15],
-            type: "line",
-            borderColor: "#EF4444",
-            backgroundColor: "rgba(239, 68, 68, 0.15)",
-            tension: 0.4
-          }
-        ]
-      },
-      options: {
-        responsive: true,
-        maintainAspectRatio: false,
-        plugins: {
-          legend: {
-            position: "bottom",
-            labels: {
-              color: "grey",
-              font: { weight: "bold" }
-            }
-          }
-        },
-        scales: {
-          x: {
-            ticks: { color: "grey", font: { weight: "bold" } }
-          },
-          y: {
-            ticks: { color: "grey", font: { weight: "bold" } }
-          }
-        }
-      }
-    },
-    "#grafico-container",
-    "Dados do gráfico de tendência"
-  )
+  // Função genérica para criar gráficos ApexCharts
+  function initApexChart(containerSelector, options) {
+    const chartContainer = document.querySelector(containerSelector)
+    if (!chartContainer) return
 
-  initChart(
-    "graficoResumo",
-    {
-      type: "bar",
-      data: {
-        labels: ["Média", "Mediana", "Moda", "Desvio Padrão"],
-        datasets: [
-          {
-            label: "Medidas Estatísticas",
-            data: [12.5, 10, 8, 3.2],
-            backgroundColor: ["#3B82F6", "#10B981", "#F59E0B", "#EF4444"]
-          }
-        ]
-      },
-      options: {
-        responsive: true,
-        maintainAspectRatio: false,
-        scales: {
-          x: { ticks: { color: "grey", font: { weight: "bold" } } },
-          y: { ticks: { color: "grey", font: { weight: "bold" } } }
-        }
-      }
-    },
-    "#graficoResumo-container",
-    "Resumo estatístico"
-  )
+    // garante altura padrão
+    options.chart = {
+      height: 280,
+      ...options.chart
+    }
 
-  // Gráficos avançados
-  initChart(
-    "chartBar",
-    {
-      type: "bar",
-      data: {
-        labels: ["Jan", "Fev", "Mar", "Abr", "Mai", "Jun"],
-        datasets: [
-          {
-            label: "Receita",
-            data: [12, 19, 8, 14, 17, 22],
-            backgroundColor: "#3B82F6"
-          }
-        ]
-      },
-      options: {
-        responsive: true,
-        maintainAspectRatio: false,
-        plugins: { legend: { display: true } }
-      }
-    },
-    "#chart-bar-container",
-    "Gráfico de barras"
-  )
+    const chart = new ApexCharts(chartContainer, options)
+    chart.render()
 
-  initChart(
-    "chartLine",
-    {
-      type: "line",
-      data: {
-        labels: ["Jan", "Fev", "Mar", "Abr", "Mai", "Jun"],
-        datasets: [
-          {
-            label: "Tendência",
-            data: [5, 15, 12, 20, 18, 24],
-            borderColor: "#10B981",
-            backgroundColor: "rgba(16, 185, 129, 0.2)",
-            tension: 0.3
-          }
-        ]
-      },
-      options: {
-        responsive: true,
-        maintainAspectRatio: false,
-        plugins: { legend: { display: true } }
-      }
-    },
-    "#chart-line-container",
-    "Gráfico de linha"
-  )
+    // força ajuste de tamanho após renderizar
+    setTimeout(() => {
+      chart.updateOptions({})
+      window.dispatchEvent(new Event("resize"))
+    }, 200)
+  }
 
-  initChart(
-    "chartPie",
-    {
-      type: "doughnut",
-      data: {
-        labels: ["Produto A", "Produto B", "Produto C"],
-        datasets: [
-          {
-            label: "Participação",
-            data: [45, 25, 30],
-            backgroundColor: ["#3B82F6", "#F59E0B", "#EF4444"]
-          }
-        ]
-      },
-      options: {
-        responsive: true,
-        maintainAspectRatio: false,
-        plugins: { legend: { position: "bottom" } }
-      }
-    },
-    "#chart-pie-container",
-    "Gráfico de pizza"
-  )
+  // Gráfico de barras + linha (tendência)
+  initApexChart("#grafico-container", {
+    chart: { type: "line" },
+    series: [
+      { name: "Volume", type: "column", data: [8, 10, 14, 12, 16, 15] },
+      { name: "Tendência", type: "line", data: [8, 9, 11, 11, 14, 15] }
+    ],
+    xaxis: { categories: ["Set", "Out", "Nov", "Dez", "Jan", "Fev"] },
+    stroke: { width: [0, 4], curve: "smooth" },
+    plotOptions: { bar: { columnWidth: "50%" } },
+    colors: ["#3B82F6", "#EF4444"],
+    legend: { position: "bottom" },
+    tooltip: { shared: true, intersect: false }
+  })
 
-  initChart(
-    "chartRadar",
-    {
-      type: "radar",
-      data: {
-        labels: ["Qualidade", "Velocidade", "Custo", "Satisfação", "Confiabilidade"],
-        datasets: [
-          {
-            label: "Avaliação",
-            data: [80, 60, 70, 90, 75],
-            backgroundColor: "rgba(59, 130, 246, 0.3)",
-            borderColor: "#3B82F6"
-          }
-        ]
-      },
-      options: {
-        responsive: true,
-        maintainAspectRatio: false,
-        scales: {
-          r: {
-            beginAtZero: true
-          }
-        }
-      }
-    },
-    "#chart-radar-container",
-    "Gráfico radar"
-  )
+  // Gráfico Resumo Estatístico
+  initApexChart("#graficoResumo-container", {
+    chart: { type: "bar" },
+    series: [{ name: "Medidas Estatísticas", data: [12.5, 10, 8, 3.2] }],
+    xaxis: { categories: ["Média", "Mediana", "Moda", "Desvio Padrão"] },
+    colors: ["#3B82F6", "#10B981", "#F59E0B", "#EF4444"],
+    dataLabels: { enabled: true }
+  })
+
+  // Gráfico de Barras Simples
+  initApexChart("#chart-bar-container", {
+    chart: { type: "bar" },
+    series: [{ name: "Receita", data: [12, 19, 8, 14, 17, 22] }],
+    xaxis: { categories: ["Jan", "Fev", "Mar", "Abr", "Mai", "Jun"] },
+    colors: ["#3B82F6"],
+    dataLabels: { enabled: true }
+  })
+
+  // Gráfico de Linha
+  initApexChart("#chart-line-container", {
+    chart: { type: "line" },
+    series: [{ name: "Tendência", data: [5, 15, 12, 20, 18, 24] }],
+    xaxis: { categories: ["Jan", "Fev", "Mar", "Abr", "Mai", "Jun"] },
+    stroke: { curve: "smooth" },
+    colors: ["#10B981"],
+    markers: { size: 5 }
+  })
+
+  // Gráfico de Pizza / Donut
+  initApexChart("#chart-pie-container", {
+    chart: { type: "donut" },
+    series: [45, 25, 30],
+    labels: ["Produto A", "Produto B", "Produto C"],
+    colors: ["#3B82F6", "#F59E0B", "#EF4444"],
+    legend: { position: "bottom" }
+  })
+
+  // Gráfico Radar
+  initApexChart("#chart-radar-container", {
+    chart: { type: "radar" },
+    series: [{ name: "Avaliação", data: [80, 60, 70, 90, 75] }],
+    labels: ["Qualidade", "Velocidade", "Custo", "Satisfação", "Confiabilidade"],
+    colors: ["#3B82F6"],
+    fill: { opacity: 0.3 },
+    stroke: { width: 2 }
+  })
 
   initDadosPage()
 })
