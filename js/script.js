@@ -235,7 +235,29 @@ window.addEventListener("load", () => {
   })
 
   initDadosPage()
+  initPerfilPage()
 })
+
+function initPerfilPage() {
+  const nomeUsuario = localStorage.getItem("usuarioNome") || "Usuário Profissional"
+  const nomeEl = document.getElementById("nomeUsuario")
+  if (nomeEl) nomeEl.textContent = nomeUsuario
+
+  const botaoTrocar = document.getElementById("botaoTrocarConta")
+  if (botaoTrocar) {
+    botaoTrocar.addEventListener("click", () => {
+      // Exemplo: redirecionar para login ou página de seleção de conta
+      window.location.href = "index.html"
+    })
+  }
+
+  const botaoEditar = document.getElementById("botaoEditarPerfil")
+  if (botaoEditar) {
+    botaoEditar.addEventListener("click", () => {
+      window.alert("Funcionalidade de edição de perfil ainda não implementada.")
+    })
+  }
+}
 
 // =============================
 // Dados (importar / salvar / visualizar)

@@ -544,7 +544,23 @@ cartao__descricao{
 .kpi__label {
   color: var(--suave);
 }
-
+.kpis-emlinha {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-top: 16px;
+}
+    
+.kpi-distintivo {
+    border: 1px solid var(--border);
+    background: var(--card);
+    color: var(--text);
+    border-radius: 999px;
+    padding: 8px 12px;
+    font-weight: 700;
+    font-size: 14px;
+    box-shadow: var(--shadow);
+}
 .chart-card {
   background: var(--cartao);
   border: 1px solid var(--borda);
@@ -875,5 +891,136 @@ input:checked + .slider {
 
 input:checked + .slider:before {
   transform: translateX(22px);
+}
+
+/* ============================
+   PÁGINA DE PERFIL
+   ============================ */
+.perfil-resumo {
+  padding: var(--esp2);
+  display: flex;
+  flex-direction: column;
+  gap: var(--esp3);
+  position: relative;
+}
+
+.perfil-resumo__top {
+  display: flex;
+  align-items: center;
+  gap: var(--esp3);
+  flex-wrap: wrap;
+}
+
+.perfil-avatar {
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--primaria);
+  font-size: 2.25rem;
+  flex-shrink: 0;
+}
+
+.perfil-dados h1 {
+  font-size: 1.8rem;
+  margin-bottom: 8px;
+}
+
+.perfil-bio {
+  color: var(--suave);
+  margin-bottom: 16px;
+}
+
+.perfil-metricas {
+  display: flex;
+  gap: 18px;
+  flex-wrap: wrap;
+}
+
+.metrica {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.metrica__valor {
+  font-weight: 700;
+  font-size: 1.4rem;
+}
+
+.metrica__label {
+  color: var(--suave);
+  font-size: 0.9rem;
+}
+
+.perfil-acoes {
+  margin-left: auto;
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.perfil-acoes .botao {
+  padding: 10px 14px;
+  min-width: 170px;
+}
+
+.lista {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 0;
+  margin: 0;
+}
+
+.lista__item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 14px;
+  border-radius: var(--raio);
+  background: rgba(59, 130, 246, 0.08);
+  border: 1px solid rgba(59, 130, 246, 0.2);
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.lista__texto {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.lista__titulo {
+  font-weight: 600;
+  color: var(--texto);
+}
+
+.lista__meta {
+  color: var(--suave);
+  font-size: 0.85rem;
+}
+
+.cartao__acoes {
+  margin-top: 16px;
+  display: flex;
+  justify-content: flex-end;
+}
+
+@media (max-width: 900px) {
+  .perfil-resumo__top {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .perfil-acoes {
+    width: 100%;
+    justify-content: stretch;
+  }
+
+  .perfil-acoes .botao {
+    width: 100%;
+  }
 }
 
