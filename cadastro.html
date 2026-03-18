@@ -43,6 +43,7 @@
           <label class="obrigatorio" for="senha">Senha</label>
           <input placeholder="Ex: Xxx20xx@" class="entrada" id="senha" name="senha" type="password" autocomplete="new-password" required
             aria-describedby="dica-senha" />
+            <p id="mensagem" class="erro"></p>
           <div id="dica-senha" class="ajuda">
             Dica: use no mínimo 8 caracteres.
           </div>
@@ -61,7 +62,7 @@
           <a href="#">política de privacidade</a>.
         </label>
 
-        <button class="botao botao--primario" type="submit" onclick="window.location.href='home.html'">Criar conta</button>
+        <button class="botao botao--primario" type="submit">Criar conta</button>
 
         <p class="ajuda" style="font-size:20px; margin:0;">
           Já tem conta? <a href="index.html">Entrar</a>
