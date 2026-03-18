@@ -418,3 +418,33 @@ function initDadosPage() {
   loadFromStorage()
 }
 
+// =============================
+//     Cadastro/Login
+// =============================
+const form = document.getElementById("formularioCadastro");
+const senha = document.getElementById("senha");
+const confirmar = document.getElementById("confirmar");
+const mensagem = document.getElementById("mensagem");
+
+form.addEventListener("submit", function (e) {
+  e.preventDefault();
+
+  mensagem.style.color = "red";
+  if (senha.value.length < 8) {
+    mensagem.textContent = "A senha deve ter pelo menos 8 caracteres.";
+    return;
+  }
+
+  if (senha.value !== confirmar.value) {
+    mensagem.textContent = "As senhas não coincidem.";
+    return;
+  }
+
+  mensagem.style.color = "green";
+  mensagem.textContent = "Conta criada com sucesso!";
+
+
+  setTimeout(() => {
+    window.location.href = "home.html";
+  }, 1000);
+});
