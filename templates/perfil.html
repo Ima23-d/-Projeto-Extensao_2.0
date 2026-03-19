@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>DataInsight • Perfil</title>
+  <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+  <link rel="stylesheet" href="css/estilo.css" />
+  <link rel="stylesheet" href="{{ url_for('static', filename='estilo.css') }}">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+</head>
+
+<body>
+
+  <div class="layout">
+    <aside class="sidebar" aria-label="Navegação principal">
+      <div class="sidebar__header">
+        <a class="marca" href="/home" aria-label="DataInsight - Início">
+          <span class="marca__simbolo" aria-hidden="true">
+            <i class="fa-solid fa-chart-line"></i>
+          </span>
+          DataInsight
+        </a>
+      </div>
+
+      <nav>
+       <a href="/home"><i class="fa-solid fa-house"></i> Início</a>
+        <a href="/dados"><i class="fa-solid fa-table-list"></i> Dados</a>
+        <a href="/graficoavancado"><i class="fa-solid fa-layer-group"></i> Galeria</a>
+        <a href="/analises"><i class="fa-solid fa-chart-line"></i> Análises</a>
+        <a href="/graficos"><i class="fa-solid fa-chart-column"></i> Gráficos</a>
+        <a href="/relatorios" ><i class="fa-solid fa-file-pdf"></i> Relatórios</a>
+        <a href="/perfil" aria-current="page"><i class="fa-solid fa-user"></i> Perfil</a>
+      </nav>
+    </aside>
+
+    <div class="main">
+        <header class="topbar">
+            <div class="topbar__actions">
+                <button class="botao botao--suave" type="button" onclick="alternarTema()" aria-label="Alternar tema">
+                    <i class="fa-solid fa-moon"></i>
+                </button>
+                <a class="botao botao--suave" href="configuracoes.html" aria-label="Abrir configurações">
+                    <i class="fa-solid fa-gear"></i>
+                </a>
+            </div>
+        </header>
+
+      <main id="conteudo" class="pagina" role="main">
+        <div class="container">
+          <section class="cartao perfil-resumo" aria-label="Resumo do perfil">
+            <div class="perfil-resumo__top">
+              <div class="perfil-avatar" aria-hidden="true">
+                <i class="fa-solid fa-user fa-3x"></i>
+              </div>
+              <div class="perfil-dados">
+                <h1>Olá, {{ nome }}</h1>
+                <p class="perfil-bio">Analista de dados • Último acesso: há 2 dias</p>
+
+                <div class="perfil-metricas">
+                  <div class="metrica">
+                    <span class="metrica__valor">27</span>
+                    <span class="metrica__label">Relatórios</span>
+                  </div>
+                  <div class="metrica">
+                    <span class="metrica__valor">142</span>
+                    <span class="metrica__label">Análises</span>
+                  </div>
+                  <div class="metrica">
+                    <span class="metrica__valor">12</span>
+                    <span class="metrica__label">Favoritos</span>
+                  </div>
+                </div>
+              </div>
+              <div class="perfil-acoes">
+                <button class="botao botao--primario" type="button" id="botaoEditarPerfil">
+                  <i class="fa-solid fa-pen"></i> Editar perfil
+                </button>
+                <button class="botao botao--suave" type="button" id="botaoTrocarConta">
+                  <i class="fa-solid fa-right-from-bracket"></i> Trocar conta
+                </button>
+              </div>
+            </div>
+          </section>
+
+          <div class="grade grade--2" style="gap: 24px;">
+            <section class="cartao" aria-labelledby="titulo-ultimas-analises">
+              <header class="cartao__cabecalho">
+                <h2 id="titulo-ultimas-analises">Últimas análises</h2>
+                <p class="cartao__subtitulo">Veja suas análises recentes</p>
+              </header>
+              <div class="cartao__conteudo">
+                <ul class="lista" id="listaUltimasAnalises">
+                  <li class="lista__item">
+                    <div class="lista__texto">
+                      <strong>Análise</strong>
+                      <span class="lista__titulo">Relatório de vendas mensal</span>
+                    </div>
+                    <span class="lista__meta">há 2 dias</span>
+                  </li>
+                  <li class="lista__item">
+                    <div class="lista__texto">
+                      <strong>Análise</strong>
+                      <span class="lista__titulo">Comparativo de despesas por departamento</span>
+                    </div>
+                    <span class="lista__meta">há 5 dias</span>
+                  </li>
+                  <li class="lista__item">
+                    <div class="lista__texto">
+                      <strong>Análise</strong>
+                      <span class="lista__titulo">Projeção de crescimento anual</span>
+                    </div>
+                    <span class="lista__meta">há 1 semana</span>
+                  </li>
+                </ul>
+
+                <div class="cartao__acoes">
+                  <button class="botao botao--suave" type="button">
+                    <i class="fa-solid fa-list"></i> Ver todas as análises
+                  </button>
+                </div>
+              </div>
+            </section>
+
+            <section class="cartao" aria-labelledby="titulo-ultimos-relatorios">
+              <header class="cartao__cabecalho">
+                <h2 id="titulo-ultimos-relatorios">Últimos relatórios</h2>
+                <p class="cartao__subtitulo">Acesse seus relatórios gerados recentemente</p>
+              </header>
+              <div class="cartao__conteudo">
+                <ul class="lista" id="listaUltimosRelatorios">
+                  <li class="lista__item">
+                    <div class="lista__texto">
+                      <strong>Relatório</strong>
+                      <span class="lista__titulo">Resumo financeiro trimestral</span>
+                    </div>
+                    <button class="botao botao--suave" type="button" aria-label="Abrir relatório resumo financeiro trimestral">
+                      <i class="fa-solid fa-eye"></i> Abrir
+                    </button>
+                  </li>
+                  <li class="lista__item">
+                    <div class="lista__texto">
+                      <strong>Relatório</strong>
+                      <span class="lista__titulo">Desempenho de campanhas</span>
+                    </div>
+                    <button class="botao botao--suave" type="button" aria-label="Abrir relatório desempenho de campanhas">
+                      <i class="fa-solid fa-eye"></i> Abrir
+                    </button>
+                  </li>
+                  <li class="lista__item">
+                    <div class="lista__texto">
+                      <strong>Relatório</strong>
+                      <span class="lista__titulo">Análise de custo por cliente</span>
+                    </div>
+                    <button class="botao botao--suave" type="button" aria-label="Abrir relatório análise de custo por cliente">
+                      <i class="fa-solid fa-eye"></i> Abrir
+                    </button>
+                  </li>
+                </ul>
+
+                <div class="cartao__acoes">
+                  <button class="botao botao--suave" type="button">
+                    <i class="fa-solid fa-file-lines"></i> Ver todos os relatórios
+                  </button>
+                </div>
+              </div>
+            </section>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <footer class="rodape" role="contentinfo">
+    <div class="container rodape__interno">
+      <span>© DataInsight</span>
+      <p>o site a seguir contém acessibilidade disponivel NIVEL AA segundo as diretrizes da WCAG 2.1</p>
+      <p>E-mail para contato: <a href="#">DataInsight@gmail.com</a>.</p>
+    </div>
+  </footer>
+
+  <div class="acessibilidade-flutuante" aria-label="Ferramentas de acessibilidade">
+    <div id="painelAcessibilidade" class="acessibilidade-painel" role="dialog" aria-modal="false"
+      aria-labelledby="tituloAcessibilidade">
+      <h2 id="tituloAcessibilidade" class="acessibilidade-titulo">Acessibilidade</h2>
+
+      <div class="acessibilidade-acoes">
+        <button class="botao botao--suave" type="button" id="botaoAumentar">Aumentar fonte</button>
+        <button class="botao botao--suave" type="button" id="botaoDiminuir">Diminuir fonte</button>
+        <button class="botao botao--suave" type="button" id="botaoLer">Ler página (voz)</button>
+        <button class="botao botao--suave" type="button" id="botaoParar">Parar leitura</button>
+        <button class="botao botao--suave" type="button" id="botaoContraste">Modo alto contraste</button>
+      </div>
+
+      <p class="ajuda" style="margin:10px 0 0;">
+        Dica: use TAB para navegar e Enter/Espaço para ativar botões.
+      </p>
+    </div>
+
+    <button id="alternarAcessibilidade" class="acessibilidade-alternar" type="button" aria-expanded="false"
+      aria-controls="painelAcessibilidade">
+      <img src="{{url_for('static', filename='images/Logo acessibilidade.png')}}" alt="img-acessibilidade">
+    </button>
+  </div>
+
+  <div vw class="enabled" id="Vlibras">
+    <div vw-access-button class="active"></div>
+    <div vw-plugin-wrapper>
+      <div class="vw-plugin-top-wrapper"></div>
+    </div>
+  </div>
+
+  <script src="https://vlibras.gov.br/app/vlibras-plugin.js"></script>
+
+  <script>
+    new window.VLibras.Widget('https://vlibras.gov.br/app');
+  </script>
+
+  <script src="{{ url_for('static', filename='js/acessibilidade.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+
+  <script src="acessibilidade/acessibilidade.js"></script>
+
+  <script src="js/script.js"></script>
+</body>
+
+</html>
