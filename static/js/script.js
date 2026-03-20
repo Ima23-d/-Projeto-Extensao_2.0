@@ -445,6 +445,6 @@ form.addEventListener("submit", function (e) {
 
 
   setTimeout(() => {
-    window.location.href = "home.html";
+    window.location.href = "/";
   }, 1000);
 });

@@ -7,5 +7,4 @@ usuario = db["usuarios"]
 usuario.create_index("email", unique=True)
 
 
-# for u in usuario.find():
-#     print(f"{u["_id"]} ; {u["nome"]} ; {u["email"]} ; {u["senha"]}\n")
+

@@ -34,8 +34,8 @@ def tela_cadastro():
             "senha":senha_hash
         })
 
-
         return redirect("/")
+    
     return render_template("cadastro.html")
 
 
