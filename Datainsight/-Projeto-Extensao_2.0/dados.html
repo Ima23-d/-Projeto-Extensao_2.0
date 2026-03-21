@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>DataInsight • Dados</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="css/estilo.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+</head>
+
+<body>
+ 
+  
+
+  <div class="layout">
+    <aside class="sidebar d-none d-lg-flex" aria-label="Navegação principal">
+      <div class="sidebar__header">
+        <a class="marca" href="home.html" aria-label="DataInsight - Início">
+          <span class="marca__simbolo" aria-hidden="true">
+            <i class="fa-solid fa-chart-column"></i>
+          </span>
+          DataInsight
+        </a>
+      </div>
+
+          <nav>
+            <a href="home.html"><i class="fa-solid fa-house"></i> Início</a>
+            <a href="dados.html"  aria-current="page"><i class="fa-solid fa-table-list"></i> Dados</a>
+            <a href="graficos-avancados.html"><i class="fa-solid fa-layer-group"></i> Galeria</a>
+            <a href="analises.html"><i class="fa-solid fa-chart-line"></i> Análises</a>
+            <a href="graficos.html"><i class="fa-solid fa-chart-column"></i> Gráficos</a>
+            <a href="relatorios.html"><i class="fa-solid fa-file-pdf"></i> Relatórios</a>
+            <a href="perfil.html"><i class="fa-solid fa-user"></i> Perfil</a>
+          </nav>
+    </aside>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light d-lg-none">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="home.html">
+      <i class="fa-solid fa-chart-column"></i> DataInsight
+    </a>
+
+  <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#menuMobile">
+  <i class="fa-solid fa-bars"></i>
+  </button>
+
+    <div class="collapse navbar-collapse" id="menuMobile">
+      <ul class="navbar-nav">
+        <li class="nav-item"><a class="nav-link" href="home.html">Início</a></li>
+        <li class="nav-item"><a class="nav-link" href="dados.html">Dados</a></li>
+        <li class="nav-item"><a class="nav-link" href="graficos-avancados.html">Galeria</a></li>
+        <li class="nav-item"><a class="nav-link" href="analises.html">Análises</a></li>
+        <li class="nav-item"><a class="nav-link" href="graficos.html">Gráficos</a></li>
+        <li class="nav-item"><a class="nav-link" href="relatorios.html">Relatórios</a></li>
+        <li class="nav-item"><a class="nav-link" href="perfil.html">Perfil</a></li>
+      </ul>
+    </div>
+  </div>
+</nav>
+    
+
+    <div class="main">
+      <header class="topbar">
+        <div class="topbar__actions">
+          <button class="botao botao--suave" type="button" onclick="alternarTema()" aria-label="Alternar tema">
+            <i class="fa-solid fa-moon"></i>
+          </button>
+          <a class="botao botao--suave" href="configuracoes.html" aria-label="Abrir configurações">
+            <i class="fa-solid fa-gear"></i>
+          </a>
+        </div>
+      </header>
+
+      <main id="conteudo" class="pagina" role="main">
+        <div class="container">
+          <header class="pagina__cabecalho">
+            <div class="migalhas">Início &gt; Dados</div>
+            <h1 class="h1">Base de dados</h1>
+            <p class="p">Insira ou visualize os dados que serão usados nas análises.</p>
+          </header>
+
+          <section class="grade grade--2" aria-label="Entrada de dados">
+            <article class="cartao">
+              <h2 class="h2">Inserir dados</h2>
+              <p class="p" style="margin-top:6px;">Cole números separados por vírgula ou quebra de linha.</p>
+
+              <div class="campo" style="margin-top:16px;">
+                <label for="dados-brutos">Dados</label>
+                <textarea class="area-texto" id="dados-brutos" placeholder="Ex: 10, 12, 15, 9, 8"></textarea>
+              </div>
+
+              <div style="display:flex; gap: 12px; flex-wrap: wrap; margin-top: 16px;">
+                <button class="botao botao--suave" type="button" id="btnImportarArquivo">Importar CSV</button>
+                <button class="botao botao--suave" type="button" id="btnImportarUrl">Importar de URL</button>
+                <button class="botao botao--delet" type="button" id="btnLimparDados">Limpar</button>
+                <button class="botao botao--primario" type="button" id="btnSalvarDados">Salvar</button>
+              </div>
+
+              <input type="file" id="dadosArquivo" accept=".csv,.txt" style="display:none" />
+
+            </article>
+
+            <article class="cartao">
+              <h2 class="h2">Resumo</h2>
+              <p class="p" style="margin-top:6px;">Exemplo de status do conjunto</p>
+
+              <div class="grade" style="margin-top:16px;">
+                <div class="cartao" style="box-shadow:none;">
+                  <div class="cartao__meta">Registros</div>
+                  <div class="cartao__valor">30</div>
+                  <div class="cartao__descricao">Última atualização: hoje</div>
+                </div>
+                <div class="cartao" style="box-shadow:none;">
+                  <div class="cartao__meta">Colunas</div>
+                  <div class="cartao__valor">1</div>
+                  <div class="cartao__descricao">Tipo: numérico</div>
+                </div>
+              </div>
+            </article>
+          </section>
+
+          <section style="margin-top:24px;" aria-label="Tabela de dados">
+            <div class="tabela-envoltoria">
+              <table>
+                <caption>Tabela de dados</caption>
+                <thead>
+                  <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Valor</th>
+                    <th scope="col">Etiqueta</th>
+                    <th scope="col">Ações</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>1</td>
+                    <td>10</td>
+                    <td>Exemplo</td>
+                    <td><a href="#" aria-label="Editar linha 1 (placeholder)">Editar</a></td>
+                  </tr>
+                  <tr>
+                    <td>2</td>
+                    <td>12</td>
+                    <td>Exemplo</td>
+                    <td><a href="#" aria-label="Editar linha 2 (placeholder)">Editar</a></td>
+                  </tr>
+                  <tr>
+                    <td>3</td>
+                    <td>15</td>
+                    <td>Exemplo</td>
+                    <td><a href="#" aria-label="Editar linha 3 (placeholder)">Editar</a></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div style="display:flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; margin-top: 16px;">
+              <span class="p" style="font-size:14px;">Mostrando 1–3 de 30</span>
+              <div style="display:flex; gap: 10px;">
+                <button class="botao botao--select-voltar" type="button">Voltar</button>
+                <button class="botao botao--select-proximo" type="button">Próximo</button>
+              </div>
+            </div>
+          </section>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <footer class="rodape" role="contentinfo">
+    <div class="container rodape__interno">
+      <span>© DataInsight</span>
+      <p>o site a seguir contém acessibilidade disponivel NIVEL AA segundo as diretrizes da WCAG 2.1</p>
+      <p>E-mail para contato: <a href="#">DataInsight@gmail.com</a>.</p>
+    </div>
+  </footer>
+
+  <div class="acessibilidade-flutuante" aria-label="Ferramentas de acessibilidade">
+    <div id="painelAcessibilidade" class="acessibilidade-painel" role="dialog" aria-modal="false"
+      aria-labelledby="tituloAcessibilidade">
+      <h2 id="tituloAcessibilidade" class="acessibilidade-titulo">Acessibilidade</h2>
+
+      <div class="acessibilidade-acoes">
+        <button class="botao botao--suave" type="button" id="botaoAumentar">Aumentar fonte</button>
+        <button class="botao botao--suave" type="button" id="botaoDiminuir">Diminuir fonte</button>
+        <button class="botao botao--suave" type="button" id="botaoLer">Ler página (voz)</button>
+        <button class="botao botao--suave" type="button" id="botaoParar">Parar leitura</button>
+      </div>
+
+      <p class="ajuda" style="margin:10px 0 0;">
+        Dica: use TAB para navegar e Enter/Espaço para ativar botões.
+      </p>
+    </div>
+
+    <button id="alternarAcessibilidade" class="acessibilidade-alternar" type="button" aria-expanded="false"
+      aria-controls="painelAcessibilidade">
+      <img src="img/Logo acessibilidade.png" alt="img-acessibilidade">
+    </button>
+  </div>
+
+<div vw class="enabled" id="Vlibras">
+  <div vw-access-button class="active"></div>
+  <div vw-plugin-wrapper>
+    <div class="vw-plugin-top-wrapper"></div>
+  </div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://vlibras.gov.br/app/vlibras-plugin.js"></script>
+
+<script>
+  new window.VLibras.Widget('https://vlibras.gov.br/app');
+</script>
+
+  <script src="acessibilidade/acessibilidade.js"></script>
+  <script src="js/script.js"></script>
+</body>
+
+</html>
