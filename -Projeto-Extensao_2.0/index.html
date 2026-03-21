@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>DataInsight • Login</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="css/estilo.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+</head>
+
+<body>
+
+  <header class="barra-topo" role="banner">
+    <div class="container barra-topo__interno">
+      <a class="marca" href="index.html" aria-label="DataInsight - Página inicial">
+        <span class="marca__simbolo" aria-hidden="true">
+          <i class="fa-solid fa-chart-column"></i>
+        </span>
+        DataInsight
+      </a>
+    </div>
+  </header>
+
+  <main id="conteudo" class="autenticacao" role="main">
+    <section class="cartao autenticacao__cartao" aria-labelledby="titulo-login">
+      <h1 id="titulo-login" class="autenticacao__titulo">Entrar</h1>
+      <p class="autenticacao__subtitulo">Analise seus dados de forma simples e acessível.</p>
+
+      <form action="" method="POST" style="margin-top: 24px; display: grid; gap: 16px;">
+        <div class="campo">
+          <label class="obrigatorio" for="email">Email</label>
+          <input placeholder="Ex: xxxx@gmail.com" class="entrada" id="email" name="email" type="email" autocomplete="email" required />
+        </div>
+
+        <div class="campo">
+          <label class="obrigatorio" for="senha">Senha</label>
+          <input placeholder="Ex: Xxx20xx@" class="entrada" id="senha" name="senha" type="password" autocomplete="current-password" required />
+        </div>
+
+        <div style="display:flex; align-items:center; justify-content:space-between; gap: 12px; flex-wrap: wrap;">
+          <label style="display:flex; align-items:center; gap:10px; color: var(--muted); font-weight:600;">
+            <input type="checkbox" name="lembrar" class="checkbox"/>
+            Lembrar de mim
+          </label>
+
+        </div>
+
+        <button class="botao botao--primario" type="submit">Entrar</button>
+
+        <div class="autenticacao__links">
+          <a href="#" aria-label="Recuperar senha (placeholder)">Esqueci a senha</a>
+          <a href="cadastro.html">Criar conta</a>
+        </div>
+      </form>
+    </section>
+  </main>
+<!-- 
+  <footer class="rodape" role="contentinfo">
+    <div class="container rodape__interno">
+      <span>© DataInsight</span>
+    </div>
+  </footer> -->
+
+  <!-- Painel flutuante de acessibilidade -->
+  <div class="acessibilidade-flutuante" aria-label="Ferramentas de acessibilidade">
+    <div id="painelAcessibilidade" class="acessibilidade-painel" role="dialog" aria-modal="false"
+      aria-labelledby="tituloAcessibilidade">
+      <h2 id="tituloAcessibilidade" class="acessibilidade-titulo">Acessibilidade</h2>
+
+      <div class="acessibilidade-acoes">
+        <button class="botao botao--suave" type="button" id="botaoAumentar">Aumentar fonte</button>
+        <button class="botao botao--suave" type="button" id="botaoDiminuir">Diminuir fonte</button>
+        <button class="botao botao--suave" type="button" id="botaoLer">Ler página (voz)</button>
+        <button class="botao botao--suave" type="button" id="botaoParar">Parar leitura</button>
+      </div>
+
+      <p class="ajuda" style="margin:10px 0 0;">
+        Dica: use TAB para navegar e Enter/Espaço para ativar botões.
+      </p>
+    </div>
+
+    <button id="alternarAcessibilidade" class="acessibilidade-alternar" type="button" aria-expanded="false"
+      aria-controls="painelAcessibilidade">
+      <img src="img/Logo acessibilidade.png" alt="img-acessibilidade">
+    </button>
+  </div>
+
+  <!-- VLibras -->
+  <div vw class="enabled" id="Vlibras"> 
+    <div vw-access-button class="active"></div>
+    <div vw-plugin-wrapper>
+      <div class="vw-plugin-top-wrapper"></div>
+    </div>
+  </div>
+  <script src ="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://vlibras.gov.br/app/vlibras-plugin.js"></script>
+
+  <script>
+    new window.VLibras.Widget('https://vlibras.gov.br/app');
+  </script>
+
+  <script src="acessibilidade/acessibilidade.js"></script>
+
+  <script src="js/script.js"></script>
+</body>
+
+</html>
