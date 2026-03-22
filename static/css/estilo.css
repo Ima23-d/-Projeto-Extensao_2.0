@@ -1626,7 +1626,7 @@ table td {
 
   /* MOSTRA navbar/topbar normal */
   .topbar {
-    display: none;
+    display: flex;
   }
 
   /* Grids viram coluna */
