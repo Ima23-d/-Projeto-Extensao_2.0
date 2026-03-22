@@ -459,6 +459,7 @@ body {
 .linha a {
   color: var(--primaria);
 }
+
 /* ============================
    DARK MODE - index
    ============================ */
@@ -652,26 +653,26 @@ body {
 }
 
 .container {
-    width: 100%;
-    max-width: var(--container);
-    margin: 0 auto;
-    padding-left: 24px;
-    padding-right: 24px;
+  width: 100%;
+  max-width: var(--container);
+  margin: 0 auto;
+  padding-left: 24px;
+  padding-right: 24px;
 }
 
 
 @media (max-width: 768px) {
-    .container {
-        padding-left: 16px;
-        padding-right: 16px;
-    }
+  .container {
+    padding-left: 16px;
+    padding-right: 16px;
+  }
 }
 
 @media (max-width: 480px) {
-    .container {
-        padding-left: 12px;
-        padding-right: 12px;
-    }
+  .container {
+    padding-left: 12px;
+    padding-right: 12px;
+  }
 }
 
 
@@ -693,6 +694,9 @@ body {
   border: none;
   font-size: 22px;
   cursor: pointer;
+  justify-content: center;
+  align-items: center;
+  display: flex;
 }
 
 .acessibilidade-painel {
