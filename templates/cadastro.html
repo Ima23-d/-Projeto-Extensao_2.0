@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>DataInsight • Cadastro</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/estilo.css') }}" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+</head>
+
+<body>
+
+  <header class="barra-topo" role="banner">
+    <div class="container barra-topo__interno">
+      <a class="marca" href="{{ url_for('pagina_login') }}" aria-label="DataInsight - Voltar ao login">
+        <span class="marca__simbolo" aria-hidden="true">
+          <i class="fa-solid fa-chart-column"></i>
+        </span>
+        DataInsight
+      </a>
+    </div>
+  </header>
+
+  <main id="conteudo" class="autenticacao" role="main" tabindex="-1">
+    <section class="autenticacao__cartao" aria-labelledby="titulo-cadastro">
+      <h1 id="titulo-cadastro" class="autenticacao__titulo">Criar conta</h1>
+      <p class="autenticacao__subtitulo">Crie sua conta para salvar preferências e relatórios.</p>
+
+
+      <form id="formularioCadastro" action="{{ url_for('pg_cadastro') }}" method="POST" style="margin-top: 24px; display:grid; gap: 16px;">
+        {% if error_cad %}
+        <div style="background-color: #fee; color: #c00; padding: 12px; border-radius: 4px; margin-bottom: 16px;">
+          {{ msg or 'Erro ao criar conta' }}
+        </div>
+        {% endif %}
+        
+        <div class="campo">
+          <label class="obrigatorio" for="nome">Nome</label>
+          <input placeholder="Ex: Arthur" class="entrada" id="nome" name="nome" type="text" autocomplete="name" required />
+        </div>
+        
+        <div class="campo">
+          <label class="obrigatorio" for="email">Email</label>
+          <input placeholder="Ex: xxxx@gmail.com" class="entrada" id="email" name="email" type="email" autocomplete="email" required />
+        </div>
+
+        <div class="campo">
+          <label class="obrigatorio" for="senha">Senha</label>
+          <input placeholder="Ex: Xxx20xx@" class="entrada" id="senha" name="senha" type="password" autocomplete="new-password" required
+            aria-describedby="dica-senha" />
+            <p id="mensagem" class="erro"></p>
+          <div id="dica-senha" class="ajuda">
+            Dica: use no mínimo 8 caracteres, incluindo letras e números.
+          </div>
+        </div>
+
+        <div class="campo">
+          <label class="obrigatorio" for="confirmar">Confirmar senha</label>
+          <input placeholder="Ex: Xxx20xx@" class="entrada" id="confirmar" name="confirmar" type="password" autocomplete="new-password" required />
+        </div>
+
+        <label class="linha">
+          <input id="termos" type="checkbox" required class="checkbox" />
+          Aceito os
+          <a href="#">termos</a>
+          e a
+          <a href="#">política de privacidade</a>.
+        </label>
+
+        <button class="botao botao--primario" type="submit">Criar conta</button>
+
+        <p class="ajuda" style="font-size:20px; margin:0;">
+          Já tem conta? <a href="{{ url_for('pagina_login') }}">Entrar</a>
+        </p>
+      </form>
+    </section>
+  </main>
+
+  <!-- <footer class="rodape" role="contentinfo">
+    <div class="container rodape__interno">
+      <span>© DataInsight</span>
+      <p>o site a seguir contém acessibilidade disponivel NIVEL AA segundo as diretrizes da WCAG 2.1</p>
+      <p>E-mail para contato: <a href="#">XXX@gmail.com</a>.</p>
+    </div>
+  </footer> -->
+
+  <div class="acessibilidade-flutuante" aria-label="Ferramentas de acessibilidade">
+    <div id="painelAcessibilidade" class="acessibilidade-painel" role="dialog" aria-modal="false"
+      aria-labelledby="tituloAcessibilidade">
+      <h2 id="tituloAcessibilidade" class="acessibilidade-titulo">Acessibilidade</h2>
+
+      <div class="acessibilidade-acoes">
+        <button class="botao botao--suave" type="button" id="botaoAumentar">Aumentar fonte</button>
+        <button class="botao botao--suave" type="button" id="botaoDiminuir">Diminuir fonte</button>
+        <button class="botao botao--suave" type="button" id="botaoContraste">Alto contraste</button>
+        <button class="botao botao--suave" type="button" id="botaoLer">Ler página (voz)</button>
+        <button class="botao botao--suave" type="button" id="botaoParar">Parar leitura</button>
+      </div>
+
+      <p class="ajuda" style="margin:10px 0 0;">
+        Dica: use TAB para navegar e Enter/Espaço para ativar botões.
+      </p>
+    </div>
+
+    <button id="alternarAcessibilidade" class="acessibilidade-alternar" type="button" aria-expanded="false"
+      aria-controls="painelAcessibilidade">
+      <img src="{{ url_for('static', filename='img/Logo acessibilidade.png') }}" alt="img-acessibilidade">
+    </button>
+  </div>
+
+<div vw class="enabled" id="Vlibras">
+  <div vw-access-button class="active"></div>
+  <div vw-plugin-wrapper>
+    <div class="vw-plugin-top-wrapper"></div>
+  </div>
+</div>
+
+<script src="https://vlibras.gov.br/app/vlibras-plugin.js"></script>
+
+<script>
+  new window.VLibras.Widget('https://vlibras.gov.br/app');
+</script>
+
+<script>
+  const senhaInput = document.getElementById('senha');
+  const confirmarInput = document.getElementById('confirmar');
+  const mensagem = document.getElementById('mensagem');
+  const formulario = document.getElementById('formularioCadastro');
+
+  function validarSenha() {
+    const senha = senhaInput.value;
+    const confirmar = confirmarInput.value;
+
+    if (senha.length < 8) {
+      mensagem.textContent = 'Senha deve ter no mínimo 8 caracteres';
+      mensagem.style.color = '#c00';
+      return false;
+    }
+
+    if (senha !== confirmar) {
+      mensagem.textContent = 'As senhas não coincidem';
+      mensagem.style.color = '#c00';
+      return false;
+    }
+
+    mensagem.textContent = '✓ Senhas válidas';
+    mensagem.style.color = '#060';
+    return true;
+  }
+
+  senhaInput.addEventListener('input', validarSenha);
+  confirmarInput.addEventListener('input', validarSenha);
+
+  formulario.addEventListener('submit', (e) => {
+    if (!validarSenha()) {
+      e.preventDefault();
+    }
+  });
+</script>
+
+  <script src="{{ url_for('static', filename='acessibilidade/acessibilidade.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+</body>
+
+</html>

@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>DataInsight • Relatórios</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.min.js"></script>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/estilo.css') }}" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+</head>
+
+<body>
+  <div class="layout">
+    <aside class="sidebar" aria-label="Navegação principal">
+      <div class="sidebar__header">
+        <a class="marca" href="{{ url_for('pagina_home') }}" aria-label="DataInsight - Início">
+          <span class="marca__simbolo" aria-hidden="true">
+            <i class="fa-solid fa-chart-column"></i>
+          </span>
+          DataInsight
+        </a>
+      </div>
+      <nav>
+        <a href="{{ url_for('pagina_home') }}"><i class="fa-solid fa-house"></i> Início</a>
+        <a href="{{ url_for('pagina_dados') }}"><i class="fa-solid fa-table-list"></i> Dados</a>
+        <a href="{{ url_for('pagina_graficoAvancado') }}"><i class="fa-solid fa-layer-group"></i> Dashboard</a>
+        <a href="{{ url_for('pagina_analise') }}"><i class="fa-solid fa-chart-line"></i> Análises</a>
+        <a href="{{ url_for('pagina_relatorio') }}" aria-current="page"><i class="fa-solid fa-file-pdf"></i> Relatórios</a>
+        <a href="{{ url_for('pagina_perfil') }}"><i class="fa-solid fa-user"></i> Perfil</a>
+        <hr style="margin: 16px 0; border: none; height: 1px; background-color: var(--borda);">
+        <a href="{{ url_for('logout') }}" style="color: var(--perigo);"><i class="fa-solid fa-sign-out-alt"></i> Sair</a>
+      </nav>
+    </aside>
+
+    <div class="main">
+      <header class="topbar">
+        <div class="topbar__actions">
+          <button class="botao botao--suave" type="button" onclick="alternarTema()" aria-label="Alternar tema">
+            <i class="fa-solid fa-moon"></i>
+          </button>
+          <a class="botao botao--suave" href="{{ url_for('pagina_configuracoes') }}" aria-label="Abrir configurações">
+            <i class="fa-solid fa-gear"></i>
+          </a>
+        </div>
+      </header>
+
+      <main id="conteudo" class="pagina" role="main">
+        <div class="container">
+          <header class="pagina__cabecalho">
+            <div class="migalhas">Início &gt; Relatórios</div>
+            <h1 class="h1">Gerar Relatório</h1>
+            <p class="p">Selecione o que deseja incluir e gere seu relatório em segundos.</p>
+          </header>
+
+          <section class="cartao" style="margin-top: 24px;">
+            <h2 class="h2" style="margin-bottom: 16px;">Passo 1: Configuração Básica</h2>
+
+            <div class="grade grade--2" style="margin-bottom: 24px;">
+              <div class="campo">
+                <label for="nomeRel">Nome do Relatório</label>
+                <input type="text" class="entrada" id="nomeRel" placeholder="Ex: Análise Março 2026"
+                  value="Meu Relatório">
+              </div>
+              <div class="campo">
+                <label for="perRel">Período</label>
+                <select class="selecao" id="perRel">
+                  <option selected>Últimos 6 meses</option>
+                  <option>Últimos 30 dias</option>
+                  <option>Este ano</option>
+                </select>
+              </div>
+            </div>
+
+            <h2 class="h2" style="margin-bottom: 16px;">Passo 2: Selecione o Conteúdo</h2>
+
+            <!-- Indicador de desempenho -->
+            <div class="card-opcao" onclick="toggleCheck('opt-kpi')">
+              <input type="checkbox" id="opt-kpi" checked>
+              <div class="card-opcao-icon"><i class="fa-solid fa-chart-bar"></i></div>
+              <div class="card-opcao-text">
+                <h3>Indicador de desempenho</h3>
+                <p>Faturamento, Lucro, Despesas, Crescimento</p>
+              </div>
+            </div>
+
+            <!-- Tendências -->
+            <div class="card-opcao" onclick="toggleCheck('opt-tendencias')">
+              <input type="checkbox" id="opt-tendencias" checked>
+              <div class="card-opcao-icon"><i class="fa-solid fa-chart-line"></i></div>
+              <div class="card-opcao-text">
+                <h3>Tendências de Crescimento</h3>
+                <p>Evolução mensal de faturamento e lucro</p>
+              </div>
+            </div>
+
+            <!-- Margem -->
+            <div class="card-opcao" onclick="toggleCheck('opt-margem')">
+              <input type="checkbox" id="opt-margem" checked>
+              <div class="card-opcao-icon"><i class="fa-solid fa-percent"></i></div>
+              <div class="card-opcao-text">
+                <h3>Análise de Margem</h3>
+                <p>Taxa de margem e performance</p>
+              </div>
+            </div>
+
+            <!-- Dados Detalhados -->
+            <div class="card-opcao" onclick="toggleCheck('opt-dados')">
+              <input type="checkbox" id="opt-dados" checked>
+              <div class="card-opcao-icon"><i class="fa-solid fa-table"></i></div>
+              <div class="card-opcao-text">
+                <h3>Tabela de Dados Detalhada</h3>
+                <p>Informações completas mês a mês</p>
+              </div>
+            </div>
+
+            <!-- Insights -->
+            <div class="card-opcao" onclick="toggleCheck('opt-insights')">
+              <input type="checkbox" id="opt-insights" checked>
+              <div class="card-opcao-icon"><i class="fa-solid fa-lightbulb"></i></div>
+              <div class="card-opcao-text">
+                <h3>Insights & Recomendações</h3>
+                <p>Principais achados e oportunidades</p>
+              </div>
+            </div>
+
+            <!-- BOTÕES -->
+            <div class="btn-group">
+              <button class="botao botao--primario" onclick="gerarPreview()">
+                <i class="fa-solid fa-eye"></i> Ver Resumo
+              </button>
+              <button class="botao botao--suave" onclick="exportarPDF()">
+                <i class="fa-solid fa-file-pdf"></i> Baixar PDF
+              </button>
+            </div>
+          </section>
+
+          <!-- PREVIEW -->
+          <div id="preview" class="preview-box"></div>
+
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <footer class="rodape">
+    <div class="container rodape__grid">
+
+      <!-- Marca -->
+      <div class="rodape__col">
+
+        <h2 class="rodape__logo">DataInsight</h2>
+        <p>
+          Plataforma de análise de dados e métricas para startups e pequenos negócios.
+          Simples, acessível e poderosa.
+        </p>
+        <small>© 2026 DataInsight</small>
+      </div>
+
+      <!-- Links -->
+      <div class="rodape__col">
+        <h3>Links</h3>
+        <ul>
+          <li><a href="{{ url_for('pagina_home') }}">Home</a></li>
+          <li><a href="{{ url_for('pagina_dados') }}">Dados</a></li>
+          <li><a href="{{ url_for('pagina_graficoAvancado') }}">Dashboard</a></li>
+          <li><a href="{{ url_for('pagina_analise') }}">Analises</a></li>
+          <li><a href="{{ url_for('pagina_relatorio') }}">Relatórios</a></li>
+          <li><a href="{{ url_for('pagina_perfil') }}">Perfil</a></li>
+        </ul>
+      </div>
+
+      <!-- Guias -->
+      <div class="rodape__col">
+        <h3>Termos de uso e Privacidade</h3>
+        <ul>
+          <li><a href="#">Termos de uso</a></li>
+          <li><a href="#">Privacidade</a></li>
+        </ul>
+      </div>
+
+      <!-- Suporte -->
+      <div class="rodape__col">
+        <h3>Acessibilidade</h3>
+        <ul>
+          <li><a href="#">Nivel AA. Seguindo a WCAG2</a></li>
+          <li><a href="https://www.w3.org/TR/WCAG21/">WCAG2</a></li>
+        </ul>
+      </div>
+
+    </div>
+  </footer>
+
+  <div class="acessibilidade-flutuante" aria-label="Ferramentas de acessibilidade">
+    <div id="painelAcessibilidade" class="acessibilidade-painel" role="dialog" aria-modal="false"
+      aria-labelledby="tituloAcessibilidade">
+      <h2 id="tituloAcessibilidade" class="acessibilidade-titulo">Acessibilidade</h2>
+      <div class="acessibilidade-acoes">
+        <button class="botao botao--suave" type="button" id="botaoAumentar">Aumentar fonte</button>
+        <button class="botao botao--suave" type="button" id="botaoDiminuir">Diminuir fonte</button>
+        <button class="botao botao--suave" type="button" id="botaoLer">Ler página (voz)</button>
+        <button class="botao botao--suave" type="button" id="botaoParar">Parar leitura</button>
+      </div>
+      <p class="ajuda" style="margin:10px 0 0;">
+        Dica: use TAB para navegar e Enter/Espaço para ativar botões.
+      </p>
+    </div>
+    <button id="alternarAcessibilidade" class="acessibilidade-alternar" type="button" aria-expanded="false"
+      aria-controls="painelAcessibilidade">
+      <img src="{{ url_for('static', filename='img/Logo acessibilidade.png') }}" alt="img-acessibilidade">
+    </button>
+  </div>
+
+  <div vw class="enabled" id="Vlibras">
+    <div vw-access-button class="active"></div>
+    <div vw-plugin-wrapper>
+      <div class="vw-plugin-top-wrapper"></div>
+    </div>
+  </div>
+
+  <script src="https://vlibras.gov.br/app/vlibras-plugin.js"></script>
+  <script>new window.VLibras.Widget('https://vlibras.gov.br/app');</script>
+  <script src="{{ url_for('static', filename='acessibilidade/acessibilidade.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/relatorios.js') }}"></script>
+</body>
+
+</html>
