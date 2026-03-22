@@ -1,10 +1,10 @@
 from flask import Flask, render_template, session, redirect, url_for
 from functools import wraps
 from functions import tela_cadastro, login
-
 app = Flask(__name__)
 app.secret_key = "kdachave"
 
+# =================== PROTEÇÃO ===================
 def login_required(f):
     @wraps(f)
     def decorated_function(*args, **kwargs):
@@ -13,23 +13,25 @@ def login_required(f):
         return f(*args, **kwargs)
     return decorated_function
 
-#################### PÁGINAS DA WEB ###############################
+# =================== LANDING ===================
 @app.route("/")
+def pagina_landing():
+    return render_template("index.html")
+
+
+# =================== LOGIN ===================
+@app.route("/login")
 def pagina_login():
     if 'usuario_nome' in session:
         return redirect(url_for('pagina_home'))
     return render_template("login.html")
 
 
-@app.route("/landing")
-def pagina_landing():
-    return render_template("index.html")
-
-
+# =================== SISTEMA ===================
 @app.route("/home")
 @login_required
 def pagina_home():
-   return render_template("home.html")
+    return render_template("home.html")
 
 
 @app.route("/analises")
@@ -38,9 +40,9 @@ def pagina_analise():
     return render_template("analises.html")
 
 
-@app.route("/graficos")
+@app.route("/graficos-avancados")
 @login_required
-def pagina_grafico():
+def pagina_graficoAvancado():
     return render_template("graficos-avancados.html")
 
 
@@ -74,21 +76,16 @@ def pagina_perfil():
     return render_template("perfil.html")
 
 
-@app.route("/graficoavancado")
-@login_required
-def pagina_graficoAvancado():
-    return render_template("graficos-avancados.html")
-
-
-######################## FUNÇÕES DAS PÁGINAS ################################
-
+# =================== AÇÕES ===================
 @app.route("/cadastro", methods=["GET", "POST"])
 def pg_cadastro():
     return tela_cadastro()
-    
-@app.route("/login", methods=["GET", "POST"])
+
+
+@app.route("/login", methods=["POST"])
 def pg_login():
     return login()
+
 
 @app.route("/logout")
 def logout():
@@ -96,5 +93,6 @@ def logout():
     return redirect(url_for('pagina_login'))
 
 
+# =================== RUN ===================
 if __name__ == "__main__":
-    app.run(debug=True, host='localhost', port=5000)
+    app.run(debug=True, host='0.0.0.0', port=5000)
