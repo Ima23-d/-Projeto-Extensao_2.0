@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>DataInsight • Métricas</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/estilo.css') }}" /> 
+    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+    <link rel="stylesheet" href="css/estilo.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+</head>
+
+<body>
+        
+    <div class="layout">
+        <aside class="sidebar" aria-label="Navegação principal">
+            <div class="sidebar__header">
+                <a class="marca" href="{{ url_for('pagina_landing') }}" aria-label="DataInsight - Início">
+                    <span class="marca__simbolo" aria-hidden="true">
+                        <i class="fa-solid fa-chart-column"></i>
+                    </span>
+                    DataInsight
+                </a>
+            </div>
+
+         
+        <nav>
+            <a href="{{ url_for('pagina_home') }}"><i class="fa-solid fa-house"></i> Início</a>
+            <a href="{{ url_for('pagina_dados') }}"><i class="fa-solid fa-table-list"></i> Dados</a>
+            <a href="{{ url_for('pagina_graficoAvancado') }}"><i class="fa-solid fa-layer-group"></i> Dashboard</a>
+            <a href="{{ url_for('pagina_analise') }}" aria-current="page"><i class="fa-solid fa-chart-line"></i> Análises</a>
+            <a href="{{ url_for('pagina_relatorio') }}"><i class="fa-solid fa-file-pdf"></i> Relatórios</a>
+            <a href="{{ url_for('pagina_perfil') }}"><i class="fa-solid fa-user"></i> Perfil</a>
+            <hr style="margin: 16px 0; border: none; height: 1px; background-color: var(--borda);">
+            <a href="{{ url_for('logout') }}" style="color: var(--perigo);"><i class="fa-solid fa-sign-out-alt"></i> Sair</a>
+        </nav>
+
+        </aside>
+        <script src ="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+        <nav class="navbar navbar-expand-lg navbar-light bg-light d-lg-none">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="home.html">
+      <i class="fa-solid fa-chart-column"></i> DataInsight
+    </a>
+
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#menuMobile">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="menuMobile">
+      <ul class="navbar-nav">
+        <li class="nav-item"><a class="nav-link" href="{{ url_for('pagina_home') }}">Início</a></li>
+        <li class="nav-item"><a class="nav-link" href="{{ url_for('pagina_dados') }}">Dados</a></li>
+        <li class="nav-item"><a class="nav-link" href="{{ url_for('pagina_graficoAvancado') }}">Galeria</a></li>
+        <li class="nav-item"><a class="nav-link" href="{{ url_for('pagina_analise') }}" >Análises</a></li>
+        <li class="nav-item"><a class="nav-link" href="{{ url_for('pagina_relatorio') }}">Relatórios</a></li>
+        <li class="nav-item"><a class="nav-link" href="{{ url_for('pagina_perfil') }}">Perfil</a></li>
+        <li class="nav-item"><a class="nav-link" href="{{ url_for('logout') }}">Sair</a></li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+        <div class="main">
+            <header class="topbar">
+                <div class="topbar__actions">
+                    <button class="botao botao--suave" type="button" onclick="alternarTema()"
+                        aria-label="Alternar tema">
+                        <i class="fa-solid fa-moon"></i>
+                    </button>
+                    <a class="botao botao--suave" href="configuracoes.html" aria-label="Abrir configurações">
+                        <i class="fa-solid fa-gear"></i>
+                    </a>
+                </div>
+            </header>
+
+            <main id="conteudo" class="pagina" role="main">
+                <div class="container">
+                    <header class="pagina__cabecalho">
+                        <div class="migalhas">Início &gt; Métricas</div>
+                        <h1 class="h1">Análise de Métricas</h1>
+                        <p class="p">Análise detalhada de desempenho com comparação entre períodos.</p>
+                    </header>
+
+                    <!-- FILTROS AVANÇADOS -->
+                    <section class="cartao" aria-label="Filtros">
+                        <h2 class="h2">Filtros</h2>
+
+                        <div class="grade grade--3" style="margin-top:16px;">
+                            <div class="campo">
+                                <label for="periodo-inicio">Período - Início</label>
+                                <input type="date" class="entrada" id="periodo-inicio" />
+                            </div>
+
+                            <div class="campo">
+                                <label for="periodo-fim">Período - Fim</label>
+                                <input type="date" class="entrada" id="periodo-fim" />
+                            </div>
+
+                            <div class="campo">
+                                <label for="comparar-com">Comparar com</label>
+                                <select class="selecao" id="comparar-com">
+                                    <option>Mês anterior</option>
+                                    <option selected>Mesmo período ano passado</option>
+                                    <option>Personalizado</option>
+                                    <option>Sem comparação</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div style="display:flex; gap: 12px; flex-wrap: wrap; margin-top: 16px;">
+                            <button class="botao botao--delet" type="button">✕ Limpar filtros</button>
+                            <button class="botao botao--primario" type="button">Aplicar filtros</button>
+                        </div>
+                    </section>
+
+                    <!-- PAINEL DE MÉTRICAS -->
+                    <section aria-label="Lista de métricas disponíveis" style="margin-top: 24px;">
+                        <h2 class="h2" style="margin-bottom: 16px;">Selecione as Métricas</h2>
+                        <div class="grade grade--4">
+
+                            <!-- Métrica 1 -->
+                            <div class="cartao" style="cursor: pointer; transition: all 0.3s;"
+                                onclick="selecionarMetrica(this, 'faturamento')"  style=" border-left: 4px solid var(--primaria);">
+                                <div style="display: flex; justify-content: space-between; align-items: start;">
+                                    <div>
+                                        <h3 class="h3" style="margin: 0 0 8px;">Faturamento</h3>
+                                        <p class="p" style="margin: 0; font-size: 14px; color: var(--suave);">Receita
+                                            total</p>
+                                    </div>
+                                    <input type="checkbox" id="check-faturamento" class="metrica-checkbox"
+                                        style="width: 20px; height: 20px; cursor: pointer;" />
+                                </div>
+                                <div style="margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--borda);">
+                                    <span style="font-weight: 600; color: var(--primaria);">R$ 245.680</span>
+                                    <!-- <span style="font-size: 12px; color: var(--sucesso); margin-left: 8px;">↑12.5%</span> -->
+                                </div>
+                            </div>
+
+                            <!-- Métrica 2 -->
+                            <div class="cartao" style="cursor: pointer; transition: all 0.3s;"
+                                onclick="selecionarMetrica(this, 'despesas')"  style=" border-left: 4px solid var(--primaria);">
+                                <div style="display: flex; justify-content: space-between; align-items: start;">
+                                    <div>
+                                        <h3 class="h3" style="margin: 0 0 8px;">Despesas</h3>
+                                        <p class="p" style="margin: 0; font-size: 14px; color: var(--suave);">Custos
+                                            operacionais</p>
+                                    </div>
+                                    <input type="checkbox" id="check-despesas" class="metrica-checkbox"
+                                        style="width: 20px; height: 20px; cursor: pointer;" />
+                                </div>
+                                <div style="margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--borda);">
+                                    <span style="font-weight: 600; color: var(--perigo);">R$ 160.250</span>
+                                    <!-- <span style="font-size: 12px; color: var(--perigo); margin-left: 8px;">↑ 8.3%</span> -->
+                                </div>
+                            </div>
+
+                            <!-- Métrica 3 -->
+                            <div class="cartao" style="cursor: pointer; transition: all 0.3s;"
+                                onclick="selecionarMetrica(this, 'lucro')"  style=" border-left: 4px solid var(--primaria);">
+                                <div style="display: flex; justify-content: space-between; align-items: start;">
+                                    <div>
+                                        <h3 class="h3" style="margin: 0 0 8px;">Lucro</h3>
+                                        <p class="p" style="margin: 0; font-size: 14px; color: var(--suave);">
+                                            Faturamento - Despesas</p>
+                                    </div>
+                                    <input type="checkbox" id="check-lucro" class="metrica-checkbox"
+                                        style="width: 20px; height: 20px; cursor: pointer;" checked />
+                                </div>
+                                <div style="margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--borda);">
+                                    <span style="font-weight: 600; color: var(--sucesso);">R$ 85.430</span>
+                                    <!-- <span style="font-size: 12px; color: var(--sucesso); margin-left: 8px;">↑15.2%</span> -->
+                                </div>
+                            </div>
+
+                            <!-- Métrica 4 -->
+                            <div class="cartao" style="cursor: pointer; transition: all 0.3s;"
+                                onclick="selecionarMetrica(this, 'margem')"  style=" border-left: 4px solid var(--primaria);"> 
+                                <div style="display: flex; justify-content: space-between; align-items: start;">
+                                    <div>
+                                        <h3 class="h3" style="margin: 0 0 8px;">Margem Líquida</h3>
+                                        <p class="p" style="margin: 0; font-size: 14px; color: var(--suave);">Lucro /
+                                            Faturamento</p>
+                                    </div>
+                                    <input type="checkbox" id="check-margem" class="metrica-checkbox"
+                                        style="width: 20px; height: 20px; cursor: pointer;" />
+                                </div>
+                                <div style="margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--borda);">
+                                    <span style="font-weight: 600; color: var(--aviso);">34.8%</span>
+                                    <!-- <span style="font-size: 12px; color: var(--sucesso); margin-left: 8px;">↑ 2.1%</span> -->
+                                </div>
+                            </div>
+
+                        </div>
+                    </section>
+
+                    <!-- GRÁFICO DINÂMICO -->
+                    <section class="cartao" aria-labelledby="titulo-analise" style="margin-top: 24px;">
+                        <div
+                            style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+                            <div>
+                                <h2 class="h2" id="titulo-analise">Gráfico Comparativo</h2>
+                                <p class="p" style="margin: 4px 0 0; font-size: 14px;">Evolução das métricas
+                                    selecionadas ao longo do tempo</p>
+                            </div>
+                        </div>
+
+                        <div id="grafico-metricas"
+                            style="width: 100%; min-height: 400px; border: 1px solid var(--borda); border-radius: var(--raio); padding: 16px; background: rgba(229, 231, 235, 0.1);">
+                        </div>
+                    </section>
+
+                    <!-- EXPLICAÇÃO DA MÉTRICA -->
+                    <section class="cartao" aria-label="Explicação das métricas" style="margin-top: 24px;">
+                        <h2 class="h2" style="margin-bottom: 16px;">O que significa cada métrica?</h2>
+
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+
+                            <!-- Faturamento -->
+                            <div
+                                style="padding: 16px; border-left: 4px solid var(--primaria); background: rgba(59, 130, 246, 0.05);">
+                                <h3 class="h3" style="margin-top: 0; color: var(--primaria);">Faturamento</h3>
+                                <p class="p">A receita bruta total gerada pelas vendas ou serviços, antes de descontos
+                                    fiscais e despesas. É o primeiro indicador de volume de negócios.</p>
+                            </div>
+
+                            <!-- Despesas -->
+                            <div
+                                style="padding: 16px; border-left: 4px solid var(--perigo); background: rgba(220, 38, 38, 0.05);">
+                                <h3 class="h3" style="margin-top: 0; color: var(--perigo);">Despesas</h3>
+                                <p class="p">Todos os custos operacionais necessários para manter o negócio funcionando
+                                    (salários, fornecedores, aluguel, etc.). Reduzir despesas melhora a rentabilidade.
+                                </p>
+                            </div>
+
+                            <!-- Lucro -->
+                            <div
+                                style="padding: 16px; border-left: 4px solid var(--sucesso); background: rgba(22, 163, 74, 0.05);">
+                                <h3 class="h3" style="margin-top: 0; color: var(--sucesso);">Lucro</h3>
+                                <p class="p">O resultado positivo após subtrair todas as despesas do faturamento. É o
+                                    objetivo final e indica se o negócio é rentável.</p>
+                            </div>
+
+                            <!-- Margem Líquida -->
+                            <div
+                                style="padding: 16px; border-left: 4px solid var(--aviso); background: rgba(217, 119, 6, 0.05);">
+                                <h3 class="h3" style="margin-top: 0; color: var(--aviso);">Margem Líquida</h3>
+                                <p class="p">Percentual do faturamento que se converte em lucro. Quanto maior, melhor a
+                                    eficiência. Serve para comparar rentabilidade entre períodos.</p>
+                            </div>
+
+                        </div>
+                    </section>
+
+                    <!-- COMPARAÇÃO ENTRE PERÍODOS -->
+                    <section class="cartao" aria-label="Comparação entre períodos" style="margin-top: 24px;">
+                        <h2 class="h2" style="margin-bottom: 16px;">Comparação entre Períodos</h2>
+
+                        <div style="overflow-x: auto;">
+                            <table style="width: 100%; border-collapse: collapse;">
+                                <thead>
+                                    <tr style="background: rgba(229, 231, 235, 0.3);">
+                                        <th
+                                            style="padding: 12px; text-align: left; font-weight: 600; border: 1px solid var(--borda); color: var(--suave);">
+                                            Métrica</th>
+                                        <th
+                                            style="padding: 12px; text-align: center; font-weight: 600; border: 1px solid var(--borda); color: var(--suave);">
+                                            Período Atual</th>
+                                        <th
+                                            style="padding: 12px; text-align: center; font-weight: 600; border: 1px solid var(--borda); color: var(--suave);">
+                                            Período Anterior</th>
+                                        <th
+                                            style="padding: 12px; text-align: center; font-weight: 600; border: 1px solid var(--borda); color: var(--suave);">
+                                            Variação</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td style="padding: 12px; border: 1px solid var(--borda); font-weight: 600;">
+                                            Faturamento</td>
+                                        <td style="padding: 12px; border: 1px solid var(--borda); text-align: center;">
+                                            R$ 245.680</td>
+                                        <td style="padding: 12px; border: 1px solid var(--borda); text-align: center;">
+                                            R$ 218.300</td>
+                                        <td
+                                            style="padding: 12px; border: 1px solid var(--borda); text-align: center; color: var(--sucesso); font-weight: 600;">
+                                            ↑ 12.5%</td>
+                                    </tr>
+                                    <tr style="background: rgba(229, 231, 235, 0.1);">
+                                        <td style="padding: 12px; border: 1px solid var(--borda); font-weight: 600;">
+                                            Despesas</td>
+                                        <td style="padding: 12px; border: 1px solid var(--borda); text-align: center;">
+                                            R$ 160.250</td>
+                                        <td style="padding: 12px; border: 1px solid var(--borda); text-align: center;">
+                                            R$ 148.000</td>
+                                        <td
+                                            style="padding: 12px; border: 1px solid var(--borda); text-align: center; color: var(--perigo); font-weight: 600;">
+                                            ↑ 8.3%</td>
+                                    </tr>
+                                    <tr>
+                                        <td style="padding: 12px; border: 1px solid var(--borda); font-weight: 600;">
+                                            Lucro</td>
+                                        <td style="padding: 12px; border: 1px solid var(--borda); text-align: center;">
+                                            R$ 85.430</td>
+                                        <td style="padding: 12px; border: 1px solid var(--borda); text-align: center;">
+                                            R$ 70.300</td>
+                                        <td
+                                            style="padding: 12px; border: 1px solid var(--borda); text-align: center; color: var(--sucesso); font-weight: 600;">
+                                            ↑ 15.2%</td>
+                                    </tr>
+                                    <tr style="background: rgba(229, 231, 235, 0.1);">
+                                        <td style="padding: 12px; border: 1px solid var(--borda); font-weight: 600;">
+                                            Margem Líquida</td>
+                                        <td style="padding: 12px; border: 1px solid var(--borda); text-align: center;">
+                                            34.8%</td>
+                                        <td style="padding: 12px; border: 1px solid var(--borda); text-align: center;">
+                                            32.2%</td>
+                                        <td
+                                            style="padding: 12px; border: 1px solid var(--borda); text-align: center; color: var(--sucesso); font-weight: 600;">
+                                            ↑ 2.6 pp</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <div
+                            style="margin-top: 16px; padding: 12px; background: rgba(59, 130, 246, 0.1); border-left: 4px solid var(--primaria); border-radius: var(--raio);">
+                            <p class="p" style="margin: 0;"><strong>Insights:</strong> O faturamento cresceu 12.5%
+                                comparado ao período anterior, enquanto despesas subiram apenas 8.3%, resultando em
+                                aumento de lucro de 15.2% e melhoria da margem em 2.6 pontos percentuais.</p>
+                        </div>
+                    </section>
+
+                </div>
+            </main>
+        </div>
+    </div>
+
+   <footer class="rodape">
+    <div class="container rodape__grid">
+
+      <!-- Marca -->
+      <div class="rodape__col">
+        
+        <h2 class="rodape__logo">DataInsight</h2>
+        <p>
+          Plataforma de análise de dados e métricas para startups e pequenos negócios.
+          Simples, acessível e poderosa.
+        </p>
+        <small>© 2026 DataInsight</small>
+      </div>
+
+      <!-- Links -->
+      <div class="rodape__col">
+        <h3>Links</h3>
+        <ul>
+          <li><a href="{{ url_for('pagina_home') }}">Home</a></li>
+          <li><a href="{{ url_for('pagina_dados') }}">Dados</a></li>
+          <li><a href="{{ url_for('pagina_graficoAvancado') }}">Dashboard</a></li>
+          <li><a href="{{ url_for('pagina_analise') }}">Analises</a></li>
+          <li><a href="{{ url_for('pagina_relatorio') }}">Relatórios</a></li>
+          <li><a href="{{ url_for('pagina_perfil') }}">Perfil</a></li>
+        </ul>
+      </div>
+
+      <!-- Guias -->
+      <div class="rodape__col">
+        <h3>Termos de uso e Privacidade</h3>
+        <ul>
+          <li><a href="#">Termos de uso</a></li>
+          <li><a href="#">Privacidade</a></li>
+        </ul>
+      </div>
+
+      <!-- Suporte -->
+      <div class="rodape__col">
+        <h3>Acessibilidade</h3>
+        <ul>
+          <li><a href="#">Nivel AA. Seguindo a WCAG2</a></li>
+          <li><a href="https://www.w3.org/TR/WCAG21/">WCAG2</a></li>
+        </ul>
+      </div>
+
+    </div>
+  </footer>
+
+    <div class="acessibilidade-flutuante" aria-label="Ferramentas de acessibilidade">
+        <div id="painelAcessibilidade" class="acessibilidade-painel" role="dialog" aria-modal="false"
+            aria-labelledby="tituloAcessibilidade">
+            <h2 id="tituloAcessibilidade" class="acessibilidade-titulo">Acessibilidade</h2>
+
+            <div class="acessibilidade-acoes">
+                <button class="botao botao--suave" type="button" id="botaoAumentar">Aumentar fonte</button>
+                <button class="botao botao--suave" type="button" id="botaoDiminuir">Diminuir fonte</button>
+                <button class="botao botao--suave" type="button" id="botaoLer">Ler página (voz)</button>
+                <button class="botao botao--suave" type="button" id="botaoParar">Parar leitura</button>
+            </div>
+
+            <p class="ajuda" style="margin:10px 0 0;">
+                Dica: use TAB para navegar e Enter/Espaço para ativar botões.
+            </p>
+        </div>
+
+        <button id="alternarAcessibilidade" class="acessibilidade-alternar" type="button" aria-expanded="false" aria-controls="painelAcessibilidade"><img src="{{ url_for('static', filename='img/Logo acessibilidade.png') }}" alt="img-acessibilidade" /></button>
+    </div>
+    </div>
+
+    <div vw class="enabled" id="Vlibras">
+        <div vw-access-button class="active"></div>
+        <div vw-plugin-wrapper>
+            <div class="vw-plugin-top-wrapper"></div>
+        </div>
+    </div>
+
+    <script src="https://vlibras.gov.br/app/vlibras-plugin.js"></script>
+
+    <script>
+        new window.VLibras.Widget('https://vlibras.gov.br/app');
+    </script>
+
+  <script src="{{ url_for('static', filename='acessibilidade/acessibilidade.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/analise.js') }}"></script>
+
+</body>
+</body>
+
+</html>

@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>DataInsight • Início</title>
+  <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/estilo.css') }}" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <!-- <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"> -->
+</head>
+
+<body>
+
+
+  <div class="layout">
+    <aside class="sidebar" aria-label="Navegação principal">
+           <div class="sidebar__header">
+                <a class="marca" href="{{ url_for('pagina_landing') }}" aria-label="DataInsight - Início">
+                    <span class="marca__simbolo" aria-hidden="true">
+                        <i class="fa-solid fa-chart-column"></i>
+                    </span>
+                    DataInsight
+                </a>
+            </div>
+
+      <nav>
+        <a href="{{ url_for('pagina_home') }}" aria-current="page"><i class="fa-solid fa-house"></i> Início</a>
+        <a href="{{ url_for('pagina_dados') }}"><i class="fa-solid fa-table-list"></i> Dados</a>
+        <a href="{{ url_for('pagina_graficoAvancado') }}"><i class="fa-solid fa-layer-group"></i> Dashboard</a>
+        <a href="{{ url_for('pagina_analise') }}"><i class="fa-solid fa-chart-line"></i> Análises</a>
+        <a href="{{ url_for('pagina_relatorio') }}"><i class="fa-solid fa-file-pdf"></i> Relatórios</a>
+        <a href="{{ url_for('pagina_perfil') }}"><i class="fa-solid fa-user"></i> Perfil</a>
+        <hr style="margin: 16px 0; border: none; height: 1px; background-color: var(--borda);">
+        <a href="{{ url_for('logout') }}" style="color: var(--perigo);"><i class="fa-solid fa-sign-out-alt"></i> Sair</a>
+      </nav>
+
+    </aside>
+    <script src ="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light d-lg-none">
+      <div class="container-fluid">
+    <a class="navbar-brand" href="home.html">
+      <i class="fa-solid fa-chart-column"></i> DataInsight
+    </a>
+
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#menuMobile">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+   <div class="collapse navbar-collapse" id="menuMobile">
+      <ul class="navbar-nav">
+        <li class="nav-item"><a class="nav-link" href="{{ url_for('pagina_home') }}">Início</a></li>
+        <li class="nav-item"><a class="nav-link" href="{{ url_for('pagina_dados') }}">Dados</a></li>
+        <li class="nav-item"><a class="nav-link" href="{{ url_for('pagina_graficoAvancado') }}">Galeria</a></li>
+        <li class="nav-item"><a class="nav-link" href="{{ url_for('pagina_analise') }}" >Análises</a></li>
+        <li class="nav-item"><a class="nav-link" href="{{ url_for('pagina_relatorio') }}">Relatórios</a></li>
+        <li class="nav-item"><a class="nav-link" href="{{ url_for('pagina_perfil') }}">Perfil</a></li>
+        <li class="nav-item"><a class="nav-link" href="{{ url_for('logout') }}">Sair</a></li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="main">
+      <header class="topbar">
+        <div class="topbar__actions">
+          <span style="color: var(--muted); margin-right: auto;">Olá, <strong>{{ session.usuario_nome }}</strong></span>
+          <button class="botao botao--suave" type="button" onclick="alternarTema()" aria-label="Alternar tema">
+            <i class="fa-solid fa-moon"></i>
+          </button>
+          <a class="botao botao--suave" href="{{ url_for('pagina_configuracoes') }}" aria-label="Abrir configurações">
+            <i class="fa-solid fa-gear"></i>
+          </a>
+        </div>
+      </header>
+
+      <main id="conteudo" class="pagina" role="main">
+        <div class="container">
+          <header class="pagina__cabecalho">
+            <div class="migalhas" aria-label="Você está em">Início</div>
+            <h1 class="h1">Visão rápida do negócio</h1>
+            <p class="p">indicador de desempenho e oportunidades identificadas.</p>
+          </header>
+
+          <!-- Filtro por período -->
+          <section class="cartao" aria-label="Filtros" style="margin-top: 24px;">
+            <div style="display: flex; gap: 12px; flex-wrap: wrap; align-items: center;">
+              <label for="periodo" style="font-weight: 600;">Período:</label>
+              <select class="entrada" id="periodo" aria-label="Selecionar período">
+                <option>Últimos 7 dias</option>
+                <option>Últimos 30 dias</option>
+                <option>Últimos 90 dias</option>
+                <option>Este ano</option>
+              </select>
+            </div>
+          </section>
+
+          <!-- KIndicador de desempenho -->
+          <section aria-label="Indicador de desempenho" style="margin-top: 32px;">
+            <h2 class="h2">Indicador de desempenho</h2>
+            <div class="grade grade--4" style="margin-top: 16px;">
+
+              <article class="cartao" style=" border-left: 4px solid var(--primaria);">
+                <div class="cartao__meta">Faturamento</div>
+                <div style="margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--borda);">
+                  <p class="cartao__valor" style="color: var(--sucesso);">R$ 245.680,00</p>
+                </div>
+                <!-- <div class="cartao__descricao">↑ 12% vs período anterior</div> -->
+              </article>
+              <article class="cartao" style=" border-left: 4px solid var(--primaria);">
+                <div class="cartao__meta">Lucro</div>
+                <div style="margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--borda);">
+                  <p class="cartao__valor" style="color: var(--sucesso);">R$ 85.430,00</p>
+                  <!-- <div class="cartao__descricao">↑ 8% vs período anterior</div> -->
+                </div>
+              </article>
+              <article class="cartao" style=" border-left: 4px solid var(--primaria);">
+                <div class="cartao__meta">Despesas</div>
+                <div style="margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--borda);">
+                  <p class="cartao__valor" style="color: var(--perigo);">R$ 160.250,00</p>
+                  <!-- <div class="cartao__descricao">↓ 3% vs período anterior</div> -->
+                </div>
+              </article>
+              <article class="cartao" style=" border-left: 4px solid var(--primaria);">
+                <div class="cartao__meta">Crescimento</div>
+                <div style="margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--borda);">
+                  <p class="cartao__valor" style="color: var(--primaria);">+18,5%</p>
+                  <!-- <div class="cartao__descricao">Acumulado no período</div> -->
+                </div>
+              </article>
+            </div>
+          </section>
+
+
+          <!-- <section style="margin-top: 32px;">
+            <h2 class="h2">Alertas e Destaques</h2>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 16px;">
+              <article class="cartao" style="border-left: 4px solid var(--perigo);">
+                <div style="font-weight: 600; color: var(--perigo);">🔴 Atenção</div>
+                <p class="p" style="margin-top: 8px;">Despesas com fornecedores acima do esperado (+15%)</p>
+              </article>
+              <article class="cartao" style="border-left: 4px solid var(--sucesso);">
+                <div style="font-weight: 600; color: var(--sucesso);">🟢 Oportunidade</div>
+                <p class="p" style="margin-top: 8px;">Aumento de 25% em vendas no segmento Premium</p>
+              </article>
+            </div>
+          </section> -->
+
+          <!-- Gráficos Principais -->
+          <section style="margin-top: 32px;">
+            <h2 class="h2" style="margin-bottom: 16px;">Gráficos Principais</h2>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px;">
+              <!-- Gráfico de Linha - Evolução -->
+              <article class="cartao">
+                <h3 class="h2" style="font-size: 18px; margin-bottom: 16px;">Evolução do Faturamento</h3>
+                <div id="graficoLinhaFaturamento"></div>
+              </article>
+
+              <!-- Gráfico de Barras - Comparativo -->
+              <article class="cartao">
+                <h3 class="h2" style="font-size: 18px; margin-bottom: 16px;">Comparativo Mensal</h3>
+                <div id="graficoBarrasComparativo"></div>
+              </article>
+            </div>
+          </section>
+
+          <!-- Insights da IA -->
+          <section class="cartao"
+            style="margin-top: 32px; background: linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(59, 130, 246, 0.05)); border-left: 4px solid var(--primaria);">
+            <h2 class="h2">Insights da IA</h2>
+            <div style="margin-top: 16px;">
+              <div style="background: var(--cartao); padding: 12px; border-radius: var(--raio); margin-bottom: 12px;">
+                <p class="p"><strong>📌 Tendência positiva:</strong> O faturamento cresceu consistentemente nos últimos
+                  3 meses. Especialmente o segmento de serviços premium apresenta grande potencial.</p>
+              </div>
+              <div style="background: var(--cartao); padding: 12px; border-radius: var(--raio); margin-bottom: 12px;">
+                <p class="p"><strong>⚡ Recomendação:</strong> Reduza despesas com fornecedores secundários e realoque
+                  recursos para o segmento Premium que está gerando 35% mais ROI.</p>
+              </div>
+              <div style="background: var(--cartao); padding: 12px; border-radius: var(--raio);">
+                <p class="p"><strong>🎯 Previsão:</strong> Com a tendência atual, o lucro deve aumentar 22% no próximo
+                  período se mantiver os investimentos atuais.</p>
+              </div>
+            </div>
+          </section>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <footer class="rodape">
+    <div class="container rodape__grid">
+
+      <!-- Marca -->
+      <div class="rodape__col">
+        
+        <h2 class="rodape__logo">DataInsight</h2>
+        <p>
+          Plataforma de análise de dados e métricas para startups e pequenos negócios.
+          Simples, acessível e poderosa.
+        </p>
+        <small>© 2026 DataInsight</small>
+      </div>
+
+      <!-- Links -->
+      <div class="rodape__col">
+        <h3>Links</h3>
+        <ul>
+          <li><a href="{{ url_for('pagina_home') }}">Home</a></li>
+          <li><a href="{{ url_for('pagina_dados') }}">Dados</a></li>
+          <li><a href="{{ url_for('pagina_graficoAvancado') }}">Dashboard</a></li>
+          <li><a href="{{ url_for('pagina_analise') }}">Analises</a></li>
+          <li><a href="{{ url_for('pagina_relatorio') }}">Relatórios</a></li>
+          <li><a href="{{ url_for('pagina_perfil') }}">Perfil</a></li>
+        </ul>
+      </div>
+
+      <!-- Guias -->
+      <div class="rodape__col">
+        <h3>Termos de uso e Privacidade</h3>
+        <ul>
+          <li><a href="#">Termos de uso</a></li>
+          <li><a href="#">Privacidade</a></li>
+        </ul>
+      </div>
+
+      <!-- Suporte -->
+      <div class="rodape__col">
+        <h3>Acessibilidade</h3>
+        <ul>
+          <li><a href="#">Nivel AA. Seguindo a WCAG2</a></li>
+          <li><a href="https://www.w3.org/TR/WCAG21/">WCAG2</a></li>
+        </ul>
+      </div>
+
+    </div>
+  </footer>
+
+  <div class="acessibilidade-flutuante" aria-label="Ferramentas de acessibilidade">
+    <div id="painelAcessibilidade" class="acessibilidade-painel" role="dialog" aria-modal="false"
+      aria-labelledby="tituloAcessibilidade">
+      <h2 id="tituloAcessibilidade" class="acessibilidade-titulo">Acessibilidade</h2>
+
+      <div class="acessibilidade-acoes">
+        <button class="botao botao--suave" type="button" id="botaoAumentar">Aumentar fonte</button>
+        <button class="botao botao--suave" type="button" id="botaoDiminuir">Diminuir fonte</button>
+        <button class="botao botao--suave" type="button" id="botaoLer">Ler página (voz)</button>
+        <button class="botao botao--suave" type="button" id="botaoParar">Parar leitura</button>
+      </div>
+
+      <p class="ajuda" style="margin:10px 0 0;">
+        Dica: use TAB para navegar e Enter/Espaço para ativar botões.
+      </p>
+    </div>
+
+    <button id="alternarAcessibilidade" class="acessibilidade-alternar" type="button" aria-expanded="false"
+      aria-controls="painelAcessibilidade">
+      <img src="static/img/Logo acessibilidade.png" alt="img-acessibilidade">
+    </button>
+  </div>
+
+  <div vw class="enabled" id="Vlibras">
+    <div vw-access-button class="active"></div>
+    <div vw-plugin-wrapper>
+      <div class="vw-plugin-top-wrapper"></div>
+    </div>
+  </div>
+
+  <script src="https://vlibras.gov.br/app/vlibras-plugin.js"></script>
+
+  <script>
+    new window.VLibras.Widget('https://vlibras.gov.br/app');
+  </script>
+
+  <script src="{{ url_for('static', filename='acessibilidade/acessibilidade.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/home.js') }}"></script>
+
+</body>
+
+</html>
