@@ -21,20 +21,6 @@ const raiz = document.documentElement
 const escalaSalva = localStorage.getItem("escalaFonte")
 if (escalaSalva) raiz.style.setProperty("--escala-fonte", escalaSalva)
 
-// Modo alto contraste (salva preferências)
-const contrasteSalvo = localStorage.getItem("modoContraste")
-if (contrasteSalvo === "alto") raiz.classList.add("alto-contraste")
-
-const setContraste = (ativo) => {
-  if (ativo) {
-    raiz.classList.add("alto-contraste")
-    localStorage.setItem("modoContraste", "alto")
-  } else {
-    raiz.classList.remove("alto-contraste")
-    localStorage.setItem("modoContraste", "padrao")
-  }
-}
-
 const aumentarFonte = () => {
   let escala = parseFloat(getComputedStyle(raiz).getPropertyValue("--escala-fonte")) || 1;
   escala = Math.min(1.35, +(escala + 0.05).toFixed(2))
@@ -53,13 +39,6 @@ document.getElementById("botaoAumentar").addEventListener("click", aumentarFonte
 
 document.getElementById("botaoDiminuir").addEventListener("click", diminuirFonte)
 
-const botaoContraste = document.getElementById("botaoContraste")
-if (botaoContraste) {
-  botaoContraste.addEventListener("click", () => {
-    const alto = raiz.classList.toggle("alto-contraste")
-    setContraste(alto)
-  })
-}
 
 // ============================
 // Função de leitura por voz

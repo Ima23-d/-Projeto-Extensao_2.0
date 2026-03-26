@@ -214,6 +214,9 @@ body {
   display: flex;
   color: white;
 }
+.navbar-toggler-icon {
+  background-image: var(--bs-navbar-toggler-icon-bg);
+}
 
 .navegacao {
   display: flex;
@@ -459,7 +462,6 @@ body {
 .linha a {
   color: var(--primaria);
 }
-
 /* ============================
    DARK MODE - index
    ============================ */
@@ -694,9 +696,6 @@ body {
   border: none;
   font-size: 22px;
   cursor: pointer;
-  justify-content: center;
-  align-items: center;
-  display: flex;
 }
 
 .acessibilidade-painel {
@@ -1603,3 +1602,76 @@ table td {
   color: #f0f0f0;
   border-color: #2a2a2a;
 }
+/* =======================
+   RESPONSIVIDADE FINAL
+   ======================= */
+
+/* 📱 Mobile + Tablet (até 1024px) */
+@media (max-width: 1024px) {
+
+  .container {
+    width: 100%;
+    padding: 0 16px;
+  }
+
+  /* REMOVE sidebar */
+  .layout {
+    grid-template-columns: 1fr;
+  }
+
+  .sidebar {
+    display: none;
+  }
+
+  /* MOSTRA navbar/topbar normal */
+  .topbar {
+    display: flex;
+  }
+
+  /* Grids viram coluna */
+  .grade--2,
+  .grade--3,
+  .grade--4 {
+    grid-template-columns: 1fr;
+  }
+
+  /* KPIs */
+  .kpis-emlinha {
+    flex-direction: column;
+  }
+
+  /* Perfil */
+  .perfil-resumo__top {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .perfil-acoes {
+    width: 100%;
+  }
+
+  .perfil-acoes .botao {
+    width: 100%;
+  }
+
+  /* Form login */
+  .autenticacao__cartao {
+    width: 100%;
+  }
+
+}
+
+
+/* 💻 Notebook/Desktop (acima de 1024px) */
+@media (min-width: 1025px) {
+
+  .layout {
+    grid-template-columns: 280px 1fr;
+  }
+
+  .sidebar {
+    display: flex;
+  }
+
+}
+
