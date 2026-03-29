@@ -1,0 +1,21 @@
+ID_Venda,Data,Cliente,Email,Cidade,Estado,Produto,Categoria,Quantidade,Preco_Unitario,Desconto,Total,Forma_Pagamento,Status_Pagamento,Custo,Lucro
+1,2024-01-05,Arthur Silva,arthur@email.com,Maceió,AL,Notebook Dell,Eletrônicos,1,4500,200,4300,Cartão,Aprovado,3500,800
+2,2024-01-06,Maria Souza,maria@email.com,São Paulo,SP,Mouse Logitech,Eletrônicos,2,150,0,300,Pix,Aprovado,100,200
+3,2024-01-07,João Lima,joao@email.com,Recife,PE,Cadeira Gamer,Móveis,1,1200,100,1100,Boleto,Pendente,800,300
+4,2024-01-08,Ana Costa,ana@email.com,Rio de Janeiro,RJ,Teclado Mecânico,Eletrônicos,1,350,50,300,Cartão,Aprovado,200,100
+5,2024-01-09,Carlos Mendes,carlos@email.com,Belo Horizonte,MG,Monitor 24",Eletrônicos,2,900,100,1700,Pix,Aprovado,1200,500
+6,2024-01-10,Fernanda Alves,fernanda@email.com,Curitiba,PR,Mesa Escritório,Móveis,1,700,0,700,Boleto,Pago,500,200
+7,2024-01-11,Lucas Rocha,lucas@email.com,Salvador,BA,Headset Gamer,Eletrônicos,3,250,50,700,Cartão,Aprovado,400,300
+8,2024-01-12,Juliana Martins,juliana@email.com,Fortaleza,CE,Notebook Lenovo,Eletrônicos,1,4000,300,3700,Pix,Aprovado,3000,700
+9,2024-01-13,Pedro Santos,pedro@email.com,Porto Alegre,RS,Impressora HP,Eletrônicos,1,800,0,800,Boleto,Pendente,600,200
+10,2024-01-14,Camila Ferreira,camila@email.com,Brasília,DF,Cadeira Escritório,Móveis,2,600,100,1100,Cartão,Aprovado,700,400
+11,2024-01-15,Rafael Gomes,rafael@email.com,Recife,PE,Webcam HD,Eletrônicos,1,200,0,200,Pix,Aprovado,120,80
+12,2024-01-16,Bruna Dias,bruna@email.com,Maceió,AL,SSD 1TB,Eletrônicos,1,500,50,450,Cartão,Aprovado,300,150
+13,2024-01-17,Diego Pereira,diego@email.com,São Paulo,SP,Placa de Vídeo,Eletrônicos,1,2500,200,2300,Pix,Aprovado,1800,500
+14,2024-01-18,Patrícia Nunes,patricia@email.com,Salvador,BA,Smartphone Samsung,Eletrônicos,1,2200,100,2100,Cartão,Aprovado,1600,500
+15,2024-01-19,Marcos Oliveira,marcos@email.com,Fortaleza,CE,Fone Bluetooth,Eletrônicos,2,180,20,340,Boleto,Pago,200,140
+16,2024-01-20,Aline Ribeiro,aline@email.com,Belo Horizonte,MG,Notebook HP,Eletrônicos,1,3800,200,3600,Pix,Aprovado,2900,700
+17,2024-01-21,Victor Barros,victor@email.com,Curitiba,PR,Mesa Gamer,Móveis,1,900,50,850,Cartão,Aprovado,600,250
+18,2024-01-22,Gabriela Melo,gabriela@email.com,Porto Alegre,RS,Teclado Simples,Eletrônicos,3,80,0,240,Pix,Aprovado,100,140
+19,2024-01-23,Thiago Cardoso,thiago@email.com,Brasília,DF,Monitor 27",Eletrônicos,1,1300,100,1200,Boleto,Pendente,900,300
+20,2024-01-24,Larissa Teixeira,larissa@email.com,Rio de Janeiro,RJ,Cadeira Gamer,Móveis,1,1500,200,1300,Cartão,Aprovado,1000,300

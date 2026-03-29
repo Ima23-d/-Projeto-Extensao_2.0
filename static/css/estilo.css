@@ -1403,6 +1403,9 @@ input:checked+.slider:before {
   color: var(--texto);
   font-family: var(--fonte);
   font-size: 14px;
+  min-width: 120px;
+  overflow-wrap: break-word;
+  word-break: break-word;
 }
 
 .entrada-linha:focus {
@@ -1413,6 +1416,7 @@ input:checked+.slider:before {
 
 .entrada-coluna {
   flex: 1;
+  min-width: 150px;
 }
 
 .linha-dados:hover {
