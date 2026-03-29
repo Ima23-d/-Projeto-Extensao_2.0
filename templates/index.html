@@ -1,245 +1,606 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>DataInsight • Transforme seus dados em resultados</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet" />
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/estilo.css') }}" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
-  </head>
 
-  <body>
-    <!-- Barra de Topo -->
-    <header class="barra-topo" role="banner">
-      <div class="container barra-topo__interno">
-        <a class="marca" href="#" aria-label="Plataforma - Página inicial">
-          <span class="marca__simbolo" aria-hidden="true"><i class="fa-solid fa-chart-column"></i></span>
-          DataInsight
-        </a>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DataInsight • Transforme seus dados em resultados</title>
+  <link href="../dist/output.css" rel="stylesheet">
+  <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+</head>
 
-        <div class="auth-links">
-          <a href="{{ url_for('pg_login') }}">Entrar</a>
-          <a href="{{ url_for('pg_cadastro') }}" class="botao botao--primario" style="padding: 8px 20px;">Cadastrar</a>
+<body>
+
+  <!-- Lading page -->
+  <div class="min-h-screen bg-white">
+    <header class="bg-white border-b border-gray-100 sticky top-0 z-50">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex justify-between items-center h-16">
+          <div class="flex items-center">
+            <div class="flex items-center gap-2">
+              <div class="w-8 h-8 bg-gradient-to-br from-blue-600 to-blue-400 rounded-lg"></div><span
+                class="text-xl font-semibold text-gray-900">DataInsight</span>
+            </div>
+          </div>
+          <div class="hidden md:flex items-center gap-4">
+            <a href="login.html"
+              class="px-6 py-2 text-gray-700 hover:text-gray-900 transition-colors inline-block">Entrar</a>
+            <a href="cadastro.html"
+              class="px-6 py-2 bg-gradient-to-r from-blue-600 to-blue-500 text-white rounded-lg hover:shadow-lg transition-all inline-block text-center">Cadastrar</a>
+          </div>
+          <button class="md:hidden p-2 text-gray-700"> viewBox="0 0 24 24" fill="none" stroke="currentColor"
+            stroke-width="2" stroke-linecap="round"
+            stroke-linejoin="round" class="lucide lucide-menu">
+            <line x1="4" x2="20" y1="12" y2="12"></line>
+            <line x1="4" x2="20" y1="6" y2="6"></line>
+            <line x1="4" x2="20" y1="18" y2="18"></line>
+            </svg>
+          </button>
         </div>
       </div>
     </header>
+    <section class="bg-white pt-4 pb-20 px-4 sm:px-6 lg:px-8">
+      <div class="max-w-7xl mx-auto">
+        <div class="grid lg:grid-cols-2 gap-12 items-center">
+          <div class="text-center lg:text-left" data-aos="fade-up" data-aos-duration="1200">
+            <h1 class="text-4xl sm:text-5xl lg:text-6xl font-bold text-gray-900 leading-tight mb-6">Transforme sua
+              gestão digital em <span
+                class="bg-gradient-to-r from-blue-600 to-blue-400 bg-clip-text text-transparent">resultados</span></h1>
+            <p class="text-lg sm:text-xl text-gray-600 mb-8 max-w-2xl mx-auto lg:mx-0">A plataforma completa que
+              simplifica seus processos, aumenta produtividade e impulsiona o crescimento do seu negócio.</p>
+            <div class="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start"><button
+                class="px-8 py-4 bg-gradient-to-r from-blue-600 to-blue-500 text-white rounded-lg hover:shadow-xl transition-all flex items-center justify-center gap-2 group">Começar
+                agora<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                  stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                  class="lucide lucide-arrow-right group-hover:translate-x-1 transition-transform">
+                  <path d="M5 12h14"></path>
+                  <path d="m12 5 7 7-7 7"></path>
+                </svg></button><button
+                class="px-8 py-4 border-2 border-gray-300 text-gray-700 rounded-lg hover:border-gray-400 transition-all">Ver
+                demonstração</button></div>
+          </div>
 
-    <main id="conteudo">
-      <!-- Hero Section -->
-      <section class="pagina">
-        <div class="container">
-          <div class="hero">
-            <div class="hero__content">
-              <h1 class="hero__title">Transforme seus <span>dados</span> em resultados</h1>
-              <p class="hero__description">A plataforma completa que simplifica seus processos, aumenta produtividade e impulsiona o crescimento do seu negócio.</p>
-              <div class="hero__buttons">
-                <a href="{{ url_for('pg_cadastro') }}" class="botao botao--primario">Começar agora</a>
+          <div class="relative" data-aos="fade-left" data-aos-duration="1200" data-aos-delay="200">
+            <div
+              class="relative rounded-2xl overflow-hidden shadow-2xl bg-gradient-to-br from-gray-50 to-gray-100 border border-gray-200">
+              <div class="bg-gray-200 px-4 py-3 flex items-center gap-2 border-b border-gray-300">
+                <div class="flex gap-2">
+                  <div class="w-3 h-3 rounded-full bg-red-500"></div>
+                  <div class="w-3 h-3 rounded-full bg-yellow-500"></div>
+                  <div class="w-3 h-3 rounded-full bg-green-500"></div>
+                </div>
+                <div class="flex-1 ml-4">
+                  <div class="bg-white rounded px-3 py-1 text-xs text-gray-500">plataforma.com.br/dashboard</div>
+                </div>
               </div>
-            </div>
-            <div class="relative aos-init aos-animate" data-aos="fade-left" data-aos-duration="1200" data-aos-delay="200">
-              <div class="relative rounded-2xl overflow-hidden shadow-xl bg-gradient-to-br from-gray-50 to-gray-100 border border-gray-200">
-                <div class="bg-gray-200 px-3 py-2 flex items-center gap-2 border-b border-gray-300">
-                  <div class="flex gap-1.5">
-                    <div class="w-2.5 h-2.5 rounded-full bg-red-500"></div>
-                    <div class="w-2.5 h-2.5 rounded-full bg-yellow-500"></div>
-                    <div class="w-2.5 h-2.5 rounded-full bg-green-500"></div>
+              <div class="p-6 bg-white min-h-[400px]">
+                <div class="flex justify-between items-center mb-6">
+                  <div class="h-8 bg-gray-200 rounded w-48"></div>
+                  <div class="h-8 bg-gradient-to-r from-blue-600 to-blue-400 rounded w-32"></div>
+                </div>
+                <div class="grid grid-cols-3 gap-4 mb-6">
+                  <div class="bg-gray-50 rounded-lg p-4 border border-gray-200">
+                    <div class="h-4 bg-gray-200 rounded w-16 mb-3"></div>
+                    <div class="h-8 bg-gradient-to-r from-blue-600 to-blue-400 rounded w-20"></div>
                   </div>
-                  <div class="flex-1 ml-3">
-                    <div class="bg-white rounded px-2 py-0.5 text-xs text-gray-500">DataInsight.com.br/dashboard</div>
+                  <div class="bg-gray-50 rounded-lg p-4 border border-gray-200">
+                    <div class="h-4 bg-gray-200 rounded w-16 mb-3"></div>
+                    <div class="h-8 bg-gradient-to-r from-blue-600 to-blue-400 rounded w-20"></div>
+                  </div>
+                  <div class="bg-gray-50 rounded-lg p-4 border border-gray-200">
+                    <div class="h-4 bg-gray-200 rounded w-16 mb-3"></div>
+                    <div class="h-8 bg-gradient-to-r from-blue-600 to-blue-400 rounded w-20"></div>
                   </div>
                 </div>
-                <div class="p-4 bg-white">
-                  <div class="flex justify-between items-center mb-4">
-                    <div class="h-6 bg-gray-200 rounded w-32"></div>
-                    <div class="h-6 bg-gradient-to-r from-blue-600 to-blue-400 rounded w-24"></div>
+                <div class="bg-gray-50 rounded-lg p-6 border border-gray-200 mb-6">
+                  <div class="h-4 bg-gray-200 rounded w-32 mb-4"></div>
+                  <div class="h-40 flex items-end gap-2">
+                    <div class="flex-1 bg-gradient-to-t from-blue-600 to-blue-400 rounded-t" style="height: 60%;"></div>
+                    <div class="flex-1 bg-gradient-to-t from-blue-600 to-blue-400 rounded-t" style="height: 80%;"></div>
+                    <div class="flex-1 bg-gradient-to-t from-blue-600 to-blue-400 rounded-t" style="height: 45%;"></div>
+                    <div class="flex-1 bg-gradient-to-t from-blue-600 to-blue-400 rounded-t" style="height: 90%;"></div>
+                    <div class="flex-1 bg-gradient-to-t from-blue-600 to-blue-400 rounded-t" style="height: 70%;"></div>
+                    <div class="flex-1 bg-gradient-to-t from-blue-600 to-blue-400 rounded-t" style="height: 85%;"></div>
+                    <div class="flex-1 bg-gradient-to-t from-blue-600 to-blue-400 rounded-t" style="height: 95%;"></div>
+                    <div class="flex-1 bg-gradient-to-t from-blue-600 to-blue-400 rounded-t" style="height: 75%;"></div>
                   </div>
-                  <div class="grid grid-cols-3 gap-3 mb-4">
-                    <div class="bg-gray-50 rounded-lg p-2 border border-gray-200">
-                      <div class="h-3 bg-gray-200 rounded w-12 mb-2"></div>
-                      <div class="h-6 bg-gradient-to-r from-blue-600 to-blue-400 rounded w-16"></div>
+                </div>
+                <div class="space-y-3">
+                  <div class="flex items-center gap-4 bg-gray-50 rounded-lg p-3 border border-gray-200">
+                    <div class="w-8 h-8 bg-gradient-to-br from-blue-500 to-blue-400 rounded-full"></div>
+                    <div class="flex-1">
+                      <div class="h-3 bg-gray-200 rounded w-3/4 mb-2"></div>
+                      <div class="h-2 bg-gray-200 rounded w-1/2"></div>
                     </div>
-                    <div class="bg-gray-50 rounded-lg p-2 border border-gray-200">
-                      <div class="h-3 bg-gray-200 rounded w-12 mb-2"></div>
-                      <div class="h-6 bg-gradient-to-r from-blue-600 to-blue-400 rounded w-16"></div>
-                    </div>
-                    <div class="bg-gray-50 rounded-lg p-2 border border-gray-200">
-                      <div class="h-3 bg-gray-200 rounded w-12 mb-2"></div>
-                      <div class="h-6 bg-gradient-to-r from-blue-600 to-blue-400 rounded w-16"></div>
-                    </div>
+                    <div class="h-6 bg-gray-200 rounded w-16"></div>
                   </div>
-                  <div class="bg-gray-50 rounded-lg p-3 border border-gray-200 mb-4">
-                    <div class="h-3 bg-gray-200 rounded w-24 mb-3"></div>
-                    <div class="h-24 flex items-end gap-1.5">
-                      <div class="flex-1 bg-gradient-to-t from-blue-600 to-blue-400 rounded-t" style="height: 55%;"></div>
-                      <div class="flex-1 bg-gradient-to-t from-blue-600 to-blue-400 rounded-t" style="height: 75%;"></div>
-                      <div class="flex-1 bg-gradient-to-t from-blue-600 to-blue-400 rounded-t" style="height: 40%;"></div>
-                      <div class="flex-1 bg-gradient-to-t from-blue-600 to-blue-400 rounded-t" style="height: 85%;"></div>
-                      <div class="flex-1 bg-gradient-to-t from-blue-600 to-blue-400 rounded-t" style="height: 65%;"></div>
-                      <div class="flex-1 bg-gradient-to-t from-blue-600 to-blue-400 rounded-t" style="height: 80%;"></div>
-                      <div class="flex-1 bg-gradient-to-t from-blue-600 to-blue-400 rounded-t" style="height: 90%;"></div>
-                      <div class="flex-1 bg-gradient-to-t from-blue-600 to-blue-400 rounded-t" style="height: 70%;"></div>
+                  <div class="flex items-center gap-4 bg-gray-50 rounded-lg p-3 border border-gray-200">
+                    <div class="w-8 h-8 bg-gradient-to-br from-blue-500 to-blue-400 rounded-full"></div>
+                    <div class="flex-1">
+                      <div class="h-3 bg-gray-200 rounded w-3/4 mb-2"></div>
+                      <div class="h-2 bg-gray-200 rounded w-1/2"></div>
+                    </div>
+                    <div class="h-6 bg-gray-200 rounded w-16"></div>
+                  </div>
+                  <div class="flex items-center gap-4 bg-gray-50 rounded-lg p-3 border border-gray-200">
+                    <div class="w-8 h-8 bg-gradient-to-br from-blue-500 to-blue-400 rounded-full"></div>
+                    <div class="flex-1">
+                      <div class="h-3 bg-gray-200 rounded w-3/4 mb-2"></div>
+                      <div class="h-2 bg-gray-200 rounded w-1/2"></div>
+                    </div>
+                    <div class="h-6 bg-gray-200 rounded w-16"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="absolute -top-4 -right-4 w-24 h-24 bg-blue-200 rounded-full blur-3xl opacity-50"></div>
+            <div class="absolute -bottom-4 -left-4 w-32 h-32 bg-blue-300 rounded-full blur-3xl opacity-50"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <section class="bg-gray-50 py-20 px-4 sm:px-6 lg:px-8">
+      <div class="max-w-7xl mx-auto">
+        <div class="text-center mb-16" data-aos="fade-up">
+          <h2 class="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">Conheça nossos recursos</h2>
+          <p class="text-lg text-gray-600 max-w-2xl mx-auto">Tudo que você precisa para levar sua gestão ao próximo
+            nível, em uma única plataforma.</p>
+        </div>
+        <div class="grid md:grid-cols-2 gap-8">
+          <div class="bg-white rounded-2xl p-8 hover:shadow-xl transition-shadow border border-gray-100"
+            data-aos="fade-up" data-aos-delay="100">
+            <div
+              class="bg-gradient-to-br from-gray-50 to-gray-100 rounded-xl mb-6 h-48 flex items-center justify-center border border-gray-200 overflow-hidden relative">
+              <div class="absolute inset-0 p-6">
+                <div class="bg-white rounded-lg shadow-md h-full p-4">
+                  <div class="flex items-center gap-3 mb-4">
+                    <div
+                      class="w-10 h-10 rounded-lg bg-gradient-to-br from-blue-600 to-blue-400 flex items-center justify-center">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                        class="lucide lucide-chart-column text-white">
+                        <path d="M3 3v16a2 2 0 0 0 2 2h16"></path>
+                        <path d="M18 17V9"></path>
+                        <path d="M13 17V5"></path>
+                        <path d="M8 17v-3"></path>
+                      </svg>
+                    </div>
+                    <div class="flex-1">
+                      <div class="h-2 bg-gray-200 rounded w-24 mb-2"></div>
+                      <div class="h-2 bg-gray-200 rounded w-16"></div>
                     </div>
                   </div>
                   <div class="space-y-2">
-                    <div class="flex items-center gap-3 bg-gray-50 rounded-lg p-2 border border-gray-200">
-                      <div class="w-6 h-6 bg-gradient-to-br from-blue-500 to-blue-400 rounded-full"></div>
-                      <div class="flex-1">
-                        <div class="h-2.5 bg-gray-200 rounded w-3/4 mb-1.5"></div>
-                        <div class="h-2 bg-gray-200 rounded w-1/2"></div>
-                      </div>
-                      <div class="h-5 bg-gray-200 rounded w-12"></div>
-                    </div>
-                    <div class="flex items-center gap-3 bg-gray-50 rounded-lg p-2 border border-gray-200">
-                      <div class="w-6 h-6 bg-gradient-to-br from-blue-500 to-blue-400 rounded-full"></div>
-                      <div class="flex-1">
-                        <div class="h-2.5 bg-gray-200 rounded w-3/4 mb-1.5"></div>
-                        <div class="h-2 bg-gray-200 rounded w-1/2"></div>
-                      </div>
-                      <div class="h-5 bg-gray-200 rounded w-12"></div>
-                    </div>
-                    <div class="flex items-center gap-3 bg-gray-50 rounded-lg p-2 border border-gray-200">
-                      <div class="w-6 h-6 bg-gradient-to-br from-blue-500 to-blue-400 rounded-full"></div>
-                      <div class="flex-1">
-                        <div class="h-2.5 bg-gray-200 rounded w-3/4 mb-1.5"></div>
-                        <div class="h-2 bg-gray-200 rounded w-1/2"></div>
-                      </div>
-                      <div class="h-5 bg-gray-200 rounded w-12"></div>
-                    </div>
+                    <div class="h-2 bg-gray-100 rounded"></div>
+                    <div class="h-2 bg-gray-100 rounded w-5/6"></div>
+                    <div class="h-2 bg-gray-100 rounded w-4/6"></div>
+                  </div>
+                  <div class="mt-4 flex gap-2">
+                    <div class="h-16 flex-1 bg-gradient-to-t from-blue-500 to-transparent rounded-t opacity-30"></div>
+                    <div class="h-20 flex-1 bg-gradient-to-t from-blue-600 to-transparent rounded-t opacity-30"></div>
+                    <div class="h-12 flex-1 bg-gradient-to-t from-blue-400 to-transparent rounded-t opacity-30"></div>
                   </div>
                 </div>
               </div>
-              <div class="absolute -top-3 -right-3 w-16 h-16 bg-blue-200 rounded-full blur-2xl opacity-50"></div>
-              <div class="absolute -bottom-3 -left-3 w-20 h-20 bg-blue-300 rounded-full blur-2xl opacity-50"></div>
             </div>
-          </div> <!-- FECHA hero -->
-        </div> <!-- FECHA container -->
-      </section>
-
-      <section class="features">
-        <div class="container">
-          <div class="section-header">
-            <h2 class="h2">Conheça nossos recursos</h2>
-            <p class="p">Tudo que você precisa para levar sua gestão ao próximo nível, em uma única plataforma.</p>
-          </div>
-
-          <div class="grade grade--2">
-            <div class="cartao">
-              <div class="feature-icon">
-                <i class="fas fa-chart-line"></i>
+            <div class="flex items-start gap-4">
+              <div
+                class="w-12 h-12 rounded-lg bg-gradient-to-br from-blue-600 to-blue-400 flex items-center justify-center flex-shrink-0">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                  stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                  class="lucide lucide-chart-column text-white">
+                  <path d="M3 3v16a2 2 0 0 0 2 2h16"></path>
+                  <path d="M18 17V9"></path>
+                  <path d="M13 17V5"></path>
+                  <path d="M8 17v-3"></path>
+                </svg>
               </div>
-              <div class="cartao__meta">Análise em Tempo Real</div>
-              <div class="cartao__descricao">Acompanhe métricas e KPIs essenciais do seu negócio com dashboards intuitivos e relatórios automatizados.</div>
-            </div>
-
-            <div class="cartao">
-              <div class="feature-icon">
-                <i class="fas fa-shield-alt"></i>
+              <div>
+                <h3 class="text-xl font-semibold text-gray-900 mb-2">Análise em Tempo Real</h3>
+                <p class="text-gray-600 leading-relaxed">Acompanhe métricas e KPIs essenciais do seu negócio com
+                  dashboards intuitivos e relatórios automatizados.</p>
               </div>
-              <div class="cartao__meta">Segurança Avançada</div>
-              <div class="cartao__descricao">Seus dados protegidos com criptografia de ponta e conformidade com as principais regulamentações.</div>
             </div>
           </div>
+          <div class="bg-white rounded-2xl p-8 hover:shadow-xl transition-shadow border border-gray-100"
+            data-aos="fade-up" data-aos-delay="400">
+            <div
+              class="bg-gradient-to-br from-gray-50 to-gray-100 rounded-xl mb-6 h-48 flex items-center justify-center border border-gray-200 overflow-hidden relative">
+              <div class="absolute inset-0 p-6">
+                <div class="bg-white rounded-lg shadow-md h-full p-4">
+                  <div class="flex items-center gap-3 mb-4">
+                    <div
+                      class="w-10 h-10 rounded-lg bg-gradient-to-br from-blue-600 to-blue-400 flex items-center justify-center">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                        class="lucide lucide-users text-white">
+                        <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path>
+                        <circle cx="9" cy="7" r="4"></circle>
+                        <path d="M22 21v-2a4 4 0 0 0-3-3.87"></path>
+                        <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                      </svg>
+                    </div>
+                    <div class="flex-1">
+                      <div class="h-2 bg-gray-200 rounded w-24 mb-2"></div>
+                      <div class="h-2 bg-gray-200 rounded w-16"></div>
+                    </div>
+                  </div>
+                  <div class="space-y-2">
+                    <div class="h-2 bg-gray-100 rounded"></div>
+                    <div class="h-2 bg-gray-100 rounded w-5/6"></div>
+                    <div class="h-2 bg-gray-100 rounded w-4/6"></div>
+                  </div>
+                  <div class="mt-4 flex gap-2">
+                    <div class="h-16 flex-1 bg-gradient-to-t from-blue-500 to-transparent rounded-t opacity-30"></div>
+                    <div class="h-20 flex-1 bg-gradient-to-t from-blue-600 to-transparent rounded-t opacity-30"></div>
+                    <div class="h-12 flex-1 bg-gradient-to-t from-blue-400 to-transparent rounded-t opacity-30"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="flex items-start gap-4">
+              <div
+                class="w-12 h-12 rounded-lg bg-gradient-to-br from-blue-600 to-blue-400 flex items-center justify-center flex-shrink-0">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                  stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                  class="lucide lucide-users text-white">
+                  <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path>
+                  <circle cx="9" cy="7" r="4"></circle>
+                  <path d="M22 21v-2a4 4 0 0 0-3-3.87"></path>
+                  <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                </svg>
+              </div>
+              <div>
+                <h3 class="text-xl font-semibold text-gray-900 mb-2">Colaboração em Equipe</h3>
+                <p class="text-gray-600 leading-relaxed">Trabalhe junto com seu time de forma eficiente, compartilhe
+                  projetos e gerencie permissões facilmente.</p>
+              </div>
+            </div>
+          </div>
+          <div class="bg-white rounded-2xl p-8 hover:shadow-xl transition-shadow border border-gray-100"
+            data-aos="fade-up" data-aos-delay="200">
+            <div
+              class="bg-gradient-to-br from-gray-50 to-gray-100 rounded-xl mb-6 h-48 flex items-center justify-center border border-gray-200 overflow-hidden relative">
+              <div class="absolute inset-0 p-6">
+                <div class="bg-white rounded-lg shadow-md h-full p-4">
+                  <div class="flex items-center gap-3 mb-4">
+                    <div
+                      class="w-10 h-10 rounded-lg bg-gradient-to-br from-blue-600 to-blue-400 flex items-center justify-center">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                        class="lucide lucide-zap text-white">
+                        <path
+                          d="M4 14a1 1 0 0 1-.78-1.63l9.9-10.2a.5.5 0 0 1 .86.46l-1.92 6.02A1 1 0 0 0 13 10h7a1 1 0 0 1 .78 1.63l-9.9 10.2a.5.5 0 0 1-.86-.46l1.92-6.02A1 1 0 0 0 11 14z">
+                        </path>
+                      </svg>
+                    </div>
+                    <div class="flex-1">
+                      <div class="h-2 bg-gray-200 rounded w-24 mb-2"></div>
+                      <div class="h-2 bg-gray-200 rounded w-16"></div>
+                    </div>
+                  </div>
+                  <div class="space-y-2">
+                    <div class="h-2 bg-gray-100 rounded"></div>
+                    <div class="h-2 bg-gray-100 rounded w-5/6"></div>
+                    <div class="h-2 bg-gray-100 rounded w-4/6"></div>
+                  </div>
+                  <div class="mt-4 flex gap-2">
+                    <div class="h-16 flex-1 bg-gradient-to-t from-blue-500 to-transparent rounded-t opacity-30"></div>
+                    <div class="h-20 flex-1 bg-gradient-to-t from-blue-600 to-transparent rounded-t opacity-30"></div>
+                    <div class="h-12 flex-1 bg-gradient-to-t from-blue-400 to-transparent rounded-t opacity-30"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="flex items-start gap-4">
+              <div
+                class="w-12 h-12 rounded-lg bg-gradient-to-br from-blue-600 to-blue-400 flex items-center justify-center flex-shrink-0">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                  stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                  class="lucide lucide-zap text-white">
+                  <path
+                    d="M4 14a1 1 0 0 1-.78-1.63l9.9-10.2a.5.5 0 0 1 .86.46l-1.92 6.02A1 1 0 0 0 13 10h7a1 1 0 0 1 .78 1.63l-9.9 10.2a.5.5 0 0 1-.86-.46l1.92-6.02A1 1 0 0 0 11 14z">
+                  </path>
+                </svg>
+              </div>
+              <div>
+                <h3 class="text-xl font-semibold text-gray-900 mb-2">Automação Inteligente</h3>
+                <p class="text-gray-600 leading-relaxed">Automatize tarefas repetitivas e ganhe tempo para focar no que
+                  realmente importa para seu crescimento.</p>
+              </div>
+            </div>
+          </div>
+          <div class="bg-white rounded-2xl p-8 hover:shadow-xl transition-shadow border border-gray-100"
+            data-aos="fade-up" data-aos-delay="300">
+            <div
+              class="bg-gradient-to-br from-gray-50 to-gray-100 rounded-xl mb-6 h-48 flex items-center justify-center border border-gray-200 overflow-hidden relative">
+              <div class="absolute inset-0 p-6">
+                <div class="bg-white rounded-lg shadow-md h-full p-4">
+                  <div class="flex items-center gap-3 mb-4">
+                    <div
+                      class="w-10 h-10 rounded-lg bg-gradient-to-br from-blue-600 to-blue-400 flex items-center justify-center">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                        class="lucide lucide-shield text-white">
+                        <path
+                          d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z">
+                        </path>
+                      </svg>
+                    </div>
+                    <div class="flex-1">
+                      <div class="h-2 bg-gray-200 rounded w-24 mb-2"></div>
+                      <div class="h-2 bg-gray-200 rounded w-16"></div>
+                    </div>
+                  </div>
+                  <div class="space-y-2">
+                    <div class="h-2 bg-gray-100 rounded"></div>
+                    <div class="h-2 bg-gray-100 rounded w-5/6"></div>
+                    <div class="h-2 bg-gray-100 rounded w-4/6"></div>
+                  </div>
+                  <div class="mt-4 flex gap-2">
+                    <div class="h-16 flex-1 bg-gradient-to-t from-blue-500 to-transparent rounded-t opacity-30"></div>
+                    <div class="h-20 flex-1 bg-gradient-to-t from-blue-600 to-transparent rounded-t opacity-30"></div>
+                    <div class="h-12 flex-1 bg-gradient-to-t from-blue-400 to-transparent rounded-t opacity-30"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="flex items-start gap-4">
+              <div
+                class="w-12 h-12 rounded-lg bg-gradient-to-br from-blue-600 to-blue-400 flex items-center justify-center flex-shrink-0">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                  stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                  class="lucide lucide-shield text-white">
+                  <path
+                    d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z">
+                  </path>
+                </svg>
+              </div>
+              <div>
+                <h3 class="text-xl font-semibold text-gray-900 mb-2">Segurança Avançada</h3>
+                <p class="text-gray-600 leading-relaxed">Seus dados protegidos com criptografia de ponta e conformidade
+                  com as principais regulamentações.</p>
+              </div>
+            </div>
+          </div>
         </div>
-      </section>
-    </main>
-
-    <!-- Footer -->
-    <footer class="rodape">
-      <div class="container rodape__grid">
-        
-        <!-- Marca -->
-        <div class="rodape__col">
-          <h2 class="rodape__logo">DataInsight</h2>
-          <p>Plataforma de análise de dados e métricas para startups e pequenos negócios. Simples, acessível e poderosa.</p>
-          <small>© 2026 DataInsight</small>
+      </div>
+    </section>
+    <footer class="bg-gray-900 text-gray-300">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <div class="grid grid-cols-2 md:grid-cols-5 gap-8 mb-12">
+          <div class="col-span-2 md:col-span-1">
+            <div class="flex items-center gap-2 mb-4">
+              <div class="w-8 h-8 bg-gradient-to-br from-blue-600 to-blue-400 rounded-lg"></div><span
+                class="text-xl font-semibold text-white">DataInsight</span>
+            </div>
+            <p class="text-sm text-gray-400 mb-6">Transformando a gestão digital com tecnologia e inovação.</p>
+            <div class="flex gap-3"><a href="#" aria-label="Facebook"
+                class="w-9 h-9 rounded-lg bg-gray-800 flex items-center justify-center hover:bg-gray-700 transition-colors"><svg
+                  xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
+                  stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                  class="lucide lucide-facebook">
+                  <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path>
+                </svg></a><a href="#" aria-label="Twitter"
+                class="w-9 h-9 rounded-lg bg-gray-800 flex items-center justify-center hover:bg-gray-700 transition-colors">
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                  <path
+                    d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.746l7.73-8.835L1.254 2.25H8.08l4.253 5.622 5.911-5.622zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
+                </svg></a>
+              <a href="#" aria-label="LinkedIn"
+                class="w-9 h-9 rounded-lg bg-gray-800 flex items-center justify-center hover:bg-gray-700 transition-colors"><svg
+                  xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
+                  stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                  class="lucide lucide-linkedin">
+                  <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path>
+                  <rect width="4" height="12" x="2" y="9"></rect>
+                  <circle cx="4" cy="4" r="2"></circle>
+                </svg></a><a href="#" aria-label="Instagram"
+                class="w-9 h-9 rounded-lg bg-gray-800 flex items-center justify-center hover:bg-gray-700 transition-colors"><svg
+                  xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
+                  stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                  class="lucide lucide-instagram">
+                  <rect width="20" height="20" x="2" y="2" rx="5" ry="5"></rect>
+                  <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
+                  <line x1="17.5" x2="17.51" y1="6.5" y2="6.5"></line>
+                </svg></a>
+            </div>
+          </div>
+          <div>
+            <h3 class="text-white font-semibold mb-4">Produto</h3>
+            <ul class="space-y-3">
+              <li><a href="#" class="text-sm hover:text-white transition-colors">Funcionalidades</a></li>
+              <li><a href="#" class="text-sm hover:text-white transition-colors">Preços</a></li>
+              <li><a href="#" class="text-sm hover:text-white transition-colors">Segurança</a></li>
+              <li><a href="#" class="text-sm hover:text-white transition-colors">Atualizações</a></li>
+            </ul>
+          </div>
+          <div>
+            <h3 class="text-white font-semibold mb-4">Empresa</h3>
+            <ul class="space-y-3">
+              <li><a href="#" class="text-sm hover:text-white transition-colors">Sobre nós</a></li>
+              <li><a href="#" class="text-sm hover:text-white transition-colors">Blog</a></li>
+              <li><a href="#" class="text-sm hover:text-white transition-colors">Carreiras</a></li>
+              <li><a href="#" class="text-sm hover:text-white transition-colors">Contato</a></li>
+            </ul>
+          </div>
+          <div>
+            <h3 class="text-white font-semibold mb-4">Recursos</h3>
+            <ul class="space-y-3">
+              <li><a href="#" class="text-sm hover:text-white transition-colors">Central de Ajuda</a></li>
+              <li><a href="#" class="text-sm hover:text-white transition-colors">Documentação</a></li>
+              <li><a href="#" class="text-sm hover:text-white transition-colors">Tutoriais</a></li>
+              <li><a href="#" class="text-sm hover:text-white transition-colors">Status</a></li>
+            </ul>
+          </div>
+          <div>
+            <h3 class="text-white font-semibold mb-4">Legal</h3>
+            <ul class="space-y-3">
+              <li><a href="#" class="text-sm hover:text-white transition-colors">Termos de Uso</a></li>
+              <li><a href="#" class="text-sm hover:text-white transition-colors">Política de Privacidade</a></li>
+              <li><a href="#" class="text-sm hover:text-white transition-colors">Cookies</a></li>
+              <li><a href="#" class="text-sm hover:text-white transition-colors">Licenças</a></li>
+            </ul>
+          </div>
         </div>
-
-        <!-- Links -->
-        <div class="rodape__col">
-          <h3>Links</h3>
-          <ul>
-            <li>
-              <a href="{{ url_for('pagina_home') }}">Home</a>
-            </li>
-            <li>
-              <a href="{{ url_for('pagina_dados') }}">Dados</a>
-            </li>
-            <li>
-              <a href="{{ url_for('pagina_graficoAvancado') }}">Dashboard</a>
-            </li>
-            <li>
-              <a href="{{ url_for('pagina_analise') }}">Analises</a>
-            </li>
-            <li>
-              <a href="{{ url_for('pagina_relatorio') }}">Relatórios</a>
-            </li>
-            <li>
-              <a href="{{ url_for('pagina_perfil') }}">Perfil</a>
-            </li>
-          </ul>
-        </div>
-
-        <!-- Guias -->
-        <div class="rodape__col">
-          <h3>Termos de uso e Privacidade</h3>
-          <ul>
-            <li>
-              <a href="#">Termos de uso</a>
-            </li>
-            <li>
-              <a href="#">Privacidade</a>
-            </li>
-          </ul>
-        </div>
-
-        <!-- Suporte -->
-        <div class="rodape__col">
-          <h3>Acessibilidade</h3>
-          <ul>
-            <li>
-              <a href="#">Nivel AA. Seguindo a WCAG2</a>
-            </li>
-            <li>
-              <a href="https://www.w3.org/TR/WCAG21/">WCAG2</a>
-            </li>
-          </ul>
+        <div class="pt-8 border-t border-gray-800">
+          <div class="flex flex-col md:flex-row justify-between items-center gap-4">
+            <p class="text-sm text-gray-400">© 2026 Plataforma. Todos os direitos reservados.</p>
+            <div class="flex gap-6 text-sm"><a href="#" class="hover:text-white transition-colors">Termos de Uso</a><a
+                href="#" class="hover:text-white transition-colors">Privacidade</a><a href="#"
+                class="hover:text-white transition-colors">Cookies</a></div>
+          </div>
         </div>
       </div>
     </footer>
+  </div>
 
-    <!-- Painel flutuante de acessibilidade -->
-    <div class="acessibilidade-flutuante" aria-label="Ferramentas de acessibilidade">
-      <div id="painelAcessibilidade" class="acessibilidade-painel" role="dialog" aria-modal="false" aria-labelledby="tituloAcessibilidade">
-        <h2 id="tituloAcessibilidade" class="acessibilidade-titulo">Acessibilidade</h2>
+  <!-- AOS Animation -->
+  <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+  <script>
+    AOS.init({
+      duration: 800,
+      once: true
+    });
+  </script>
 
-        <div class="acessibilidade-acoes">
-          <button class="botao botao--suave" type="button" id="botaoAumentar">Aumentar fonte</button>
-          <button class="botao botao--suave" type="button" id="botaoDiminuir">Diminuir fonte</button>
-          <button class="botao botao--suave" type="button" id="botaoLer">Ler página (voz)</button>
-          <button class="botao botao--suave" type="button" id="botaoParar">Parar leitura</button>
-        </div>
+  <!-- ═══ PAINEL DE ACESSIBILIDADE ═══ -->
+  <style>
+    .a11y-wrap {
+      position: fixed;
+      bottom: 80px;
+      right: 16px;
+      z-index: 9999;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 8px;
+    }
 
-        <p class="ajuda" style="margin:10px 0 0;">Dica: use TAB para navegar e Enter/Espaço para ativar botões.</p>
-      </div>
+    .a11y-panel {
+      background: #fff;
+      border: 1px solid #e5e7eb;
+      border-radius: 12px;
+      padding: 16px;
+      width: 220px;
+      box-shadow: 0 4px 24px rgba(0, 0, 0, .12);
+      display: none;
+      flex-direction: column;
+      gap: 8px;
+    }
 
-      <button id="alternarAcessibilidade" class="acessibilidade-alternar" type="button" aria-expanded="false" aria-controls="painelAcessibilidade"><img src="static/img/Logo acessibilidade.png" alt="img-acessibilidade" /></button>
+    .a11y-panel.open {
+      display: flex;
+    }
+
+    .a11y-panel h2 {
+      font-size: .85rem;
+      font-weight: 700;
+      color: #111827;
+      margin: 0 0 4px;
+    }
+
+    .a11y-panel button {
+      padding: 7px 10px;
+      border-radius: 8px;
+      border: 1px solid #d1d5db;
+      background: #f9fafb;
+      font-size: .8rem;
+      cursor: pointer;
+      text-align: left;
+      transition: background .2s;
+    }
+
+    .a11y-panel button:hover {
+      background: #eff6ff;
+      border-color: #93c5fd;
+    }
+
+    .a11y-panel .tip {
+      font-size: .7rem;
+      color: #6b7280;
+      margin-top: 4px;
+    }
+
+    .a11y-toggle {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #2563eb, #60a5fa);
+      border: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 2px 12px rgba(37, 99, 235, .4);
+    }
+  </style>
+
+  <div class="a11y-wrap" aria-label="Ferramentas de acessibilidade">
+    <div id="painelAcessibilidade" class="a11y-panel" role="dialog" aria-modal="false"
+      aria-labelledby="tituloAcessibilidade">
+      <h2 id="tituloAcessibilidade">Acessibilidade</h2>
+      <button type="button" id="botaoAumentar">Aumentar fonte</button>
+      <button type="button" id="botaoDiminuir">Diminuir fonte</button>
+      <button type="button" id="botaoLer">Ler página (voz)</button>
+      <button type="button" id="botaoParar">Parar leitura</button>
+      <p class="tip">Dica: use TAB para navegar e Enter/Espaço para ativar.</p>
     </div>
+    <button id="alternarAcessibilidade" class="a11y-toggle" type="button" aria-expanded="false"
+      aria-controls="painelAcessibilidade" aria-label="Abrir ferramentas de acessibilidade">
+      <!-- Ícone de acessibilidade (inline, sem dependência) -->
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round"
+        stroke-linejoin="round">
+        <circle cx="12" cy="4" r="1" />
+        <path d="M12 7v5" />
+        <path d="m8 10 4 2 4-2" />
+        <path d="m9 21 3-4 3 4" />
+        <path d="M9 17H7l-2-5h14l-2 5h-2" />
+      </svg>
+    </button>
+  </div>
 
-    <!-- VLibras -->
-    <div vw class="enabled" id="Vlibras">
-      <div vw-access-button class="active"></div>
-      <div vw-plugin-wrapper>
-        <div class="vw-plugin-top-wrapper"></div>
-      </div>
+  <script>
+    (function () {
+      var painel = document.getElementById('painelAcessibilidade');
+      var toggle = document.getElementById('alternarAcessibilidade');
+
+      toggle.addEventListener('click', function () {
+        var open = painel.classList.toggle('open');
+        toggle.setAttribute('aria-expanded', String(open));
+      });
+
+      document.getElementById('botaoAumentar').addEventListener('click', function () {
+        var cur = parseFloat(getComputedStyle(document.documentElement).fontSize);
+        document.documentElement.style.fontSize = (cur + 2) + 'px';
+      });
+      document.getElementById('botaoDiminuir').addEventListener('click', function () {
+        var cur = parseFloat(getComputedStyle(document.documentElement).fontSize);
+        document.documentElement.style.fontSize = Math.max(cur - 2, 10) + 'px';
+      });
+      document.getElementById('botaoLer').addEventListener('click', function () {
+        if (!window.speechSynthesis) return;
+        window.speechSynthesis.cancel();
+        var u = new SpeechSynthesisUtterance(document.body.innerText);
+        u.lang = 'pt-BR';
+        window.speechSynthesis.speak(u);
+      });
+      document.getElementById('botaoParar').addEventListener('click', function () {
+        window.speechSynthesis && window.speechSynthesis.cancel();
+      });
+    })();
+  </script>
+
+  <!-- ═══ VLIBRAS ═══ -->
+  <div vw class="enabled" id="Vlibras">
+    <div vw-access-button class="active"></div>
+    <div vw-plugin-wrapper>
+      <div class="vw-plugin-top-wrapper"></div>
     </div>
+  </div>
+  <script src="https://vlibras.gov.br/app/vlibras-plugin.js"></script>
+  <script>new window.VLibras.Widget('https://vlibras.gov.br/app');</script>
 
-    <script src="https://vlibras.gov.br/app/vlibras-plugin.js"></script>
-    <script>
-      new window.VLibras.Widget('https://vlibras.gov.br/app')
-    </script>
-    <script src="{{ url_for('static', filename='acessibilidade/acessibilidade.js') }}"></script>
-    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
-  </body>
+</body>
+
 </html>
