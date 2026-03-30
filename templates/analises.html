@@ -6,13 +6,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>DataInsight • Métricas</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/estilo.css') }}" /> 
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/estilo.css') }}" />
     <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 </head>
 
 <body>
-        
+
     <div class="layout">
         <aside class="sidebar" aria-label="Navegação principal">
             <div class="sidebar__header">
@@ -24,43 +24,14 @@
                 </a>
             </div>
 
-         
-        <nav>
-            <a href="{{ url_for('pagina_home') }}"><i class="fa-solid fa-house"></i> Início</a>
-            <a href="{{ url_for('pagina_dados') }}"><i class="fa-solid fa-table-list"></i> Dados</a>
-            <a href="{{ url_for('pagina_graficoAvancado') }}"><i class="fa-solid fa-layer-group"></i> Dashboard</a>
-            <a href="{{ url_for('pagina_analise') }}" aria-current="page"><i class="fa-solid fa-chart-line"></i> Análises</a>
-            <a href="{{ url_for('pagina_relatorio') }}"><i class="fa-solid fa-file-pdf"></i> Relatórios</a>
-            <a href="{{ url_for('pagina_perfil') }}"><i class="fa-solid fa-user"></i> Perfil</a>
-            <hr style="margin: 16px 0; border: none; height: 1px; background-color: var(--borda);">
-            <a href="{{ url_for('logout') }}" style="color: var(--perigo);"><i class="fa-solid fa-sign-out-alt"></i> Sair</a>
-        </nav>
+
+            <!-- Navegação lateral -->
+            {% include 'partials/navbar.html' %}
 
         </aside>
-        <script src ="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
-        <nav class="navbar navbar-expand-lg navbar-light bg-light d-lg-none">
-  <div class="container-fluid">
-    <a class="navbar-brand" href="home.html">
-      <i class="fa-solid fa-chart-column"></i> DataInsight
-    </a>
 
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#menuMobile">
-      <span class="navbar-toggler-icon"></span>
-    </button>
-
-    <div class="collapse navbar-collapse" id="menuMobile">
-      <ul class="navbar-nav">
-        <li class="nav-item"><a class="nav-link" href="{{ url_for('pagina_home') }}">Início</a></li>
-        <li class="nav-item"><a class="nav-link" href="{{ url_for('pagina_dados') }}">Dados</a></li>
-        <li class="nav-item"><a class="nav-link" href="{{ url_for('pagina_graficoAvancado') }}">Galeria</a></li>
-        <li class="nav-item"><a class="nav-link" href="{{ url_for('pagina_analise') }}" >Análises</a></li>
-        <li class="nav-item"><a class="nav-link" href="{{ url_for('pagina_relatorio') }}">Relatórios</a></li>
-        <li class="nav-item"><a class="nav-link" href="{{ url_for('pagina_perfil') }}">Perfil</a></li>
-        <li class="nav-item"><a class="nav-link" href="{{ url_for('logout') }}">Sair</a></li>
-      </ul>
-    </div>
-  </div>
-</nav>
+        <!-- Navegação móvel -->
+        {% include 'partials/navbar_mobile.html' %}
 
         <div class="main">
             <header class="topbar">
@@ -122,7 +93,8 @@
 
                             <!-- Métrica 1 -->
                             <div class="cartao" style="cursor: pointer; transition: all 0.3s;"
-                                onclick="selecionarMetrica(this, 'faturamento')"  style=" border-left: 4px solid var(--primaria);">
+                                onclick="selecionarMetrica(this, 'faturamento')"
+                                style=" border-left: 4px solid var(--primaria);">
                                 <div style="display: flex; justify-content: space-between; align-items: start;">
                                     <div>
                                         <h3 class="h3" style="margin: 0 0 8px;">Faturamento</h3>
@@ -140,7 +112,8 @@
 
                             <!-- Métrica 2 -->
                             <div class="cartao" style="cursor: pointer; transition: all 0.3s;"
-                                onclick="selecionarMetrica(this, 'despesas')"  style=" border-left: 4px solid var(--primaria);">
+                                onclick="selecionarMetrica(this, 'despesas')"
+                                style=" border-left: 4px solid var(--primaria);">
                                 <div style="display: flex; justify-content: space-between; align-items: start;">
                                     <div>
                                         <h3 class="h3" style="margin: 0 0 8px;">Despesas</h3>
@@ -158,7 +131,8 @@
 
                             <!-- Métrica 3 -->
                             <div class="cartao" style="cursor: pointer; transition: all 0.3s;"
-                                onclick="selecionarMetrica(this, 'lucro')"  style=" border-left: 4px solid var(--primaria);">
+                                onclick="selecionarMetrica(this, 'lucro')"
+                                style=" border-left: 4px solid var(--primaria);">
                                 <div style="display: flex; justify-content: space-between; align-items: start;">
                                     <div>
                                         <h3 class="h3" style="margin: 0 0 8px;">Lucro</h3>
@@ -176,7 +150,8 @@
 
                             <!-- Métrica 4 -->
                             <div class="cartao" style="cursor: pointer; transition: all 0.3s;"
-                                onclick="selecionarMetrica(this, 'margem')"  style=" border-left: 4px solid var(--primaria);"> 
+                                onclick="selecionarMetrica(this, 'margem')"
+                                style=" border-left: 4px solid var(--primaria);">
                                 <div style="display: flex; justify-content: space-between; align-items: start;">
                                     <div>
                                         <h3 class="h3" style="margin: 0 0 8px;">Margem Líquida</h3>
@@ -337,74 +312,11 @@
         </div>
     </div>
 
-   <footer class="rodape">
-    <div class="container rodape__grid">
+    <!-- Footer -->
+    {% include 'partials/footer.html' %}
 
-      <!-- Marca -->
-      <div class="rodape__col">
-        
-        <h2 class="rodape__logo">DataInsight</h2>
-        <p>
-          Plataforma de análise de dados e métricas para startups e pequenos negócios.
-          Simples, acessível e poderosa.
-        </p>
-        <small>© 2026 DataInsight</small>
-      </div>
-
-      <!-- Links -->
-      <div class="rodape__col">
-        <h3>Links</h3>
-        <ul>
-          <li><a href="{{ url_for('pagina_home') }}">Home</a></li>
-          <li><a href="{{ url_for('pagina_dados') }}">Dados</a></li>
-          <li><a href="{{ url_for('pagina_graficoAvancado') }}">Dashboard</a></li>
-          <li><a href="{{ url_for('pagina_analise') }}">Analises</a></li>
-          <li><a href="{{ url_for('pagina_relatorio') }}">Relatórios</a></li>
-          <li><a href="{{ url_for('pagina_perfil') }}">Perfil</a></li>
-        </ul>
-      </div>
-
-      <!-- Guias -->
-      <div class="rodape__col">
-        <h3>Termos de uso e Privacidade</h3>
-        <ul>
-          <li><a href="#">Termos de uso</a></li>
-          <li><a href="#">Privacidade</a></li>
-        </ul>
-      </div>
-
-      <!-- Suporte -->
-      <div class="rodape__col">
-        <h3>Acessibilidade</h3>
-        <ul>
-          <li><a href="#">Nivel AA. Seguindo a WCAG2</a></li>
-          <li><a href="https://www.w3.org/TR/WCAG21/">WCAG2</a></li>
-        </ul>
-      </div>
-
-    </div>
-  </footer>
-
-    <div class="acessibilidade-flutuante" aria-label="Ferramentas de acessibilidade">
-        <div id="painelAcessibilidade" class="acessibilidade-painel" role="dialog" aria-modal="false"
-            aria-labelledby="tituloAcessibilidade">
-            <h2 id="tituloAcessibilidade" class="acessibilidade-titulo">Acessibilidade</h2>
-
-            <div class="acessibilidade-acoes">
-                <button class="botao botao--suave" type="button" id="botaoAumentar">Aumentar fonte</button>
-                <button class="botao botao--suave" type="button" id="botaoDiminuir">Diminuir fonte</button>
-                <button class="botao botao--suave" type="button" id="botaoLer">Ler página (voz)</button>
-                <button class="botao botao--suave" type="button" id="botaoParar">Parar leitura</button>
-            </div>
-
-            <p class="ajuda" style="margin:10px 0 0;">
-                Dica: use TAB para navegar e Enter/Espaço para ativar botões.
-            </p>
-        </div>
-
-        <button id="alternarAcessibilidade" class="acessibilidade-alternar" type="button" aria-expanded="false" aria-controls="painelAcessibilidade"><img src="{{ url_for('static', filename='img/Logo acessibilidade.png') }}" alt="img-acessibilidade" /></button>
-    </div>
-    </div>
+    <!-- Painel Acessibilidae -->
+    {% include 'partials/painel_acessibilidade.html' %}
 
     <div vw class="enabled" id="Vlibras">
         <div vw-access-button class="active"></div>
@@ -419,9 +331,10 @@
         new window.VLibras.Widget('https://vlibras.gov.br/app');
     </script>
 
-  <script src="{{ url_for('static', filename='acessibilidade/acessibilidade.js') }}"></script>
-  <script src="{{ url_for('static', filename='js/script.js') }}"></script>
-  <script src="{{ url_for('static', filename='js/analise.js') }}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="{{ url_for('static', filename='acessibilidade/acessibilidade.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/analise.js') }}"></script>
 
 </body>
 </body>
