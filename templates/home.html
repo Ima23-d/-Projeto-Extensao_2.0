@@ -3,63 +3,65 @@
 
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
   <title>DataInsight • Início</title>
   <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css">
   <link rel="stylesheet" href="{{ url_for('static', filename='css/estilo.css') }}" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-  <!-- <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"> -->
 </head>
 
-<body>
+<body class="overflow-x-hidden">
 
-
-  <div class="layout">
-    <aside class="sidebar" aria-label="Navegação principal">
-           <div class="sidebar__header">
-                <a class="marca" href="{{ url_for('pagina_landing') }}" aria-label="DataInsight - Início">
-                    <span class="marca__simbolo" aria-hidden="true">
-                        <i class="fa-solid fa-chart-column"></i>
-                    </span>
-                    DataInsight
-                </a>
-            </div>
-            
-    <!-- Navegação lateral -->
-    {% include 'partials/navbar.html' %}
-
+  <div class="layout d-flex flex-column flex-lg-row w-100 overflow-hidden">
+    <aside class="sidebar d-none d-lg-block" aria-label="Navegação principal">
+      <div class="sidebar__header">
+        <a class="marca" href="{{ url_for('pagina_landing') }}" aria-label="DataInsight - Início">
+          <span class="marca__simbolo" aria-hidden="true">
+            <i class="fa-solid fa-chart-column"></i>
+          </span>
+          DataInsight
+        </a>
+      </div>
+      {% include 'partials/navbar.html' %}
     </aside>
-   
-    <!-- Navegação móvel -->
-    {% include 'partials/navbar_mobile.html' %}
 
-    <div class="main">
-      <header class="topbar">
-        <div class="topbar__actions">
-          <span style="color: var(--muted); margin-right: auto;">Olá, <strong>{{ session.usuario_nome }}</strong></span>
-          <button class="botao botao--suave" type="button" onclick="alternarTema()" aria-label="Alternar tema">
-            <i class="fa-solid fa-moon"></i>
-          </button>
-          <a class="botao botao--suave" href="{{ url_for('pagina_configuracoes') }}" aria-label="Abrir configurações">
-            <i class="fa-solid fa-gear"></i>
-          </a>
+    <div class="d-block d-lg-none w-100">
+      {% include 'partials/navbar_mobile.html' %}
+    </div>
+
+    <div class="main flex-grow-1 w-100" style="min-width: 0;">
+
+      <header class="topbar w-100 border-bottom p-3">
+        <div class="d-flex justify-content-between align-items-center w-100">
+          <span style="color: var(--muted); font-size: 14px;" class="text-truncate">Olá, <strong>{{ session.usuario_nome
+              }}</strong></span>
+          <div class="d-flex gap-2 align-items-center flex-nowrap">
+            <button class="botao botao--suave m-0 p-2" type="button" onclick="alternarTema()"
+              aria-label="Alternar tema">
+              <i class="fa-solid fa-moon"></i>
+            </button>
+            <a class="botao botao--suave m-0 p-2" href="{{ url_for('pagina_configuracoes') }}"
+              aria-label="Abrir configurações">
+              <i class="fa-solid fa-gear"></i>
+            </a>
+          </div>
         </div>
       </header>
 
-      <main id="conteudo" class="pagina" role="main">
-        <div class="container">
-          <header class="pagina__cabecalho">
+      <main id="conteudo" class="pagina p-3 p-md-4 w-100" role="main">
+        <div class="container-fluid p-0">
+
+          <header class="pagina__cabecalho mb-4">
             <div class="migalhas" aria-label="Você está em">Início</div>
-            <h1 class="h1">Visão rápida do negócio</h1>
-            <p class="p">indicador de desempenho e oportunidades identificadas.</p>
+            <h1 class="h1 text-break">Visão rápida do negócio</h1>
+            <p class="p text-break">indicador de desempenho e oportunidades identificadas.</p>
           </header>
 
-          <!-- Filtro por período -->
-          <section class="cartao" aria-label="Filtros" style="margin-top: 24px;">
-            <div style="display: flex; gap: 12px; flex-wrap: wrap; align-items: center;">
-              <label for="periodo" style="font-weight: 600;">Período:</label>
-              <select class="entrada" id="periodo" aria-label="Selecionar período">
+          <section class="cartao mb-4" aria-label="Filtros">
+            <div class="d-flex gap-2 flex-wrap align-items-center">
+              <label for="periodo" class="fw-bold mb-0">Período:</label>
+              <select class="form-select w-auto" id="periodo" aria-label="Selecionar período">
                 <option>Últimos 7 dias</option>
                 <option>Últimos 30 dias</option>
                 <option>Últimos 90 dias</option>
@@ -68,104 +70,96 @@
             </div>
           </section>
 
-          <!-- KIndicador de desempenho -->
-          <section aria-label="Indicador de desempenho" style="margin-top: 32px;">
-            <h2 class="h2">Indicador de desempenho</h2>
-            <div class="grade grade--4" style="margin-top: 16px;">
+          <section aria-label="Indicador de desempenho" class="mb-4">
+            <h2 class="h2 mb-3">Indicador de desempenho</h2>
+            <div class="row g-3 m-0">
 
-              <article class="cartao" style=" border-left: 4px solid var(--primaria);">
-                <div class="cartao__meta">Faturamento</div>
-                <div style="margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--borda);">
-                  <p class="cartao__valor" style="color: var(--sucesso);">R$ 245.680,00</p>
-                </div>
-                <!-- <div class="cartao__descricao">↑ 12% vs período anterior</div> -->
-              </article>
-              <article class="cartao" style=" border-left: 4px solid var(--primaria);">
-                <div class="cartao__meta">Lucro</div>
-                <div style="margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--borda);">
-                  <p class="cartao__valor" style="color: var(--sucesso);">R$ 85.430,00</p>
-                  <!-- <div class="cartao__descricao">↑ 8% vs período anterior</div> -->
-                </div>
-              </article>
-              <article class="cartao" style=" border-left: 4px solid var(--primaria);">
-                <div class="cartao__meta">Despesas</div>
-                <div style="margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--borda);">
-                  <p class="cartao__valor" style="color: var(--perigo);">R$ 160.250,00</p>
-                  <!-- <div class="cartao__descricao">↓ 3% vs período anterior</div> -->
-                </div>
-              </article>
-              <article class="cartao" style=" border-left: 4px solid var(--primaria);">
-                <div class="cartao__meta">Crescimento</div>
-                <div style="margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--borda);">
-                  <p class="cartao__valor" style="color: var(--primaria);">+18,5%</p>
-                  <!-- <div class="cartao__descricao">Acumulado no período</div> -->
-                </div>
-              </article>
+              <div class="col-12 col-sm-6 col-xl-3 p-1">
+                <article class="cartao h-100 w-100" style="border-left: 4px solid var(--primaria);">
+                  <div class="cartao__meta">Faturamento</div>
+                  <div class="mt-2 pt-2 border-top">
+                    <p class="cartao__valor text-truncate" style="color: var(--sucesso);">R$ 245.680,00</p>
+                  </div>
+                </article>
+              </div>
+
+              <div class="col-12 col-sm-6 col-xl-3 p-1">
+                <article class="cartao h-100 w-100" style="border-left: 4px solid var(--primaria);">
+                  <div class="cartao__meta">Lucro</div>
+                  <div class="mt-2 pt-2 border-top">
+                    <p class="cartao__valor text-truncate" style="color: var(--sucesso);">R$ 85.430,00</p>
+                  </div>
+                </article>
+              </div>
+
+              <div class="col-12 col-sm-6 col-xl-3 p-1">
+                <article class="cartao h-100 w-100" style="border-left: 4px solid var(--primaria);">
+                  <div class="cartao__meta">Despesas</div>
+                  <div class="mt-2 pt-2 border-top">
+                    <p class="cartao__valor text-truncate" style="color: var(--perigo);">R$ 160.250,00</p>
+                  </div>
+                </article>
+              </div>
+
+              <div class="col-12 col-sm-6 col-xl-3 p-1">
+                <article class="cartao h-100 w-100" style="border-left: 4px solid var(--primaria);">
+                  <div class="cartao__meta">Crescimento</div>
+                  <div class="mt-2 pt-2 border-top">
+                    <p class="cartao__valor text-truncate" style="color: var(--primaria);">+18,5%</p>
+                  </div>
+                </article>
+              </div>
+
             </div>
           </section>
 
+          <section class="mb-4">
+            <h2 class="h2 mb-3">Gráficos Principais</h2>
+            <div class="row g-3 m-0">
 
-          <!-- <section style="margin-top: 32px;">
-            <h2 class="h2">Alertas e Destaques</h2>
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 16px;">
-              <article class="cartao" style="border-left: 4px solid var(--perigo);">
-                <div style="font-weight: 600; color: var(--perigo);">🔴 Atenção</div>
-                <p class="p" style="margin-top: 8px;">Despesas com fornecedores acima do esperado (+15%)</p>
-              </article>
-              <article class="cartao" style="border-left: 4px solid var(--sucesso);">
-                <div style="font-weight: 600; color: var(--sucesso);">🟢 Oportunidade</div>
-                <p class="p" style="margin-top: 8px;">Aumento de 25% em vendas no segmento Premium</p>
-              </article>
-            </div>
-          </section> -->
+              <div class="col-12 col-lg-6 p-1">
+                <article class="cartao h-100 w-100 overflow-hidden">
+                  <h3 class="h2 mb-3" style="font-size: 18px;">Evolução do Faturamento</h3>
+                  <div id="graficoLinhaFaturamento" class="w-100"></div>
+                </article>
+              </div>
 
-          <!-- Gráficos Principais -->
-          <section style="margin-top: 32px;">
-            <h2 class="h2" style="margin-bottom: 16px;">Gráficos Principais</h2>
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px;">
-              <!-- Gráfico de Linha - Evolução -->
-              <article class="cartao">
-                <h3 class="h2" style="font-size: 18px; margin-bottom: 16px;">Evolução do Faturamento</h3>
-                <div id="graficoLinhaFaturamento"></div>
-              </article>
+              <div class="col-12 col-lg-6 p-1">
+                <article class="cartao h-100 w-100 overflow-hidden">
+                  <h3 class="h2 mb-3" style="font-size: 18px;">Comparativo Mensal</h3>
+                  <div id="graficoBarrasComparativo" class="w-100"></div>
+                </article>
+              </div>
 
-              <!-- Gráfico de Barras - Comparativo -->
-              <article class="cartao">
-                <h3 class="h2" style="font-size: 18px; margin-bottom: 16px;">Comparativo Mensal</h3>
-                <div id="graficoBarrasComparativo"></div>
-              </article>
             </div>
           </section>
 
-          <!-- Insights da IA -->
-          <section class="cartao"
-            style="margin-top: 32px; background: linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(59, 130, 246, 0.05)); border-left: 4px solid var(--primaria);">
-            <h2 class="h2">Insights da IA</h2>
-            <div style="margin-top: 16px;">
-              <div style="background: var(--cartao); padding: 12px; border-radius: var(--raio); margin-bottom: 12px;">
-                <p class="p"><strong>📌 Tendência positiva:</strong> O faturamento cresceu consistentemente nos últimos
-                  3 meses. Especialmente o segmento de serviços premium apresenta grande potencial.</p>
+          <section class="cartao mb-4 w-100"
+            style="background: linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(59, 130, 246, 0.05)); border-left: 4px solid var(--primaria);">
+            <h2 class="h2 mb-3">Insights da IA</h2>
+            <div class="d-flex flex-column gap-3">
+              <div class="p-3 rounded" style="background: var(--cartao);">
+                <p class="p mb-0"><strong>📌 Tendência positiva:</strong> O faturamento cresceu consistentemente nos
+                  últimos 3 meses.</p>
               </div>
-              <div style="background: var(--cartao); padding: 12px; border-radius: var(--raio); margin-bottom: 12px;">
-                <p class="p"><strong>⚡ Recomendação:</strong> Reduza despesas com fornecedores secundários e realoque
-                  recursos para o segmento Premium que está gerando 35% mais ROI.</p>
+              <div class="p-3 rounded" style="background: var(--cartao);">
+                <p class="p mb-0"><strong>⚡ Recomendação:</strong> Reduza despesas com fornecedores secundários e
+                  realoque recursos.</p>
               </div>
-              <div style="background: var(--cartao); padding: 12px; border-radius: var(--raio);">
-                <p class="p"><strong>🎯 Previsão:</strong> Com a tendência atual, o lucro deve aumentar 22% no próximo
-                  período se mantiver os investimentos atuais.</p>
+              <div class="p-3 rounded" style="background: var(--cartao);">
+                <p class="p mb-0"><strong>🎯 Previsão:</strong> Com a tendência atual, o lucro deve aumentar 22% no
+                  próximo período.</p>
               </div>
             </div>
           </section>
+
         </div>
       </main>
     </div>
   </div>
 
-  <!-- Footer -->
-   {% include 'partials/footer.html' %}
-
-  <!-- Painel Acessibilidae -->
-   {% include 'partials/painel_acessibilidade.html' %}
+  {% include 'partials/footer.html' %}
+  {% include 'partials/painel_acessibilidade.html' %}
 
   <div vw class="enabled" id="Vlibras">
     <div vw-access-button class="active"></div>
@@ -175,7 +169,6 @@
   </div>
 
   <script src="https://vlibras.gov.br/app/vlibras-plugin.js"></script>
-
   <script>
     new window.VLibras.Widget('https://vlibras.gov.br/app');
   </script>

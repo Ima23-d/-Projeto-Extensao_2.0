@@ -98,6 +98,18 @@ function getChartBarrasOptions() {
       foreColor: colors.texto,
       background: colors.fundo
     },
+    // Formatação dos valores dentro das barras
+    dataLabels: {
+      enabled: true,
+      formatter: function (val) {
+        return (val / 1000).toFixed(0) + 'k';
+      },
+      style: {
+        fontSize: '10px',
+        colors: ['#fff']
+      }
+    },
+    // --------------------------------
     colors: ['#3B82F6', '#DC2626', '#16A34A'],
     grid: {
       strokeDashArray: 4,
