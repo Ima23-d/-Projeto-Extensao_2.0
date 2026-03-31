@@ -422,15 +422,41 @@ body {
 /* ============================
    TELA DE LOGIN / CADASTRO
    ============================ */
+
+  .barra-topo {
+    display: flex;
+    justify-content: flex-start; 
+    align-items: center;        
+    padding: 20px 40px;         
+    width: 100%;
+    box-sizing: border-box;
+    background-color: transparent;
+}
+
+.marca {
+  display: flex;
+  align-items: center;
+  gap: 10px;               
+  text-decoration: none;
+  color: #fff;                
+}
+
+.sidebar__header {
+  display: flex;
+  align-items: center;
+}
+
 .autenticacao {
-  min-height: calc(100vh - var(--barra-topo));
+  min-height: calc(100vh - 120px);
   display: grid;
   place-items: center;
-  padding: var(--esp4) 0;
+  padding: 20px 40px;
 }
 
 .autenticacao__cartao {
-  width: 480px;
+  width: 100%;
+  max-width: 480px;   
+  margin: 0 auto;
 }
 
 .autenticacao__titulo {
@@ -458,10 +484,17 @@ body {
 .autenticacao__links a {
   color: var(--primaria);
   text-decoration: none;
+  font-weight: 600; /* Deixa o link mais visível */
+  transition: opacity 0.2s;;
 }
 
 .linha a {
   color: var(--primaria);
+}
+
+.autenticacao__links a:hover {
+  opacity: 0.8; /* Efeito visual ao passar o mouse */
+  text-decoration: underline;
 }
 
 /* ============================
