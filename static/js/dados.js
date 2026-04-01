@@ -170,14 +170,32 @@ function exibirPagina() {
 // COLUNAS E LINHAS
 // ===============================
 el.btnNovaColuna.onclick = () => {
-    el.colunas.innerHTML += `
-        <div style="display: flex; gap: 8px; min-width: 200px; max-width: 100%;">
-            <input type="text" class="entrada entrada-coluna" placeholder="Coluna" style="flex: 1; min-width: 0;">
-            <button class="botao botao--delet botao-remover-coluna" type="button" style="padding: 10px 12px; flex-shrink: 0;" title="Remover">✕</button>
-        </div>
-    `;
-    const input = el.colunas.lastChild.querySelector(".entrada-coluna");
-    input.addEventListener("input", () => { sincronizarColunas(); atualizarTabela(); exibirPagina(); });
+    const colunaWrapper = document.createElement("div");
+    colunaWrapper.style.display = "flex";
+    colunaWrapper.style.gap = "8px";
+    colunaWrapper.style.minWidth = "200px";
+    colunaWrapper.style.maxWidth = "100%";
+
+    const inputColuna = document.createElement("input");
+    inputColuna.type = "text";
+    inputColuna.className = "entrada entrada-coluna";
+    inputColuna.placeholder = "Coluna";
+    inputColuna.style.flex = "1";
+    inputColuna.style.minWidth = "0";
+
+    const btnRemover = document.createElement("button");
+    btnRemover.type = "button";
+    btnRemover.className = "botao botao--delet botao-remover-coluna";
+    btnRemover.style.padding = "10px 12px";
+    btnRemover.style.flexShrink = "0";
+    btnRemover.title = "Remover";
+    btnRemover.textContent = "✕";
+
+    colunaWrapper.appendChild(inputColuna);
+    colunaWrapper.appendChild(btnRemover);
+    el.colunas.appendChild(colunaWrapper);
+
+    inputColuna.addEventListener("input", () => { sincronizarColunas(); atualizarTabela(); exibirPagina(); });
     sincronizarColunas(); atualizarTabela(); exibirPagina();
 };
 
