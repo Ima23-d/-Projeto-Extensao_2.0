@@ -1791,9 +1791,47 @@ table td {
     grid-template-columns: 1fr;
   }
 
+  /* Footer deve seguir isotropia */
+  .rodape {
+    padding: 30px 16px;
+  }
+
+  .rodape__grid {
+    grid-template-columns: 1fr;
+    max-width: 100%;
+    gap: 16px;
+    width: 100%;
+    margin: 0 auto;
+  }
+
+  .rodape__col {
+    min-width: 0;
+  }
+
   /* KPIs */
   .kpis-emlinha {
     flex-direction: column;
+  }
+
+  html,
+  body {
+    max-width: 100%;
+    overflow-x: hidden;
+  }
+
+  .layout,
+  .main,
+  .container,
+  .rodape__grid,
+  .grade--4,
+  .cartao,
+  table {
+    min-width: 0;
+    width: 100%;
+  }
+
+  .rodape__grid {
+    overflow-x: hidden;
   }
 
   /* Perfil */
