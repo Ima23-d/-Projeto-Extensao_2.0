@@ -113,9 +113,13 @@ body {
 /* ============================
    CONTAINER
    ============================ */
+
 .container {
-  width: var(--container);
-  margin: 0 auto;
+  padding-right: 15px;
+    padding-left: 15px;
+    margin-right: auto;
+    margin-left: auto;
+    width: 100%;
 }
 
 .rodape {
@@ -177,6 +181,18 @@ body {
 .rodape__col a:focus {
   outline: 2px solid var(--primaria);
   outline-offset: 3px;
+}
+
+@media (max-width: 768px) {
+    .container {
+        padding-right: 20px;
+        padding-left: 20px;
+    }
+    
+    .main {
+        width: 100%;
+        overflow-x: hidden; 
+    }
 }
 
 /* ============================
@@ -265,9 +281,15 @@ body {
 }
 
 .botao--delet {
-  background: var(--perigo);
+background: var(--perigo);
   border: 1px solid #6b728066;
   color: white;
+  width: auto;           
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  white-space: nowrap;  
+  padding: 10px 16px;
 }
 
 .botao--select-proximo {
@@ -308,15 +330,26 @@ body {
   transform: scale(1.3);
 }
 
+#btnBuscarArquivo {
+  flex: 1;
+  min-width: 200px;
+}
+
 /* ============================
    FORMULÁRIOS
    ============================ */
+
 .campo {
-  display: grid;
-  gap: 6px;
+ display: flex; 
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 10px;
 }
 
-.entrada,
+.campo .entrada{
+  flex: 1; 
+}
+
 .selecao,
 .area-texto {
   padding: 12px;
@@ -345,7 +378,8 @@ body {
    PÁGINA
    ============================ */
 .pagina {
-  padding: var(--esp4) 0;
+  padding-right: 20px; 
+    padding-left: 20px; 
 }
 
 .pagina__cabecalho {
@@ -680,6 +714,18 @@ body {
     justify-content: center;
   }
 
+  .botao:not(.botao--delet) {
+    width: 100%;
+    
+  }
+  
+ 
+  .botao--delet {
+    width: auto; 
+    flex-shrink: 0; 
+  }
+}
+
   .grade--4 {
     grid-template-columns: 1fr;
   }
@@ -687,7 +733,7 @@ body {
   .container {
     max-width: 95%;
   }
-}
+
 
 .container {
   width: 100%;
