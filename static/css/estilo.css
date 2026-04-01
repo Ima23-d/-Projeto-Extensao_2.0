@@ -505,6 +505,7 @@ body {
   display: flex;
   gap: 16px;
   align-items: center;
+  flex-wrap: wrap;
 }
 
 .auth-links a {
@@ -512,6 +513,15 @@ body {
   text-decoration: none;
   font-weight: 500;
   transition: color 0.2s;
+}
+
+.auth-links__cta {
+  padding: 8px 20px;
+}
+
+.mockup-url {
+  overflow-wrap: anywhere;
+  word-break: break-word;
 }
 
 .auth-links a:not(.botao):hover {
@@ -671,11 +681,16 @@ body {
 }
 
 @media (max-width: 640px) {
+  .hero__title {
+    font-size: calc(32px * var(--escala-fonte));
+    line-height: 1.25;
+  }
+
   .hero__buttons {
     flex-direction: column;
   }
 
-  .botao {
+  .hero__buttons .botao {
     width: 100%;
     justify-content: center;
   }
@@ -686,6 +701,42 @@ body {
 
   .container {
     max-width: 95%;
+  }
+}
+
+@media (max-width: 768px) {
+  .barra-topo {
+    height: auto;
+    min-height: var(--barra-topo);
+    padding: 12px 0;
+  }
+
+  .barra-topo__interno {
+    height: auto;
+    min-height: var(--barra-topo);
+    gap: 12px;
+  }
+
+  .auth-links {
+    justify-content: flex-end;
+    row-gap: 8px;
+  }
+
+  .auth-links__cta {
+    padding: 8px 14px;
+    font-size: 14px;
+  }
+}
+
+@media (max-width: 480px) {
+  .barra-topo__interno {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .auth-links {
+    width: 100%;
+    justify-content: flex-start;
   }
 }
 
@@ -1089,12 +1140,13 @@ tbody tr:hover {
 }
 
 /* ============================
-   IMAGEMS
+   IMAGENS
    ============================ */
 
 img {
-  width: 50px;
-  height: 50px;
+  max-width: 100%;
+  height: auto;
+  display: block;
 }
 
 /* ============================
@@ -1721,23 +1773,28 @@ table td {
    ======================= */
   .grid-recursos {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(400px, 32px));
-    gap: 32px
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 32px;
   }
-  .recursos-conteudo{
+
+  .recurso-conteudo {
     display: flex;
     align-items: flex-start;
     gap: 16px;
   }
-  /* Regras apenas para a tela do celular */
-  @media (max-width: 640px){
-    .grid-recursos {
-      grid-template-columns: 1fr; /* Resolve o erro do espaçamento vazando na direita */
-    }
-    .recursos-conteudo{
-      flex-direction: column; /* Coloca o ícone em cima do texto */
-      align-items: center; /* Centraliza o ícone*/
-    }
-  }
+}
 
+@media (max-width: 1024px) {
+  .grid-recursos {
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+}
+
+@media (max-width: 640px) {
+  .recurso-conteudo {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
 }
