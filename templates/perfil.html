@@ -53,23 +53,6 @@
               </div>
               <div class="perfil-dados">
                 <h1><strong>{{ session.usuario_nome }}</strong></h1>
-                <p class="perfil-bio">Analista de dados • Último acesso: há 2 dias</p>
-
-                <div class="perfil-metricas">
-                  <div class="metrica">
-                    <span class="metrica__valor">27</span>
-                    <span class="metrica__label">Relatórios</span>
-                  </div>
-                  <div class="metrica">
-                    <span class="metrica__valor">142</span>
-                    <span class="metrica__label">Análises</span>
-                  </div>
-                  <div class="metrica">
-                    <span class="metrica__valor">12</span>
-                    <span class="metrica__label">Favoritos</span>
-                  </div>
-                </div>
-              </div>
               <div class="perfil-acoes">
                 <button class="botao botao--primario" type="button" id="botaoEditarPerfil">
                   <i class="fa-solid fa-pen"></i> Editar perfil
@@ -80,7 +63,7 @@
               </div>
             </div>
           </section>
-
+      <div style="height: 30px;"></div>
           <div class="grade grade--2" style="gap: 24px;">
             <section class="cartao" aria-labelledby="titulo-ultimas-analises">
               <header class="cartao__cabecalho">
@@ -127,43 +110,26 @@
               </header>
               <div class="cartao__conteudo">
                 <ul class="lista" id="listaUltimosRelatorios">
-                  <li class="lista__item">
-                    <div class="lista__texto">
-                      <strong>Relatório</strong>
-                      <span class="lista__titulo">Resumo financeiro trimestral</span>
-                    </div>
-                    <button class="botao botao--suave" type="button"
-                      aria-label="Abrir relatório resumo financeiro trimestral">
-                      <i class="fa-solid fa-eye"></i> Abrir
-                    </button>
-                  </li>
-                  <li class="lista__item">
-                    <div class="lista__texto">
-                      <strong>Relatório</strong>
-                      <span class="lista__titulo">Desempenho de campanhas</span>
-                    </div>
-                    <button class="botao botao--suave" type="button"
-                      aria-label="Abrir relatório desempenho de campanhas">
-                      <i class="fa-solid fa-eye"></i> Abrir
-                    </button>
-                  </li>
-                  <li class="lista__item">
-                    <div class="lista__texto">
-                      <strong>Relatório</strong>
-                      <span class="lista__titulo">Análise de custo por cliente</span>
-                    </div>
-                    <button class="botao botao--suave" type="button"
-                      aria-label="Abrir relatório análise de custo por cliente">
-                      <i class="fa-solid fa-eye"></i> Abrir
-                    </button>
-                  </li>
+                  {% if ultimos_relatorios and ultimos_relatorios | length > 0 %}
+                    {% for item in ultimos_relatorios %}
+                      <li class="lista__item">
+                        <div class="lista__texto">
+                          <strong>Relatório</strong>
+                          <span class="lista__titulo">{{ item.nome }}</span>
+                          <span class="lista__meta" style="display:block; font-size: 12px; color:#666;">{{ item.periodo }} • {{ item.data }}</span>
+                        </div>
+                        <a class="botao botao--suave" href="{{ url_for('visualizar_relatorio', index=loop.index0) }}" aria-label="Abrir relatório {{ item.nome }}">
+                          <i class="fa-solid fa-eye"></i> Abrir
+                        </a>
+                      </li>
+                    {% endfor %}
+                  {% else %}
+                    <li class="lista__item" style="color: var(--texto);">
+                      Nenhum relatório gerado ainda. Gere um relatório na página Relatórios e ele aparecerá aqui.
+                    </li>
+                  {% endif %}
                 </ul>
 
-                <div class="cartao__acoes">
-                  <button class="botao botao--suave" type="button">
-                    <i class="fa-solid fa-file-lines"></i> Ver todos os relatórios
-                  </button>
-                </div>
               </div>
             </section>
           </div>

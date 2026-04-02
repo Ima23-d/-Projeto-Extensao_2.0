@@ -113,13 +113,9 @@ body {
 /* ============================
    CONTAINER
    ============================ */
-
 .container {
-  padding-right: 15px;
-    padding-left: 15px;
-    margin-right: auto;
-    margin-left: auto;
-    width: 100%;
+  width: var(--container);
+  margin: 0 auto;
 }
 
 .rodape {
@@ -181,18 +177,6 @@ body {
 .rodape__col a:focus {
   outline: 2px solid var(--primaria);
   outline-offset: 3px;
-}
-
-@media (max-width: 768px) {
-    .container {
-        padding-right: 20px;
-        padding-left: 20px;
-    }
-    
-    .main {
-        width: 100%;
-        overflow-x: hidden; 
-    }
 }
 
 /* ============================
@@ -281,15 +265,9 @@ body {
 }
 
 .botao--delet {
-background: var(--perigo);
+  background: var(--perigo);
   border: 1px solid #6b728066;
   color: white;
-  width: auto;           
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  white-space: nowrap;  
-  padding: 10px 16px;
 }
 
 .botao--select-proximo {
@@ -330,26 +308,15 @@ background: var(--perigo);
   transform: scale(1.3);
 }
 
-#btnBuscarArquivo {
-  flex: 1;
-  min-width: 200px;
-}
-
 /* ============================
    FORMULÁRIOS
    ============================ */
-
 .campo {
- display: flex; 
-  align-items: center;
-  gap: 8px;
-  margin-bottom: 10px;
+  display: grid;
+  gap: 6px;
 }
 
-.campo .entrada{
-  flex: 1; 
-}
-
+.entrada,
 .selecao,
 .area-texto {
   padding: 12px;
@@ -378,8 +345,7 @@ background: var(--perigo);
    PÁGINA
    ============================ */
 .pagina {
-  padding-right: 20px; 
-    padding-left: 20px; 
+  padding: var(--esp4) 0;
 }
 
 /* ============================
@@ -790,18 +756,6 @@ background: var(--perigo);
     justify-content: center;
   }
 
-  .botao:not(.botao--delet) {
-    width: 100%;
-    
-  }
-  
- 
-  .botao--delet {
-    width: auto; 
-    flex-shrink: 0; 
-  }
-}
-
   .grade--4 {
     grid-template-columns: 1fr;
   }
@@ -809,7 +763,7 @@ background: var(--perigo);
   .container {
     max-width: 95%;
   }
-
+}
 
 @media (max-width: 768px) {
   .barra-topo {
@@ -1456,16 +1410,6 @@ input:checked+.slider:before {
   margin-bottom: 8px;
 }
 
-.perfil-bio {
-  color: var(--suave);
-  margin-bottom: 16px;
-}
-
-.perfil-metricas {
-  display: flex;
-  gap: 18px;
-  flex-wrap: wrap;
-}
 
 .metrica {
   display: flex;
