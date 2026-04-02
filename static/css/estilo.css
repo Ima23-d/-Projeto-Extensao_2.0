@@ -114,7 +114,12 @@ body {
    CONTAINER
    ============================ */
 .container {
-  width: var(--container);
+  width: min(100%, var(--container));
+  margin: 0 auto;
+}
+
+.rodape__container {
+  width: min(100%, var(--container));
   margin: 0 auto;
 }
 
@@ -1812,6 +1817,7 @@ table td {
   .layout,
   .main,
   .container,
+  .rodape__container,
   .rodape__grid,
   .grade--4,
   .cartao,
