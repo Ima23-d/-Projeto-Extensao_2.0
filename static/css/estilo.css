@@ -504,9 +504,13 @@ body {
 .marca {
   display: flex;
   align-items: center;
-  gap: 10px;               
+  gap: 10px;
   text-decoration: none;
-  color: #fff;                
+  color: var(--texto);
+}
+
+.tema-escuro .marca {
+  color: #fff;
 }
 
 .sidebar__header {
