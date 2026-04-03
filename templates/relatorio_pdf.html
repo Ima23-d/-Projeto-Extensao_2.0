@@ -72,11 +72,17 @@
         width: 100%;
         border-collapse: collapse;
         margin-top: 15px;
+        page-break-inside: auto;
       }
       
       thead {
+        display: table-header-group;
         background: #2c3e50;
         color: white;
+      }
+      
+      tr {
+        page-break-after: auto;
       }
       
       th,
@@ -89,6 +95,10 @@
       /* INSIGHTS */
       ul {
         margin-top: 10px;
+      }
+      
+      .footer {
+        page-break-inside: avoid;
       }
       
       /* FOOTER */
@@ -122,7 +132,9 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/estilo.css') }}" />
     <script src="https://cdn.jsdelivr.net/npm/apexcharts@latest"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <!-- html2pdf não é mais necessário na geração atual -->
+    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script> -->
   </head>
 
   <body>
@@ -170,7 +182,7 @@
 
       {% if dados.grafico and dados.tabela %}
         <h2>Gráfico de Faturamento</h2>
-        <div style="width:100%; height:350px; margin-bottom:20px;">
+        <div style="width:100%; height:350px; margin-bottom:20px; page-break-inside: avoid;">
           <div id="grafico-pdf" style="width:100%; height:340px;"></div>
         </div>
       {% endif %}
@@ -232,18 +244,47 @@
     <script>
 function gerarPDF() {
   const elemento = document.getElementById("relatorio");
+  const jsPDF = window.jspdf?.jsPDF || window.jsPDF;
+
+  if (typeof jsPDF !== 'function') {
+    console.error('jsPDF não encontrado. Verifique o carregamento de jspdf.umd.min.js.');
+    alert('Erro ao gerar PDF: jsPDF não encontrado.');
+    return Promise.reject(new Error('jsPDF não definido'));
+  }
 
   return gerarGraficoPDF()
-    .then(() => new Promise(resolve => setTimeout(resolve, 500)))
+    .then(() => new Promise(resolve => setTimeout(resolve, 1000)))
     .then(() => {
-      const option = {
-        margin: 8,
-        filename: 'relatorio.pdf',
-        image: { type: 'jpeg', quality: 1 },
-        html2canvas: { scale: 2, useCORS: true, backgroundColor: '#ffffff' },
-        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
-      };
-      return html2pdf().set(option).from(elemento).save();
+      // Usamos html2canvas + jsPDF para quebrar automaticamente quando o conteúdo excede a página
+      return html2canvas(elemento, {
+        scale: 2,
+        useCORS: true,
+        backgroundColor: '#ffffff'
+      });
+    })
+    .then(canvas => {
+      const imgData = canvas.toDataURL('image/jpeg', 1.0);
+      const pdf = new jsPDF('p', 'mm', 'a4');
+      const pageWidth = pdf.internal.pageSize.getWidth();
+      const pageHeight = pdf.internal.pageSize.getHeight();
+
+      const imgWidth = pageWidth;
+      const imgHeight = (canvas.height * imgWidth) / canvas.width;
+
+      let heightLeft = imgHeight;
+      let position = 0;
+
+      pdf.addImage(imgData, 'JPEG', 0, position, imgWidth, imgHeight);
+      heightLeft -= pageHeight;
+
+      while (heightLeft > 0) {
+        position = heightLeft - imgHeight;
+        pdf.addPage();
+        pdf.addImage(imgData, 'JPEG', 0, position, imgWidth, imgHeight);
+        heightLeft -= pageHeight;
+      }
+
+      pdf.save('relatorio.pdf');
     })
     .then(() => {
       console.log('PDF gerado com sucesso');
