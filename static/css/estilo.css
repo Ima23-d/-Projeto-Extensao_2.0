@@ -114,12 +114,7 @@ body {
    CONTAINER
    ============================ */
 .container {
-  width: min(100%, var(--container));
-  margin: 0 auto;
-}
-
-.rodape__container {
-  width: min(100%, var(--container));
+  width: var(--container);
   margin: 0 auto;
 }
 
@@ -147,8 +142,6 @@ body {
 .rodape__logo {
   color: var(--texto);
   margin-bottom: 10px;
-  font-size: 2rem;
-  font-weight: 700;
 }
 
 .rodape__col p {
@@ -244,6 +237,38 @@ body {
   color: var(--primaria);
 }
 
+/* nav-bootstrap */
+
+.navbar-custom {
+  background-color: var(--cartao);
+  color: var(--texto);
+  border-bottom: 1px solid var(--borda);
+}
+
+.navbar-custom .nav-link {
+  color: var(--texto);
+}
+
+.navbar-custom .nav-link:hover {
+  color: var(--primaria);
+}
+
+.navbar-custom .navbar-brand {
+  color: var(--texto);
+}
+
+.navbar-custom .navbar-toggler {
+  border-color: var(--borda);
+}
+
+.navbar-custom .navbar-toggler-icon {
+  filter: invert(0);
+}
+
+/* DARK MODE ajuste do ícone */
+.tema-escuro .navbar-custom .navbar-toggler-icon {
+  filter: invert(1);
+}
 /* ============================
    BOTÕES
    ============================ */
@@ -504,13 +529,9 @@ body {
 .marca {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 10px;               
   text-decoration: none;
-  color: var(--texto);
-}
-
-.tema-escuro .marca {
-  color: #fff;
+  color:var(--text);                
 }
 
 .sidebar__header {
@@ -1823,7 +1844,6 @@ table td {
   .layout,
   .main,
   .container,
-  .rodape__container,
   .rodape__grid,
   .grade--4,
   .cartao,
