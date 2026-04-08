@@ -862,14 +862,16 @@ body {
    ============================ */
 .acessibilidade-flutuante {
   position: fixed;
-  left: 20px;
+  right: 20px;
   bottom: 20px;
+  z-index: 9999;
+  font-family: inherit;
 }
 
 .acessibilidade-alternar {
   width: 60px;
   height: 60px;
-  border-radius: 16px;
+  border-radius: 50%;
   background: var(--primaria);
   color: white;
   border: none;
@@ -878,33 +880,92 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  transition: all 0.3s ease;
+}
+
+.acessibilidade-alternar:hover {
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.25);
+  transform: scale(1.05);
+}
+
+.acessibilidade-alternar:active {
+  transform: scale(0.95);
+}
+
+.acessibilidade-alternar img {
+  width: 32px;
+  height: 32px;
+  object-fit: contain;
 }
 
 .acessibilidade-painel {
-  margin-top: 10px;
-  width: 260px;
-  padding: 16px;
+  position: absolute;
+  bottom: 80px;
+  right: 0;
+  width: 280px;
+  padding: 20px;
   border-radius: 12px;
   background: var(--primaria);
   color: white;
   display: none;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+  animation: slideUp 0.3s ease out;
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .acessibilidade-painel.aberto {
   display: block;
 }
 
+.acessibilidade-titulo {
+  margin: 0 0 16px 0;
+  font-size: 18px;
+  font-weight: 600;
+}
+
 .acessibilidade-acoes {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 10px;
 }
 
 .acessibilidade-acoes .botao {
   width: 100%;
-  background: transparent;
-  border: 1px solid rgba(255, 255, 255, 0.4);
+  padding: 10px 12px;
+  background: rgba(255, 255, 255, 0.15);
+  border: 1px solid rgba(255, 255, 255, 0.3);
   color: white;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 13px;
+  transition: all 0.2s ease;
+}
+
+.acessibilidade-acoes .botao:hover {
+  background: rgba(255, 255, 255, 0.25);
+  border-color: rgba(255, 255, 255, 0.5);
+}
+
+.acessibilidade-acoes .botao:active {
+  transform: scale(0.98);
+}
+
+.ajuda {
+  margin: 12px 0 0 0 !important;
+  font-size: 12px;
+  opacity: 0.9;
+  line-height: 1.4;
 }
 
 /* ============================
@@ -1917,5 +1978,59 @@ table td {
     flex-direction: column;
     align-items: center;
     text-align: center;
+  }
+}
+
+/* ============================
+   Responsividade - Acessibilidade
+   ============================ */
+@media (max-width: 768px) {
+  .acessibilidade-flutuante {
+    right: 15px;
+    bottom: 15px;
+  }
+
+  .acessibilidade-alternar {
+    width: 56px;
+    height: 56px;
+  }
+
+  .acessibilidade-painel {
+    width: 260px;
+    bottom: 75px;
+  }
+}
+
+@media (max-width: 480px) {
+  .acessibilidade-flutuante {
+    right: 10px;
+    bottom: 10px;
+  }
+
+  .acessibilidade-alternar {
+    width: 52px;
+    height: 52px;
+    font-size: 20px;
+  }
+
+  .acessibilidade-alternar img {
+    width: 28px;
+    height: 28px;
+  }
+
+  .acessibilidade-painel {
+    width: 240px;
+    bottom: 70px;
+    right: -10px;
+    padding: 16px;
+  }
+
+  .acessibilidade-titulo {
+    font-size: 16px;
+  }
+
+  .acessibilidade-acoes .botao {
+    font-size: 12px;
+    padding: 8px 10px;
   }
 }

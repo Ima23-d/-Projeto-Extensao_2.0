@@ -86,6 +86,10 @@ def pagina_relatorio():
 def pagina_contato():
     return render_template("contato.html")
 
+@app.route("/termos/termos_de_uso")
+def pagina_termos_uso():
+    return render_template("termos/termos_de_uso.html")
+
 # =================== AÇÕES Cadastro ===================
 @app.route("/cadastro", methods=["GET", "POST"])
 def pg_cadastro():

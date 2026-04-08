@@ -75,91 +75,91 @@ function setAcessibilidadeAtiva(active) {
   if (vlibras) vlibras.style.display = active ? "block" : "none"
 }
 
-function initChatbot() {
-  if (document.querySelector(".chatbot-flutuante")) return
+// function initChatbot() {
+//   if (document.querySelector(".chatbot-flutuante")) return
 
-  const button = document.createElement("button")
-  button.className = "chatbot-flutuante"
-  button.title = "Abrir assistente"
-  button.innerHTML = "<i class='fa-solid fa-robot'></i>"
-  button.type = "button"
+//   const button = document.createElement("button")
+//   button.className = "chatbot-flutuante"
+//   button.title = "Abrir assistente"
+//   button.innerHTML = "<i class='fa-solid fa-robot'></i>"
+//   button.type = "button"
 
-  const modal = document.createElement("div")
-  modal.className = "chatbot-modal"
-  modal.setAttribute("role", "dialog")
-  modal.setAttribute("aria-modal", "true")
-  modal.innerHTML = `
-      <div class="chatbot-modal__header">
-      <div class="chatbot-modal__title">
-        Assistente</div>
-      <button type="button" class="chatbot-modal__close" aria-label="Fechar">&times;</button>
-    </div>
-    <div class="chatbot-modal__body">
-      <div class="chatbot-conversation" aria-live="polite"></div>
-      <div class="chatbot-input">
-        <input type="text" placeholder="Pergunte algo..." aria-label="Digite sua pergunta" />
-        <button type="button">Enviar</button>
-      </div>
-    </div>
-  `
+//   const modal = document.createElement("div")
+//   modal.className = "chatbot-modal"
+//   modal.setAttribute("role", "dialog")
+//   modal.setAttribute("aria-modal", "true")
+//   modal.innerHTML = `
+//       <div class="chatbot-modal__header">
+//       <div class="chatbot-modal__title">
+//         Assistente</div>
+//       <button type="button" class="chatbot-modal__close" aria-label="Fechar">&times;</button>
+//     </div>
+//     <div class="chatbot-modal__body">
+//       <div class="chatbot-conversation" aria-live="polite"></div>
+//       <div class="chatbot-input">
+//         <input type="text" placeholder="Pergunte algo..." aria-label="Digite sua pergunta" />
+//         <button type="button">Enviar</button>
+//       </div>
+//     </div>
+//   `
 
-  document.body.appendChild(button)
-  document.body.appendChild(modal)
+//   document.body.appendChild(button)
+//   document.body.appendChild(modal)
 
-  const conversation = modal.querySelector(".chatbot-conversation")
-  const closeBtn = modal.querySelector(".chatbot-modal__close")
-  const input = modal.querySelector(".chatbot-input input")
-  const send = modal.querySelector(".chatbot-input button")
+//   const conversation = modal.querySelector(".chatbot-conversation")
+//   const closeBtn = modal.querySelector(".chatbot-modal__close")
+//   const input = modal.querySelector(".chatbot-input input")
+//   const send = modal.querySelector(".chatbot-input button")
 
-  const appendMessage = (text, from) => {
-    const bubble = document.createElement("div")
-    bubble.className = `chatbot-bubble ${from}`
-    bubble.textContent = text
-    conversation.appendChild(bubble)
-    conversation.scrollTop = conversation.scrollHeight
-  }
+//   const appendMessage = (text, from) => {
+//     const bubble = document.createElement("div")
+//     bubble.className = `chatbot-bubble ${from}`
+//     bubble.textContent = text
+//     conversation.appendChild(bubble)
+//     conversation.scrollTop = conversation.scrollHeight
+//   }
 
-  const botReply = (message) => {
-    const msg = message.toLowerCase().trim()
-    if (msg.includes("acessibilidade")) {
-      return "Ative ou desative a acessibilidade na página de configurações."
-    }
-    return "Ainda estou aprendendo. Pergunte sobre análise de dados ou acessibilidade."
-  }
+//   const botReply = (message) => {
+//     const msg = message.toLowerCase().trim()
+//     if (msg.includes("acessibilidade")) {
+//       return "Ative ou desative a acessibilidade na página de configurações."
+//     }
+//     return "Ainda estou aprendendo. Pergunte sobre análise de dados ou acessibilidade."
+//   }
 
-  const sendMessage = () => {
-    const text = input.value.trim()
-    if (!text) return
-    appendMessage(text, "user")
-    input.value = ""
+//   const sendMessage = () => {
+//     const text = input.value.trim()
+//     if (!text) return
+//     appendMessage(text, "user")
+//     input.value = ""
 
-    setTimeout(() => {
-      const resposta = botReply(text)
-      appendMessage(resposta, "bot")
-    }, 300)
-  }
+//     setTimeout(() => {
+//       const resposta = botReply(text)
+//       appendMessage(resposta, "bot")
+//     }, 300)
+//   }
 
-  button.addEventListener("click", () => {
-    const ativo = modal.classList.toggle("open")
-    if (ativo) input.focus()
-  })
+//   button.addEventListener("click", () => {
+//     const ativo = modal.classList.toggle("open")
+//     if (ativo) input.focus()
+//   })
 
-  closeBtn.addEventListener("click", () => modal.classList.remove("open"))
-  send.addEventListener("click", sendMessage)
-  input.addEventListener("keydown", (evt) => {
-    if (evt.key === "Enter") sendMessage()
-  })
+//   closeBtn.addEventListener("click", () => modal.classList.remove("open"))
+//   send.addEventListener("click", sendMessage)
+//   input.addEventListener("keydown", (evt) => {
+//     if (evt.key === "Enter") sendMessage()
+//   })
 
-  // Garantir que o estado de acessibilidade definido seja aplicado ao chatbot recém-criado
-  setAcessibilidadeAtiva(isAcessibilidadeAtiva())
-}
+//   // Garantir que o estado de acessibilidade definido seja aplicado ao chatbot recém-criado
+//   setAcessibilidadeAtiva(isAcessibilidadeAtiva())
+// }
 
 // =============================
 //     Inicialização da página
 // =============================
 window.addEventListener("load", () => {
   setTema()
-  initChatbot()
+  // initChatbot()
   initChartSelection()
 
   // Função para detectar mode escuro
@@ -282,8 +282,8 @@ document.addEventListener('DOMContentLoaded', function() {
   setTema();
   setAcessibilidadeAtiva(isAcessibilidadeAtiva());
   initChartSelection();
-  if (typeof initChatbot === 'function') {
-    initChatbot();
-  }
+  // if (typeof initChatbot === 'function') {
+  //   initChatbot();
+  // }
 });
   
