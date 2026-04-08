@@ -69,43 +69,13 @@
             </div>
           </section>
 
-          <!-- KIndicador de desempenho -->
-          <section aria-label="Indicador de desempenho" style="margin-top: 32px;">
-            <h2 class="h2">Indicador de desempenho</h2>
-            <div class="grade grade--4" style="margin-top: 16px;">
-
-              <article class="cartao" style=" border-left: 4px solid var(--primaria);">
-                <div class="cartao__meta">Faturamento</div>
-                <div style="margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--borda);">
-                  <p class="cartao__valor" style="color: var(--sucesso);">R$ 245.680,00</p>
-                </div>
-                <!-- <div class="cartao__descricao">↑ 12% vs período anterior</div> -->
-              </article>
-              <article class="cartao" style=" border-left: 4px solid var(--primaria);">
-                <div class="cartao__meta">Lucro</div>
-                <div style="margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--borda);">
-                  <p class="cartao__valor" style="color: var(--sucesso);">R$ 85.430,00</p>
-                  <!-- <div class="cartao__descricao">↑ 8% vs período anterior</div> -->
-                </div>
-              </article>
-              <article class="cartao" style=" border-left: 4px solid var(--primaria);">
-                <div class="cartao__meta">Despesas</div>
-                <div style="margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--borda);">
-                  <p class="cartao__valor" style="color: var(--perigo);">R$ 160.250,00</p>
-                  <!-- <div class="cartao__descricao">↓ 3% vs período anterior</div> -->
-                </div>
-              </article>
-              <article class="cartao" style=" border-left: 4px solid var(--primaria);">
-                <div class="cartao__meta">Crescimento</div>
-                <div style="margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--borda);">
-                  <p class="cartao__valor" style="color: var(--primaria);">+18,5%</p>
-                  <!-- <div class="cartao__descricao">Acumulado no período</div> -->
-                </div>
-              </article>
-            </div>
+            <!-- STATUS DO NEGÓCIO -->
+          <section class="cartao mb-4" style="border-left: 4px solid var(--sucesso);">
+            <h2 class="h2">Status do negócio</h2>
+            <p><strong>🟢 Saudável:</strong> O negócio apresenta crescimento consistente, lucro positivo e despesas sob controle.</p>
           </section>
 
-
+          <!-- Alertas por enquanto sem --> 
           <!-- <section style="margin-top: 32px;">
             <h2 class="h2">Alertas e Destaques</h2>
             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 16px;">
@@ -118,7 +88,44 @@
                 <p class="p" style="margin-top: 8px;">Aumento de 25% em vendas no segmento Premium</p>
               </article>
             </div>
-          </section> -->
+          </section>  -->
+
+          <!-- KIndicador de desempenho -->
+          <section aria-label="Indicador de desempenho" style="margin-top: 32px;">
+            <h2 class="h2">Indicador de desempenho</h2>
+            <div class="grade grade--4" style="margin-top: 16px;">
+
+              <article class="cartao" style=" border-left: 4px solid var(--primaria);">
+                <div class="cartao__meta">Faturamento</div>
+                <div style="margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--borda);">
+                  <p class="cartao__valor" style="color: var(--sucesso);">R$ 245.680,00</p>
+                </div>
+                <div class="cartao__descricao">↑ 12% vs período anterior</div>
+              </article>
+              <article class="cartao" style=" border-left: 4px solid var(--primaria);">
+                <div class="cartao__meta">Lucro</div>
+                <div style="margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--borda);">
+                  <p class="cartao__valor" style="color: var(--sucesso);">R$ 85.430,00</p>
+                  <div class="cartao__descricao">↑ 8% vs período anterior</div>
+                </div>
+              </article>
+              <article class="cartao" style=" border-left: 4px solid var(--primaria);">
+                <div class="cartao__meta">Despesas</div>
+                <div style="margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--borda);">
+                  <p class="cartao__valor" style="color: var(--perigo);">R$ 160.250,00</p>
+                  <div class="cartao__descricao">↓ 3% vs período anterior</div>
+                </div>
+              </article>
+              <article class="cartao" style=" border-left: 4px solid var(--primaria);">
+                <div class="cartao__meta">Crescimento</div>
+                <div style="margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--borda);">
+                  <p class="cartao__valor" style="color: var(--primaria);">+18,5%</p>
+                  <div class="cartao__descricao">Acumulado no período</div>
+                </div>
+              </article>
+            </div>
+          </section>
+          
         <div style="height: 30px;"></div>
         <section class="mb-4">
           <h2 class="h2 mb-3">Gráficos Principais</h2>
@@ -159,6 +166,14 @@
             </div>
           </div>
         </section>
+
+        
+         <!-- PRÓXIMA AÇÃO -->
+        <section class="cartao mb-4" style="border-left: 4px solid orange;">
+          <h2 class="h2">Próxima ação recomendada</h2>
+          <p>➡️ Revisar contratos com fornecedores e aumentar investimento na categoria mais rentável.</p>
+        </section>
+
         </div>
       </main>
     </div>
@@ -190,3 +205,4 @@
 </body>
 
 </html>
+

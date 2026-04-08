@@ -19,303 +19,165 @@ function getThemeColors() {
   };
 }
 
-// Opções para Gráfico de Barras
+// ==========================================
+// 📊 DESPESA POR CATEGORIA (CORRETO)
+// ==========================================
 function getChartBarrasOptions() {
   const colors = getThemeColors();
   return {
     series: [{
-      name: 'Receita',
-      data: [45000, 52000, 48000, 61000, 55000, 67000, 72000, 58000]
+      name: 'Despesas',
+      data: [25000, 18000, 12000, 9000, 7000]
     }],
     chart: {
       type: 'bar',
       height: 320,
-      toolbar: { show: true },
-      foreColor: colors.texto,
-      background: colors.fundo
+      foreColor: colors.texto
     },
-    colors: ['#3B82F6'],
-    plotOptions: {
-      bar: {
-        borderRadius: 4,
-        horizontal: false,
-        dataLabels: {
-          position: 'top'
-        }
-      }
-    },
-    dataLabels: {
-      enabled: false
-    },
-    stroke: {
-      show: true,
-      width: 2,
-      colors: ['transparent']
-    },
-    grid: {
-      strokeDashArray: 4,
-      borderColor: colors.borda
-    },
+    colors: ['#0586c2'],
     xaxis: {
-      categories: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago'],
-      labels: {
-        style: {
-          colors: colors.suave,
-          fontSize: '12px'
-        }
-      }
-    },
-    yaxis: {
-      labels: {
-        formatter: function(value) {
-          return 'R$ ' + (value / 1000).toFixed(0) + 'k';
-        },
-        style: {
-          colors: colors.suave,
-          fontSize: '12px'
-        }
-      }
+      categories: ['Fornecedores', 'Marketing', 'Operacional', 'Equipe', 'Outros']
     },
     tooltip: {
-      theme: isDarkMode() ? 'dark' : 'light',
-      y: {
-        formatter: function(value) {
-          return 'R$ ' + value.toLocaleString('pt-BR');
-        }
-      }
-    },
-    fill: {
-      opacity: 1
+      y: val => 'R$ ' + val.toLocaleString('pt-BR')
     }
   };
 }
 
-// Opções para Gráfico de Linha
+// ==========================================
+// 📈 RECEITA vs DESPESA (PRINCIPAL)
+// ==========================================
 function getChartLinhaOptions() {
   const colors = getThemeColors();
+
+  const receita = [30000, 40000, 35000, 50000, 49000, 60000, 75000, 85000];
+  const despesa = [18000, 24000, 21000, 30000, 29000, 36000, 45000, 51000];
+
+  // ✅ cálculo automático do lucro
+  const lucro = receita.map((valor, i) => valor - despesa[i]);
+
   return {
     series: [
       {
         name: 'Receita',
-        data: [30000, 40000, 35000, 50000, 49000, 60000, 75000, 85000]
+        data: receita
       },
       {
-        name: 'Custos',
-        data: [18000, 24000, 21000, 30000, 29000, 36000, 45000, 51000]
+        name: 'Despesa',
+        data: despesa
+      },
+      {
+        name: 'Lucro',
+        data: lucro
       }
     ],
     chart: {
       type: 'line',
       height: 400,
-      toolbar: { show: true },
-      foreColor: colors.texto,
-      background: colors.fundo
-    },
-    colors: ['#16A34A', '#DC2626'],
-    stroke: {
-      curve: 'smooth',
-      width: 3
-    },
-    grid: {
-      strokeDashArray: 4,
-      borderColor: colors.borda
-    },
-    xaxis: {
-      categories: ['Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sab', 'Dom', 'Seg'],
-      labels: {
-        style: {
-          colors: colors.suave,
-          fontSize: '12px'
-        }
-      }
-    },
-    yaxis: {
-      labels: {
-        formatter: function(value) {
-          return 'R$ ' + (value / 1000).toFixed(0) + 'k';
-        },
-        style: {
-          colors: colors.suave,
-          fontSize: '12px'
-        }
-      }
-    },
-    tooltip: {
-      theme: isDarkMode() ? 'dark' : 'light',
-      y: {
-        formatter: function(value) {
-          return 'R$ ' + value.toLocaleString('pt-BR');
-        }
-      }
-    },
-    legend: {
-      position: 'top',
-      labels: {
-        colors: colors.texto
-      }
-    }
-  };
-}
-
-// Opções para Gráfico de Pizza
-function getChartPizzaOptions() {
-  const colors = getThemeColors();
-  return {
-    series: [30, 25, 20, 15, 10],
-    chart: {
-      type: 'pie',
-      height: 320,
-      toolbar: { show: true },
       foreColor: colors.texto
     },
-    colors: ['#3B82F6', '#16A34A', '#DC2626', '#F59E0B', '#8B5CF6'],
-    labels: ['Categoria A', 'Categoria B', 'Categoria C', 'Categoria D', 'Categoria E'],
-    plotOptions: {
-      pie: {
-        donut: {
-          size: '65%'
-        }
-      }
+    // ✅ cores corretas (padrão financeiro)
+    colors: ['#3B82F6', '#DC2626', '#16A34A'],
+    stroke: {
+      curve: 'smooth',
+      width: [2,2,4]
+    },
+    xaxis: {
+      categories: ['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago']
     },
     tooltip: {
-      theme: isDarkMode() ? 'dark' : 'light',
       y: {
-        formatter: function(value) {
-          return value + '%';
+        formatter: function(val) {
+          return 'R$ ' + val.toLocaleString('pt-BR');
         }
       }
     },
     legend: {
-      position: 'bottom',
-      labels: {
-        colors: colors.texto
-      }
-    },
-    dataLabels: {
-      style: {
-        colors: [colors.texto]
-      }
+      position: 'top'
     }
   };
 }
 
-// Opções para Gráfico de Área
+// ==========================================
+// 📈 LUCRO AO LONGO DO TEMPO
+// ==========================================
 function getChartAreaOptions() {
   const colors = getThemeColors();
   return {
     series: [{
-      name: 'Volume de Vendas',
-      data: [31, 40, 28, 51, 42, 109, 100, 88, 95, 76, 84, 92]
+      name: 'Lucro',
+      data: [12000, 16000, 14000, 20000, 19000, 24000, 30000, 34000]
     }],
     chart: {
       type: 'area',
       height: 350,
-      toolbar: { show: true },
-      foreColor: colors.texto,
-      background: colors.fundo
+      foreColor: colors.texto
     },
-    colors: ['#06B6D4'],
-    stroke: {
-      curve: 'smooth',
-      width: 2
-    },
+    colors: ['#16A34A'],
+    stroke: { curve: 'smooth' },
     fill: {
       type: 'gradient',
       gradient: {
-        opacityFrom: 0.45,
+        opacityFrom: 0.4,
         opacityTo: 0.05
       }
     },
-    grid: {
-      strokeDashArray: 4,
-      borderColor: colors.borda
-    },
     xaxis: {
-      categories: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'],
-      labels: {
-        style: {
-          colors: colors.suave,
-          fontSize: '12px'
-        }
-      }
-    },
-    yaxis: {
-      labels: {
-        style: {
-          colors: colors.suave,
-          fontSize: '12px'
-        }
-      }
+      categories: ['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago']
     },
     tooltip: {
-      theme: isDarkMode() ? 'dark' : 'light'
+      y: val => 'R$ ' + val.toLocaleString('pt-BR')
     }
   };
 }
 
-// Opções para Gráfico Comparativo Trimestral
+// ==========================================
+// 📊 MARGEM DE LUCRO (%)
+// ==========================================
+function getChartPizzaOptions() {
+  const colors = getThemeColors();
+  return {
+    series: [26.2, 73.8],
+    chart: {
+      type: 'donut',
+      height: 320
+    },
+    labels: ['Margem de Lucro', 'Custos'],
+    colors: ['#16A34A', '#DC2626'],
+    tooltip: {
+      y: val => val + '%'
+    },
+    legend: {
+      position: 'bottom'
+    }
+  };
+}
+
+// ==========================================
+// 📈 CRESCIMENTO (%)
+// ==========================================
 function getChartComparativoOptions() {
   const colors = getThemeColors();
   return {
-    series: [
-      {
-        name: 'Receita',
-        data: [245000, 280000, 320000]
-      },
-      {
-        name: 'Despesa',
-        data: [160000, 155000, 150000]
-      },
-      {
-        name: 'Lucro',
-        data: [85000, 125000, 170000]
-      }
-    ],
+    series: [{
+      name: 'Crescimento (%)',
+      data: [5, 12, 18, 10, 22, 25, 30]
+    }],
     chart: {
-      type: 'bar',
+      type: 'line',
       height: 350,
-      toolbar: { show: true },
-      foreColor: colors.texto,
-      background: colors.fundo
+      foreColor: colors.texto
     },
-    colors: ['#3B82F6', '#DC2626', '#16A34A'],
-    grid: {
-      strokeDashArray: 4,
-      borderColor: colors.borda
+    colors: ['#3B82F6'],
+    stroke: {
+      curve: 'smooth',
+      width: 3
     },
     xaxis: {
-      categories: ['Q1', 'Q2', 'Q3'],
-      labels: {
-        style: {
-          colors: colors.suave,
-          fontSize: '12px'
-        }
-      }
-    },
-    yaxis: {
-      labels: {
-        formatter: function(value) {
-          return 'R$ ' + (value / 1000).toFixed(0) + 'k';
-        },
-        style: {
-          colors: colors.suave,
-          fontSize: '12px'
-        }
-      }
+      categories: ['Jan','Fev','Mar','Abr','Mai','Jun','Jul']
     },
     tooltip: {
-      theme: isDarkMode() ? 'dark' : 'light',
-      y: {
-        formatter: function(value) {
-          return 'R$ ' + value.toLocaleString('pt-BR');
-        }
-      }
-    },
-    legend: {
-      position: 'top',
-      labels: {
-        colors: colors.texto
-      }
+      y: val => val + '%'
     }
   };
 }
@@ -327,22 +189,22 @@ function getChartComparativoOptions() {
 const chartsInstances = {};
 
 function renderizarGraficos() {
-  // Destruir instâncias anteriores
+
   Object.values(chartsInstances).forEach(chart => {
     if (chart) chart.destroy();
   });
-
-  if (document.getElementById('graficoBarrasGaleria')) {
-    chartsInstances.barras = new ApexCharts(
-      document.getElementById('graficoBarrasGaleria'),
-      getChartBarrasOptions()
-    ).render();
-  }
 
   if (document.getElementById('graficoLinhaGaleria')) {
     chartsInstances.linha = new ApexCharts(
       document.getElementById('graficoLinhaGaleria'),
       getChartLinhaOptions()
+    ).render();
+  }
+
+  if (document.getElementById('graficoBarrasGaleria')) {
+    chartsInstances.barras = new ApexCharts(
+      document.getElementById('graficoBarrasGaleria'),
+      getChartBarrasOptions()
     ).render();
   }
 

@@ -2,7 +2,7 @@ from pymongo import MongoClient
 import certifi
 from dotenv import load_dotenv
 import os
-
+from datetime import datetime
 load_dotenv()
 
 uri = os.getenv('URI')
@@ -19,7 +19,6 @@ def criar_index():
 
 def salvar_dados(usuario_id, nome_planilha, colunas, dados):
     """Salva os dados no banco de dados"""
-    from datetime import datetime
     
     documento = {
         "usuario_id": usuario_id,

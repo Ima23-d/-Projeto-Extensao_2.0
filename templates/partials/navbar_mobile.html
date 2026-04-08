@@ -1,9 +1,11 @@
-<nav class="navbar navbar-expand-lg navbar-light bg-light d-lg-none">
+<nav class="navbar navbar-expand-lg d-lg-none navbar-custom">
     <div class="container-fluid">
-        <a class="navbar-brand" href="home.html">
-            <i class="fa-solid fa-chart-column"></i> DataInsight
+         <a class="marca" href="{{ url_for('pagina_landing') }}" aria-label="DataInsight - Início">
+          <span class="marca__simbolo" aria-hidden="true">
+            <i class="fa-solid fa-chart-column"></i>
+          </span>
+          DataInsight
         </a>
-
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#menuMobile">
             <span class="navbar-toggler-icon"></span>
         </button>
@@ -12,11 +14,11 @@
             <ul class="navbar-nav">
                 <li class="nav-item"><a class="nav-link" href="{{ url_for('pagina_home') }}">Início</a></li>
                 <li class="nav-item"><a class="nav-link" href="{{ url_for('pagina_dados') }}">Dados</a></li>
-                <li class="nav-item"><a class="nav-link" href="{{ url_for('pagina_graficoAvancado') }}">Galeria</a></li>
+                <li class="nav-item"><a class="nav-link" href="{{ url_for('pagina_graficoAvancado') }}">Dashboard</a></li>
                 <li class="nav-item"><a class="nav-link" href="{{ url_for('pagina_analise') }}">Análises</a></li>
                 <li class="nav-item"><a class="nav-link" href="{{ url_for('pagina_relatorio') }}">Relatórios</a></li>
                 <li class="nav-item"><a class="nav-link" href="{{ url_for('pagina_perfil') }}">Perfil</a></li>
-                <li class="nav-item"><a class="nav-link" href="{{ url_for('logout') }}">Sair</a></li>
+                <li class="nav-item"><a class="nav-link" href="{{ url_for('logout') }}" style="color:red;">Sair</a></li>
             </ul>
         </div>
     </div>

@@ -114,6 +114,16 @@
               </div>
             </div>
 
+            <!-- Gráfico -->
+            <div class="card-opcao" onclick="toggleCheck('opt-grafico')">
+              <input type="checkbox" id="opt-grafico" checked>
+              <div class="card-opcao-icon"><i class="fa-solid fa-chart-simple"></i></div>
+              <div class="card-opcao-text">
+                <h3>Gráfico de Faturamento</h3>
+                <p>Visualização de séries temporais</p>
+              </div>
+            </div>
+
             <!-- Insights -->
             <div class="card-opcao" onclick="toggleCheck('opt-insights')">
               <input type="checkbox" id="opt-insights" checked>
@@ -163,6 +173,7 @@
   </script>
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/apexcharts@latest"></script>
   <script src="{{ url_for('static', filename='acessibilidade/acessibilidade.js') }}"></script>
   <script src="{{ url_for('static', filename='js/script.js') }}"></script>
   <script src="{{ url_for('static', filename='js/relatorios.js') }}"></script>

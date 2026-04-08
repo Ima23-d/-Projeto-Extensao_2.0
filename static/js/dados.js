@@ -86,17 +86,17 @@ el.upload.onchange = () => {
 };
 
 el.limpar.onclick = () => {
-    fetch("/limpar-dados", { method: "DELETE" })
+    fetch("/apagar-dados", { method: "DELETE" })
         .then(res => res.json())
         .then(() => {
-            console.log("Dados limpos");
+            console.log("Dados apagados");
             todasAsDados = [];
             colunasAtual = [];
             paginaAtual = 1;
             limparUI();
             atualizarPaginacao();
         })
-        .catch(() => alert("Erro ao limpar dados!"));
+        .catch(() => alert("Erro ao apagar dados!"));
 };
 
 // ===============================
@@ -253,7 +253,7 @@ const sincronizarColunas = () => {
 // ===============================
 // PAGINAÇÃO E SALVAR
 // ===============================
-const atualizarPaginacao = () => {
+function atualizarPaginacao() {
     const total = todasAsDados.length;
     const totalPag = Math.ceil(total / LINHAS_POR_PAGINA);
     const inicio = total > 0 ? (paginaAtual - 1) * LINHAS_POR_PAGINA + 1 : 0;
@@ -264,7 +264,7 @@ const atualizarPaginacao = () => {
     el.total.textContent = total;
     el.btnVoltar.disabled = paginaAtual <= 1;
     el.btnProximo.disabled = paginaAtual >= totalPag;
-};
+}
 
 el.btnVoltar.onclick = () => {
     if (paginaAtual > 1) { paginaAtual--; exibirPagina(); atualizarPaginacao(); }

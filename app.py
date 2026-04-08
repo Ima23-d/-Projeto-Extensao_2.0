@@ -1,14 +1,21 @@
-from flask import Flask, render_template, session, redirect, url_for, request, jsonify
-import pandas as pd
+from flask import Flask, render_template, session, redirect, url_for
 from functools import wraps
 import os
 from dotenv import load_dotenv
-from datetime import datetime
 #------------------ IMPORTAÇÕES BACKEND ------------------
+# Importação user
 from backend.user import tela_cadastro, login
-from backend.dados import limpar_dados
-from backend.db import salvar_dados
-
+# Importação dados
+from backend.dados.carregar_dados import carregar_dados
+from backend.dados.salvar_dados import salvar_dados_manuais
+from backend.dados.apagar_dados import apagar_dados_usuario
+from backend.dados.upload_arquivo import upload_arquivo
+# Importação relatorio
+from backend.relatorio.gerar_relatorio import gerar_relatorio
+from backend.relatorio.pagina_relatorio import pagina_relatorio_pdf as pagina_relatorio_pdf_backend
+# Importação perfil
+from backend.perfil.pagina_de_perfil import pagina_perfil as pagina_perfil_backend
+from backend.perfil.vizualizar_relatorio import vizualizar_relatorio
 load_dotenv()
 
 key = os.getenv('SECRET_KEY')
@@ -19,6 +26,7 @@ app.secret_key = key
 # =================== UPLOAD ===================
 UPLOAD_FOLDER = "uploads"
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
+app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
 
 # =================== PROTEÇÃO ===================
 def login_required(f):
@@ -41,7 +49,7 @@ def pagina_login():
         return redirect(url_for('pagina_home'))
     return render_template("login.html")
 
-# =================== SISTEMA ===================
+# =================== ROTAS ===================
 @app.route("/home")
 @login_required
 def pagina_home():
@@ -72,17 +80,13 @@ def pagina_dados():
 def pagina_relatorio():
     return render_template("relatorios.html")
 
+
 @app.route("/contato")
 @login_required
 def pagina_contato():
     return render_template("contato.html")
 
-@app.route("/perfil")
-@login_required
-def pagina_perfil():
-    return render_template("perfil.html")
-
-# =================== AÇÕES ===================
+# =================== AÇÕES Cadastro ===================
 @app.route("/cadastro", methods=["GET", "POST"])
 def pg_cadastro():
     return tela_cadastro()
@@ -99,134 +103,54 @@ def logout():
 # =================== CARREGAR DADOS ===================
 @app.route("/carregar-dados", methods=["GET"])
 @login_required
-def carregar_dados():
+def carregar_dados_usuario():
     """Carrega os últimos dados salvos do usuário"""
-    from backend.db import dados_colecao
-    
-    usuario_id = session.get('usuario_id')
-    
-    try:
-        # Buscar o documento mais recente do usuário
-        documento = dados_colecao.find_one(
-            {"usuario_id": usuario_id},
-            sort=[("criado_em", -1)]
-        )
-        
-        if documento:
-            return jsonify({
-                "colunas": documento.get("colunas", []),
-                "dados": documento.get("dados", [])
-            }), 200
-        else:
-            return jsonify({
-                "colunas": [],
-                "dados": []
-            }), 200
-    except Exception as e:
-        print(f"Erro ao carregar dados: {e}")
-        return jsonify({
-            "colunas": [],
-            "dados": []
-        }), 200
+    return carregar_dados()
 
 # =================== SALVAR DADOS MANUAIS ===================
 @app.route("/salvar-dados", methods=["POST"])
 @login_required
-def salvar_dados_manuais():
-    dados_json = request.get_json()
-    
-    if not dados_json or "colunas" not in dados_json or "dados" not in dados_json:
-        return jsonify({"mensagem": "Dados inválidos"}), 400
-    
-    colunas = dados_json.get("colunas", [])
-    dados = dados_json.get("dados", [])
-    nome_planilha = dados_json.get("nome_planilha", f"Planilha_{datetime.now().strftime('%Y%m%d_%H%M%S')}")
-    
-    usuario_id = session.get('usuario_id')
-    
-    try:
-        id_salvo = salvar_dados(usuario_id, nome_planilha, colunas, dados)
-        return jsonify({
-            "mensagem": "Dados salvos com sucesso!",
-            "id": str(id_salvo)
-        }), 200
-    except Exception as e:
-        print(f"Erro ao salvar dados: {e}")
-        return jsonify({"mensagem": "Erro ao salvar dados"}), 500
+def salvar_dados_usuario():
+    """Salva os dados enviados pelo usuário"""
+    return salvar_dados_manuais()
 
-# =================== LIMPAR DADOS ===================
-@app.route("/limpar-dados", methods=["DELETE"])
+# =================== APAGAR DADOS ===================
+@app.route("/apagar-dados", methods=["DELETE"])
 @login_required
-def limpar_dados_usuario():
+def apagar_dados():
     """Deleta os últimos dados salvos do usuário"""
-    from backend.db import dados_colecao
-    
-    usuario_id = session.get('usuario_id')
-    
-    try:
-        # Deletar o documento mais recente do usuário
-        resultado = dados_colecao.delete_many({"usuario_id": usuario_id})
-        
-        return jsonify({
-            "mensagem": "Dados deletados com sucesso!",
-            "documentos_deletados": resultado.deleted_count
-        }), 200
-    except Exception as e:
-        print(f"Erro ao limpar dados: {e}")
-        return jsonify({"mensagem": "Erro ao limpar dados"}), 500
+    return apagar_dados_usuario()
 
 # =================== UPLOAD ARQUIVO ===================
 @app.route("/upload", methods=["POST"])
 @login_required
-def upload_arquivo():
-    if "file" not in request.files:
-        return jsonify({"mensagem": "Nenhum arquivo enviado"}), 400
+def upload():
+    """Faz upload do arquivo e salva os dados no banco de dados"""
+    return upload_arquivo()
 
-    arquivo = request.files["file"]
+# =================== Relatorio ===================
+@app.route('/gerar-relatorio', methods=['POST'])
+@login_required
+def gerar_relatorio_endpoint():
+    return gerar_relatorio()
 
-    if arquivo.filename == "":
-        return jsonify({"mensagem": "Arquivo inválido"}), 400
 
-    caminho = os.path.join(UPLOAD_FOLDER, arquivo.filename)
-    arquivo.save(caminho)
+@app.route('/relatorio_pdf')
+@login_required
+def pagina_relatorio_pdf():
+    return pagina_relatorio_pdf_backend()
 
-    # Ler o arquivo e limpar os dados
-    try:
-        if arquivo.filename.endswith(".csv"):
-            df = pd.read_csv(caminho)
-        elif arquivo.filename.endswith((".xlsx", ".xls")):
-            df = pd.read_excel(caminho)
-        else:
-            return jsonify({"mensagem": "Formato de arquivo não suportado"}), 400
+# =================== Perfil ===================
+@app.route("/perfil")
+@login_required
+def pagina_perfil():
+    return pagina_perfil_backend()
 
-        # Aplicar limpeza dos dados
-        df = limpar_dados(df)
+@app.route('/relatorio/visualizar/<int:index>' )
+@login_required
+def visualizar_relatorio(index):
+    return vizualizar_relatorio(index)
 
-        # Converter para dicionário e retornar
-        colunas = df.columns.tolist()
-        dados = df.to_dict('records')
-
-        # Salvar no banco de dados
-        usuario_id = session.get('usuario_id')
-        nome_planilha = arquivo.filename
-        
-        try:
-            salvar_dados(usuario_id, nome_planilha, colunas, dados)
-            print(f"✓ Arquivo '{arquivo.filename}' processado com sucesso - {len(dados)} linhas")
-        except Exception as e:
-            print(f"⚠ Aviso ao salvar no BD: {e}")
-
-        return jsonify({
-            "mensagem": "Arquivo enviado com sucesso!",
-            "colunas": colunas,
-            "dados": dados
-        }), 200
-    
-    except Exception as e:
-        print(f"✗ Erro ao processar arquivo: {e}")
-        return jsonify({
-            "mensagem": f"Erro ao processar arquivo: {str(e)}"
-        }), 400
 
 # =================== RUN ===================
 if __name__ == "__main__":

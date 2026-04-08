@@ -40,7 +40,7 @@
                         aria-label="Alternar tema">
                         <i class="fa-solid fa-moon"></i>
                     </button>
-                    <a class="botao botao--suave" href="configuracoes.html" aria-label="Abrir configurações">
+                   <a class="botao botao--suave" href="{{ url_for('pagina_configuracoes') }}" aria-label="Abrir configurações">
                         <i class="fa-solid fa-gear"></i>
                     </a>
                 </div>
@@ -298,14 +298,45 @@
                                 </tbody>
                             </table>
                         </div>
-
-                        <div
-                            style="margin-top: 16px; padding: 12px; background: rgba(59, 130, 246, 0.1); border-left: 4px solid var(--primaria); border-radius: var(--raio);">
-                            <p class="p" style="margin: 0;"><strong>Insights:</strong> O faturamento cresceu 12.5%
-                                comparado ao período anterior, enquanto despesas subiram apenas 8.3%, resultando em
-                                aumento de lucro de 15.2% e melhoria da margem em 2.6 pontos percentuais.</p>
-                        </div>
                     </section>
+                    <section class="cartao"
+                    style="margin-top: 48px; background: linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(59, 130, 246, 0.05)); border-left: 4px solid var(--primaria);">
+                    
+                    <h2 class="h2">Insights e Recomendações</h2>
+
+                    <div style="margin-top: 16px;">
+
+                        <!-- Crescimento -->
+                        <div style="background: var(--cartao); padding: 16px; border-radius: var(--raio); margin-bottom: 12px; border-left: 3px solid var(--sucesso);">
+                            <p class="p">
+                                <strong>✓ Crescimento Sustentável:</strong> O faturamento cresceu 12.5% enquanto as despesas aumentaram apenas 8.3%, resultando em ganho real de eficiência e expansão do lucro.
+                            </p>
+                        </div>
+
+                        <!-- Margem -->
+                        <div style="background: var(--cartao); padding: 16px; border-radius: var(--raio); margin-bottom: 12px; border-left: 3px solid var(--sucesso);">
+                            <p class="p">
+                                <strong>✓ Melhoria de Margem:</strong> A margem líquida aumentou em 2.6 pontos percentuais, indicando maior controle operacional e melhor conversão de receita em lucro.
+                            </p>
+                        </div>
+
+                        <!-- Tendência -->
+                        <div style="background: var(--cartao); padding: 16px; border-radius: var(--raio); margin-bottom: 12px; border-left: 3px solid var(--info);">
+                            <p class="p">
+                                <strong>→ Tendência Positiva:</strong> O crescimento do lucro (15.2%) está acima do crescimento da receita, mostrando escalabilidade e eficiência no modelo de negócio.
+                            </p>
+                        </div>
+
+                        <!-- Atenção -->
+                        <div style="background: var(--cartao); padding: 16px; border-radius: var(--raio); border-left: 3px solid var(--aviso);">
+                            <p class="p">
+                                <strong>⚠ Ponto de Atenção:</strong> Apesar do crescimento controlado, o aumento contínuo das despesas pode impactar a margem no longo prazo. Recomenda-se monitoramento constante.
+                            </p>
+                        </div>
+
+                    </div>
+                    </section>
+
 
                 </div>
             </main>
