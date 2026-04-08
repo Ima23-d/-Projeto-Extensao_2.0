@@ -79,6 +79,7 @@ def login():
         senha_hash = usuario_encontrado["senha"]
 
         if bcrypt.checkpw(senha_digitada.encode("utf-8"), senha_hash):
+            session["usuario_id"] = str(usuario_encontrado["_id"])
             session["usuario_nome"] = usuario_encontrado["nome"]
             session["usuario_email"] = usuario_encontrado["email"]
             return redirect(url_for("pagina_home"))

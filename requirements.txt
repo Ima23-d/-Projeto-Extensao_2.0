@@ -2,6 +2,5 @@ flask
 pymongo
 bcrypt
 certifi
-dotenv
-os
+python-dotenv
 wkhtmltopdf

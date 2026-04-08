@@ -22,4 +22,4 @@ def pagina_relatorio_pdf():
 
     auto = request.args.get('auto') in ['1', 'true', 'True']
 
-    return render_template('relatorio_pdf.html', dados=dados, auto=auto)
+    return render_template('paginaPDF/relatorio_pdf.html', dados=dados, auto=auto)
