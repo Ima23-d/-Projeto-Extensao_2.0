@@ -1,4 +1,4 @@
-# 📊 DataInsight Acessível - Visualização de Dados para Todos
+# 📊 DataInsight- Visualização de Dados para Todos
 
 [![Licença](https://img.shields.io/badge/Licença-MIT-green.svg)](LICENSE)
 [![Acessibilidade](https://img.shields.io/badge/WCAG-2.1%20AA-yellow)]()
@@ -8,7 +8,7 @@
 
 ## 🎯 Sobre o Projeto
 
-**DataInsight Acessível** é uma plataforma de análise e visualização de dados que une **Business Intelligence + Acessibilidade** para transformar dados complexos em informações claras e úteis.
+**DataInsigh** é uma plataforma de análise e visualização de dados que une **Business Intelligence + Acessibilidade** para transformar dados complexos em informações claras e úteis.
 
 Projetada especialmente para **microempreendedores e profissionais**, a plataforma permite:
 
