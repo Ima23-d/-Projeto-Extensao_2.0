@@ -75,13 +75,12 @@ Nosso objetivo é **democratizar o acesso à análise de dados**, eliminando bar
 
 O DataInsight foi desenvolvido seguindo as diretrizes da **WCAG 2.1**, garantindo inclusão real:
 
-* ⌨️ Navegação completa por teclado
-* 🔊 Compatibilidade com leitores de tela (NVDA, JAWS, VoiceOver)
-* 🖐️ Integração com VLibras
-* 🎨 Alto contraste e paleta acessível
-* 🔍 Zoom sem perda de conteúdo
-* 📝 Textos alternativos em todos os elementos visuais
-* 🔔 Feedback visual de ações
+* ⌨️ Navegação completa por teclado  
+* 🔊 Compatibilidade com leitores de tela (NVDA, JAWS, VoiceOver)  
+* 🖐️ Integração com VLibras  
+* 🎨 Alto contraste e paleta acessível  
+* 🔊 Sistema de leitura por voz (Text-to-Speech)  
+* 🔠 Botões para aumentar e diminuir o tamanho da fonte  
 
 ---
 
