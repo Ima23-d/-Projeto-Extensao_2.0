@@ -1,3 +1,0 @@
-Login - botão de esqueceu a senha e lembrar de min
-Cadastro - botão check de termos de uso 
-Dados - Sistema para salvar no id do usuário
