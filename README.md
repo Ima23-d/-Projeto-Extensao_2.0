@@ -55,7 +55,7 @@ Nosso objetivo é **democratizar o acesso à análise de dados**, eliminando bar
 
 ### 📁 Gestão de Dados
 
-* Upload de arquivos (CSV, JSON, XML)
+* Upload de arquivo (CSV)
 * Processamento e organização de dados
 * Exportação em múltiplos formatos
 * Integração com banco de dados (MongoDB)
