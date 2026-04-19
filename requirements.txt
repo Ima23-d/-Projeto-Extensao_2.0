@@ -4,3 +4,5 @@ bcrypt
 certifi
 python-dotenv
 wkhtmltopdf
+pandas
+openpyxl

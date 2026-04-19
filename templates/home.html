@@ -61,10 +61,10 @@
             <div class="d-flex gap-2 flex-wrap align-items-center">
               <label for="periodo" class="fw-bold mb-0">Período:</label>
               <select class="form-select w-auto" id="periodo" aria-label="Selecionar período">
-                <option>Últimos 7 dias</option>
-                <option>Últimos 30 dias</option>
-                <option>Últimos 90 dias</option>
-                <option>Este ano</option>
+                <option value="7_dias">Últimos 7 dias</option>
+                <option value="30_dias" selected>Últimos 30 dias</option>
+                <option value="90_dias">Últimos 90 dias</option>
+                <option value="ano_atual">Este ano</option>
               </select>
             </div>
           </section>
@@ -98,28 +98,28 @@
               <article class="cartao" style=" border-left: 4px solid var(--primaria);">
                 <div class="cartao__meta">Faturamento</div>
                 <div style="margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--borda);">
-                  <p class="cartao__valor" style="color: var(--sucesso);">R$ 245.680,00</p>
+                  <p class="cartao__valor" style="color: var(--sucesso);  font-size: 28px;" data-indicador="faturamento-valor">R$ 0,00</p>
                 </div>
-                <div class="cartao__descricao">↑ 12% vs período anterior</div>
+                <div class="cartao__descricao" data-indicador="faturamento-percent">↑ 0% vs período anterior</div>
               </article>
               <article class="cartao" style=" border-left: 4px solid var(--primaria);">
                 <div class="cartao__meta">Lucro</div>
                 <div style="margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--borda);">
-                  <p class="cartao__valor" style="color: var(--sucesso);">R$ 85.430,00</p>
-                  <div class="cartao__descricao">↑ 8% vs período anterior</div>
+                  <p class="cartao__valor" style="color: var(--sucesso);  font-size: 28px;" data-indicador="lucro-valor">R$ 0,00</p>
+                  <div class="cartao__descricao" data-indicador="lucro-percent">↑ 0% vs período anterior</div>
                 </div>
               </article>
               <article class="cartao" style=" border-left: 4px solid var(--primaria);">
                 <div class="cartao__meta">Despesas</div>
                 <div style="margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--borda);">
-                  <p class="cartao__valor" style="color: var(--perigo);">R$ 160.250,00</p>
-                  <div class="cartao__descricao">↓ 3% vs período anterior</div>
+                  <p class="cartao__valor" style="color: var(--perigo);  font-size: 28px;" data-indicador="despesa-valor">R$ 0,00</p>
+                  <div class="cartao__descricao" data-indicador="despesa-percent">↓ 0% vs período anterior</div>
                 </div>
               </article>
               <article class="cartao" style=" border-left: 4px solid var(--primaria);">
                 <div class="cartao__meta">Crescimento</div>
                 <div style="margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--borda);">
-                  <p class="cartao__valor" style="color: var(--primaria);">+18,5%</p>
+                  <p class="cartao__valor" style="color: var(--primaria);  font-size: 28px;" data-indicador="crescimento-valor">+0%</p>
                   <div class="cartao__descricao">Acumulado no período</div>
                 </div>
               </article>
@@ -140,8 +140,8 @@
         
             <div class="col-12 col-lg-6 p-1">
               <article class="cartao h-100 w-100 overflow-hidden">
-                <h3 class="h2 mb-3" style="font-size: 18px;">Comparativo Mensal</h3>
-                <div id="graficoBarrasComparativo" class="w-100"></div>
+                <h3 class="h2 mb-3" style="font-size: 18px;">Comparativo de Métricas</h3>
+                <div id="graficoPizzaComparativa" class="w-100"></div>
               </article>
             </div>
         
@@ -201,7 +201,7 @@
   <script src="{{ url_for('static', filename='acessibilidade/acessibilidade.js') }}"></script>
   <script src="{{ url_for('static', filename='js/script.js') }}"></script>
   <script src="{{ url_for('static', filename='js/home.js') }}"></script>
-
+ 
 </body>
 
 </html>

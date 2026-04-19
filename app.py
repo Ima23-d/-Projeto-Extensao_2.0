@@ -1,4 +1,4 @@
-from flask import Flask, render_template, session, redirect, url_for
+from flask import Flask, render_template, session, redirect, url_for, request
 from functools import wraps
 import os
 from dotenv import load_dotenv
@@ -16,6 +16,8 @@ from backend.relatorio.pagina_relatorio import pagina_relatorio_pdf as pagina_re
 # Importação perfil
 from backend.perfil.pagina_de_perfil import pagina_perfil as pagina_perfil_backend
 from backend.perfil.vizualizar_relatorio import vizualizar_relatorio
+# Importação home
+from backend.home.home import calcular_desempenho, obter_dados_graficos
 load_dotenv()
 
 key = os.getenv('SECRET_KEY')
@@ -155,6 +157,20 @@ def pagina_perfil():
 def visualizar_relatorio(index):
     return vizualizar_relatorio(index)
 
+# =================== Desempenho ===================
+@app.route('/api/desempenho', methods=['GET'])
+@login_required
+def api_desempenho():
+    """Retorna os indicadores de desempenho"""
+    periodo = request.args.get('periodo', '30_dias')
+    return calcular_desempenho(periodo)
+
+@app.route('/api/graficos', methods=['GET'])
+@login_required
+def api_graficos():
+    """Retorna dados para os gráficos"""
+    periodo = request.args.get('periodo', '30_dias')
+    return obter_dados_graficos(periodo)
 
 # =================== RUN ===================
 if __name__ == "__main__":

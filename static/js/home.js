@@ -1,196 +1,260 @@
-// ==========================================
-// Gráficos ApexCharts
-// ==========================================
+// ======================
+// CONFIGURAÇÕES
+// ======================
+const PERIODOS = {
+  '7_dias': 'Últimos 7 dias',
+  '30_dias': 'Últimos 30 dias',
+  '90_dias': 'Últimos 90 dias',
+  'ano_atual': 'Este ano'
+};
 
-// Função auxiliar para detectar modo escuro
-function isDarkMode() {
-  return document.body.classList.contains('tema-escuro');
-}
+let periodoAtual = '30_dias';
+let chartLinha = null;
+let chartBarras = null;
 
-// Função para obter cores baseado no tema
-function getThemeColors() {
-  const isDark = isDarkMode();
-  return {
-    texto: isDark ? '#F9FAFB' : '#111827',
-    suave: isDark ? '#CBD5E1' : '#6B7280',
-    borda: isDark ? '#334155' : '#E5E7EB',
-    fundo: isDark ? '#1d1d1d' : '#FFFFFF'
-  };
-}
-
-// Opções do Gráfico de Linha
-function getChartLinhaOptions() {
-  const colors = getThemeColors();
-  return {
-    series: [{
-      name: 'Faturamento',
-      data: [30000, 40000, 35000, 50000, 49000, 60000, 75000]
-    }],
-    chart: {
-      type: 'line',
-      height: 350,
-      toolbar: { show: true },
-      foreColor: colors.texto,
-      background: colors.fundo
-    },
-    colors: ['#16A34A'],
-    stroke: {
-      curve: 'smooth',
-      width: 3
-    },
-    grid: {
-      strokeDashArray: 4,
-      borderColor: colors.borda
-    },
-    xaxis: {
-      categories: ['Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sab', 'Dom'],
-      labels: {
-        style: {
-          colors: colors.suave,
-          fontSize: '12px'
-        }
-      }
-    },
-    yaxis: {
-      labels: {
-        formatter: function(value) {
-          return 'R$ ' + (value / 1000).toFixed(0) + 'k';
-        },
-        style: {
-          colors: colors.suave,
-          fontSize: '12px'
-        }
-      }
-    },
-    tooltip: {
-      theme: isDarkMode() ? 'dark' : 'light',
-      y: {
-        formatter: function(value) {
-          return 'R$ ' + value.toLocaleString('pt-BR');
-        }
-      }
-    }
-  };
-}
-
-// Opções do Gráfico de Barras
-function getChartBarrasOptions() {
-  const colors = getThemeColors();
-  return {
-    series: [
-      {
-        name: 'Faturamento',
-        data: [245000, 280000, 320000]
-      },
-      {
-        name: 'Despesas',
-        data: [160000, 155000, 150000]
-      },
-      {
-        name: 'Lucro',
-        data: [85000, 125000, 170000]
-      }
-    ],
-    chart: {
-      type: 'bar',
-      height: 350,
-      toolbar: { show: true },
-      foreColor: colors.texto,
-      background: colors.fundo
-    },
-    // Formatação dos valores dentro das barras
-    dataLabels: {
-      enabled: true,
-      formatter: function (val) {
-        return (val / 1000).toFixed(0) + 'k';
-      },
-      style: {
-        fontSize: '10px',
-        colors: ['#fff']
-      }
-    },
-    // --------------------------------
-    colors: ['#3B82F6', '#DC2626', '#16A34A'],
-    grid: {
-      strokeDashArray: 4,
-      borderColor: colors.borda
-    },
-    xaxis: {
-      categories: ['Agosto', 'Setembro', 'Outubro'],
-      labels: {
-        style: {
-          colors: colors.suave,
-          fontSize: '12px'
-        }
-      }
-    },
-    yaxis: {
-      labels: {
-        formatter: function(value) {
-          return 'R$ ' + (value / 1000).toFixed(0) + 'k';
-        },
-        style: {
-          colors: colors.suave,
-          fontSize: '12px'
-        }
-      }
-    },
-    tooltip: {
-      theme: isDarkMode() ? 'dark' : 'light',
-      y: {
-        formatter: function(value) {
-          return 'R$ ' + value.toLocaleString('pt-BR');
-        }
-      }
-    },
-    legend: {
-      position: 'top',
-      labels: {
-        colors: colors.texto
-      }
-    }
-  };
-}
-
-// Instâncias dos gráficos
-const chartsInstances = {};
-
-// Renderizar gráficos
-function renderizarGraficos() {
-  // Destruir instâncias anteriores
-  if (chartsInstances.linha) chartsInstances.linha.destroy();
-  if (chartsInstances.barras) chartsInstances.barras.destroy();
-
-  if (document.getElementById('graficoLinhaFaturamento')) {
-    chartsInstances.linha = new ApexCharts(
-      document.getElementById('graficoLinhaFaturamento'),
-      getChartLinhaOptions()
-    ).render();
-  }
-
-  if (document.getElementById('graficoBarrasComparativo')) {
-    chartsInstances.barras = new ApexCharts(
-      document.getElementById('graficoBarrasComparativo'),
-      getChartBarrasOptions()
-    ).render();
-  }
-}
-
-// Renderizar no carregamento
-document.addEventListener('DOMContentLoaded', renderizarGraficos);
-
-// Atualizar gráficos ao mudar período
-document.getElementById('periodo')?.addEventListener('change', function() {
-  console.log('Período selecionado:', this.value);
-  // Aqui você pode adicionar lógica para buscar dados diferentes baseado no período
+// ======================
+// INIT
+// ======================
+document.addEventListener('DOMContentLoaded', () => {
+  configurarPeriodo();
+  atualizarTudo();
 });
 
-// Redenrizar gráficos ao trocar de tema
-const originalAlternarTema = window.alternarTema;
-window.alternarTema = function() {
-  if (originalAlternarTema) {
-    originalAlternarTema();
-  }
-  // Aguardar um pouco para o DOM atualizar
-  setTimeout(renderizarGraficos, 100);
-};
+// ======================
+// CONTROLE DE PERÍODO
+// ======================
+function configurarPeriodo() {
+  const select = document.getElementById('periodo');
+  if (!select) return;
+
+  select.value = periodoAtual;
+
+  select.addEventListener('change', e => {
+    const valor = e.target.value;
+    if (!PERIODOS[valor]) return console.error('Período inválido');
+
+    periodoAtual = valor;
+    atualizarTudo();
+  });
+}
+
+// ======================
+// ATUALIZAÇÃO GERAL
+// ======================
+function atualizarTudo() {
+  carregarDados('/api/desempenho', atualizarIndicadores);
+  carregarDados('/api/graficos', atualizarGraficos);
+}
+
+// ======================
+// FETCH GENÉRICO
+// ======================
+function carregarDados(url, callback) {
+  fetch(`${url}?periodo=${periodoAtual}`)
+    .then(r => {
+      if (!r.ok) throw new Error(`HTTP ${r.status}`);
+      return r.json();
+    })
+    .then(data => {
+      if (!data.erro) callback(data);
+    })
+    .catch(err => console.error(err));
+}
+
+// ======================
+// INDICADORES
+// ======================
+function atualizarIndicadores(data) {
+  atualizarCard('faturamento', data.faturamento);
+  atualizarCard('lucro', data.lucro);
+  atualizarCard('despesa', data.despesa, true);
+
+  setTexto('crescimento-valor', `+${data.crescimento.valor.toFixed(1)}%`);
+}
+
+function atualizarCard(nome, dados, inverter = false) {
+  setTexto(`${nome}-valor`, formatarMoeda(dados.valor));
+
+  const percentual = inverter ? Math.abs(dados.percentual) : dados.percentual;
+  const positivo = inverter ? dados.percentual <= 0 : dados.percentual >= 0;
+
+  const sinal = positivo ? '↑' : '↓';
+  const cor = positivo ? '#10b981' : '#ef4444';
+
+  setTexto(`${nome}-percent`, `${sinal} ${percentual.toFixed(1)}%`, cor);
+}
+
+function setTexto(dataId, texto, cor = null) {
+  const el = document.querySelector(`[data-indicador="${dataId}"]`);
+  if (!el) return;
+
+  el.textContent = texto;
+  if (cor) el.style.color = cor;
+}
+
+// ======================
+// GRÁFICOS
+// ======================
+function atualizarGraficos(data) {
+  renderGraficoLinha(data.grafico_linha);
+  renderGraficoBarras(data.grafico_barras);
+}
+
+// ======================
+// COR DINÂMICA DO TEMA
+// ======================
+function getCorTexto() {
+  return getComputedStyle(document.documentElement)
+    .getPropertyValue('--texto')
+    .trim();
+}
+
+// ======================
+// GRÁFICO LINHA
+// ======================
+function renderGraficoLinha(dados) {
+  const container = document.getElementById('graficoLinhaFaturamento');
+  if (!container) return;
+
+  if (!dados?.labels?.length) return renderVazio(container, 350);
+
+  const corTexto = getCorTexto();
+
+  destruir(chartLinha);
+  container.innerHTML = '';
+
+  chartLinha = new ApexCharts(container, {
+    chart: { type: 'line', height: 350 },
+
+    series: dados.series,
+
+    xaxis: {
+      categories: dados.labels,
+      labels: { style: { colors: corTexto } }
+    },
+
+    yaxis: {
+      labels: {
+        formatter: formatarMoeda,
+        style: { colors: corTexto }
+      }
+    },
+
+    tooltip: { y: { formatter: formatarMoeda } },
+
+    stroke: { curve: 'smooth' },
+
+    title: {
+      text: `Faturamento - ${PERIODOS[periodoAtual]}`,
+      align: 'center',
+      style: {
+        color: "grey",
+        fontSize: '14px',
+        fontWeight: 'bold'
+      }
+    },
+
+    legend: {
+      labels: { colors: corTexto }
+    }
+  });
+
+  chartLinha.render();
+}
+
+// ======================
+// GRÁFICO BARRAS
+// ======================
+function renderGraficoBarras(dados) {
+  const container = document.getElementById('graficoPizzaComparativa');
+  if (!container) return;
+
+  if (!dados?.labels?.length) return renderVazio(container, 400);
+
+  const corTexto = getCorTexto();
+
+  destruir(chartBarras);
+  container.innerHTML = '';
+
+  chartBarras = new ApexCharts(container, {
+    chart: {
+      type: 'bar',
+      height: 400
+    },
+
+    series: dados.series,
+
+    colors: ['#3b82f6', '#10b981', '#ef4444'],
+
+    xaxis: {
+      categories: dados.labels,
+      labels: { style: { colors: corTexto } }
+    },
+
+    yaxis: {
+      labels: {
+        formatter: formatarMoeda,
+        style: { colors: corTexto }
+      }
+    },
+
+    tooltip: {
+      y: { formatter: formatarMoeda }
+    },
+
+    dataLabels: {
+      enabled: false
+    },
+
+    plotOptions: {
+      bar: {
+        borderRadius: 5,
+        columnWidth: '60%'
+      }
+    },
+
+    title: {
+      text: `Comparativo - ${PERIODOS[periodoAtual]}`,
+      align: 'center',
+      style: {
+        color: "grey",
+        fontSize: '14px',
+        fontWeight: 'bold'
+      }
+    },
+
+    legend: {
+      labels: { colors: corTexto }
+    }
+  });
+
+  chartBarras.render();
+}
+
+// ======================
+// UTILIDADES
+// ======================
+function destruir(chart) {
+  if (chart) chart.destroy();
+}
+
+function renderVazio(container, altura) {
+  container.innerHTML = `
+    <div style="display:flex;align-items:center;justify-content:center;height:${altura}px;color:#9ca3af;">
+      Sem dados para ${PERIODOS[periodoAtual]}
+    </div>
+  `;
+}
+
+function formatarMoeda(valor) {
+  return new Intl.NumberFormat('pt-BR', {
+    style: 'currency',
+    currency: 'BRL'
+  }).format(valor);
+}
+
+function formatarMoedaSimples(valor) {
+  if (valor >= 1e6) return `R$ ${(valor / 1e6).toFixed(1)}M`;
+  if (valor >= 1e3) return `R$ ${(valor / 1e3).toFixed(1)}K`;
+  return `R$ ${valor.toFixed(0)}`;
+}
