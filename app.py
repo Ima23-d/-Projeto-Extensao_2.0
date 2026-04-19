@@ -4,7 +4,7 @@ import os
 from dotenv import load_dotenv
 #------------------ IMPORTAÇÕES BACKEND ------------------
 # Importação user
-from backend.user import tela_cadastro, login
+from backend.user import tela_cadastro, login, esqueceu_senha
 # Importação dados
 from backend.dados.carregar_dados import carregar_dados
 from backend.dados.salvar_dados import salvar_dados_manuais
@@ -105,6 +105,11 @@ def pg_login():
 def logout():
     session.clear()
     return redirect(url_for('pagina_login'))
+
+# =================== ESQUECEU SENHA ===================
+@app.route("/esqueceu-senha", methods=["GET", "POST"])
+def esqueceu_senha_route():
+    return esqueceu_senha()
 
 # =================== CARREGAR DADOS ===================
 @app.route("/carregar-dados", methods=["GET"])

@@ -47,7 +47,7 @@
           <button class="botao botao--primario" type="submit">Entrar</button>
 
           <div class="autenticacao__links">
-            <a href="#" aria-label="Recuperar senha (placeholder)">Esqueci a senha</a>
+            <a href="{{ url_for('esqueceu_senha_route') }}" aria-label="Recuperar senha">Esqueci a senha</a>
             <a href="{{ url_for('pg_cadastro') }}">Criar conta</a>
           </div>
         </form>
