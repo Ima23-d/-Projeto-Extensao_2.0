@@ -543,7 +543,12 @@ body {
   min-height: calc(100vh - 120px);
   display: grid;
   place-items: center;
-  padding: 20px 40px;
+  padding: 20px;
+}
+@media (min-width: 768px) {
+  .autenticacao {
+    padding: 20px 40px;
+  }
 }
 
 .autenticacao__cartao {
