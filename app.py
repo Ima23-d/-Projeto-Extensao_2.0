@@ -1,10 +1,10 @@
-from flask import Flask, render_template, session, redirect, url_for, request
+from flask import Flask, render_template, session, redirect, url_for, request, flash
 from functools import wraps
 import os
 from dotenv import load_dotenv
 #------------------ IMPORTAÇÕES BACKEND ------------------
 # Importação user
-from backend.user import tela_cadastro, login
+from backend.user import tela_cadastro, login, esqueceu_senha
 # Importação dados
 from backend.dados.carregar_dados import carregar_dados
 from backend.dados.salvar_dados import salvar_dados_manuais
@@ -106,6 +106,11 @@ def logout():
     session.clear()
     return redirect(url_for('pagina_login'))
 
+# =================== ESQUECEU SENHA ===================
+@app.route("/esqueceu-senha", methods=["GET", "POST"])
+def esqueceu_senha_route():
+    return esqueceu_senha()
+
 # =================== CARREGAR DADOS ===================
 @app.route("/carregar-dados", methods=["GET"])
 @login_required
@@ -192,7 +197,6 @@ def verificar_codigo():
 
 @app.route('/reenviar-codigo')
 def reenviar_codigo():
-   
     flash("Um novo código foi enviado para seu e-mail!")
     return redirect(url_for('verificar_codigo'))
 # =================== RUN ===================
