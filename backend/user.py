@@ -1,25 +1,85 @@
-from flask import render_template, request, redirect, session, url_for, jsonify
+from flask import render_template, request, redirect, session, url_for, jsonify, current_app
+from flask_mail import Message
 import bcrypt
 from .db import usuario
 import re
 import secrets
+from datetime import datetime, timedelta
 
 
+def enviar_email_codigo(destinatario, codigo):
+    """Envia o código de recuperação por email"""
+    try:
+        # Obter a instância do Mail do contexto da aplicação
+        from flask_mail import Mail
+
+        if not hasattr(current_app, 'mail_instance'):
+            if 'flask_mail' not in current_app.extensions:
+                return False
+            mail_instance = current_app.extensions['flask_mail']
+        else:
+            mail_instance = current_app.mail_instance
+
+        sender = current_app.config.get('MAIL_USERNAME')
+
+        msg = Message(
+            subject="Código de recuperação - DataInsight",
+            sender=sender,
+            recipients=[destinatario]
+        )
+
+        msg.body = f"""
+Recuperação de Senha
+
+Recebemos uma solicitação para redefinir sua senha.
+
+Seu código de verificação: {codigo}
+
+Este código expira em 10 minutos.
+
+Se você não solicitou isso, ignore este email.
+
+DataInsight © 2026
+        """
+
+        msg.html = f"""
+        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+            <h2 style="color: #333;">Recuperação de Senha</h2>
+            <p style="font-size: 16px; color: #555;">Recebemos uma solicitação para redefinir sua senha.</p>
+            <div style="background-color: #f0f0f0; padding: 20px; border-radius: 8px; text-align: center; margin: 20px 0;">
+                <p style="color: #999; font-size: 12px;">Seu código de verificação:</p>
+                <h1 style="color: #007bff; letter-spacing: 2px; margin: 10px 0;">{codigo}</h1>
+            </div>
+            <p style="font-size: 14px; color: #999;">Este código expira em <strong>10 minutos</strong>.</p>
+            <p style="font-size: 14px; color: #999;">Se você não solicitou isso, ignore este email.</p>
+            <hr style="border: none; border-top: 1px solid #ddd; margin: 20px 0;">
+            <p style="font-size: 12px; color: #999;">DataInsight © 2026</p>
+        </div>
+        """
+
+        mail_instance.send(msg)
+        return True
+
+    except Exception:
+        return False
+
+
+# =================== VALIDAÇÕES ===================
 
 def validar_email(email):
-    """Valida o formato do email"""
     padrao = r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$'
     return re.match(padrao, email) is not None
 
 
 def validar_senha(senha):
-    """Valida força da senha (mínimo 8 caracteres)"""
     if len(senha) < 8:
         return False, "A senha deve ter no mínimo 8 caracteres"
     return True, ""
 
-def tela_cadastro():
 
+# =================== CADASTRO ===================
+
+def tela_cadastro():
     if request.method == "POST":
 
         nome = request.form.get("nome", "").strip()
@@ -27,7 +87,6 @@ def tela_cadastro():
         senha = request.form.get("senha", "")
         confirmar = request.form.get("confirmar", "")
 
-      
         if not nome or not email or not senha or not confirmar:
             return render_template("cadastro.html", error_cad=True, msg="Todos os campos são obrigatórios")
 
@@ -41,119 +100,212 @@ def tela_cadastro():
         if senha != confirmar:
             return render_template("cadastro.html", error_cad=True, msg="As senhas não coincidem")
 
-        email_encontrado = usuario.find_one({"email": email})
-        if email_encontrado:
-            return render_template("cadastro.html", error_cad=True, msg="Este email já está registrado")
+        if usuario.find_one({"email": email}):
+            return render_template("cadastro.html", error_cad=True, msg="Email já cadastrado")
 
-        senha_bytes = senha.encode("utf-8")
-        senha_hash = bcrypt.hashpw(senha_bytes, bcrypt.gensalt())
+        senha_hash = bcrypt.hashpw(senha.encode("utf-8"), bcrypt.gensalt())
 
-        try:
-            usuario.insert_one({
-                "nome": nome,
-                "email": email,
-                "senha": senha_hash
-            })
-            return redirect(url_for("pagina_login"))
-        except Exception as e:
-            return render_template("cadastro.html", error_cad=True, msg=f"Erro ao criar conta: {str(e)}")
-    
+        usuario.insert_one({
+            "nome": nome,
+            "email": email,
+            "senha": senha_hash
+        })
+
+        return redirect(url_for("pagina_login"))
+
     return render_template("cadastro.html")
 
 
+# =================== LOGIN ===================
 
 def login():
-
     if request.method == "POST":
 
         email = request.form.get("email", "").strip()
-        senha_digitada = request.form.get("senha", "")
+        senha = request.form.get("senha", "")
 
-        if not email or not senha_digitada:
-            return render_template("login.html", error=True, msg="Email e senha são obrigatórios")
+        if not email or not senha:
+            return render_template("login.html", error=True, msg="Preencha todos os campos")
 
-        usuario_encontrado = usuario.find_one({"email": email})
+        user = usuario.find_one({"email": email})
 
-        if not usuario_encontrado:
-            return render_template("login.html", error=True, msg="Email ou senha incorretos")
-        
-        senha_hash = usuario_encontrado["senha"]
+        if not user:
+            return render_template("login.html", error=True, msg="Email ou senha inválidos")
 
-        if bcrypt.checkpw(senha_digitada.encode("utf-8"), senha_hash):
-            session["usuario_id"] = str(usuario_encontrado["_id"])
-            session["usuario_nome"] = usuario_encontrado["nome"]
-            session["usuario_email"] = usuario_encontrado["email"]
+        if bcrypt.checkpw(senha.encode("utf-8"), user["senha"]):
+            session["usuario_id"] = str(user["_id"])
+            session["usuario_nome"] = user["nome"]
+            session["usuario_email"] = user["email"]
             return redirect(url_for("pagina_home"))
-        else:
-            return render_template("login.html", error=True, msg="Email ou senha incorretos")
+
+        return render_template("login.html", error=True, msg="Email ou senha inválidos")
 
     return render_template("login.html")
 
 
+# =================== ESQUECEU SENHA ===================
+
 def esqueceu_senha():
-    """
-    Processa a solicitação de recuperação de senha.
-    Valida se o email existe e retorna JSON com status.
-    """
 
     if request.method == "POST":
         email = request.form.get("email", "").strip()
 
-        # Validar se email foi fornecido
         if not email:
-            return jsonify({
-                "sucesso": False,
-                "mensagem": "Por favor, digite seu e-mail"
-            }), 400
+            return jsonify({"sucesso": False, "mensagem": "Digite seu email"}), 400
 
-        # Validar formato do email
         if not validar_email(email):
-            return jsonify({
-                "sucesso": False,
-                "mensagem": "Por favor, digite um e-mail válido"
-            }), 400
+            return jsonify({"sucesso": False, "mensagem": "Email inválido"}), 400
 
-        # Verificar se email existe na base de dados
-        usuario_encontrado = usuario.find_one({"email": email})
+        user = usuario.find_one({"email": email})
 
-        if not usuario_encontrado:
-            # Por segurança, não informar que o email não existe
+        if not user:
             return jsonify({
                 "sucesso": True,
-                "mensagem": "Se este e-mail estiver cadastrado, você receberá um código de recuperação"
-            }), 200
+                "mensagem": "Se existir, você receberá um código",
+                "redirect_url": url_for("verificar_codigo_route")
+            })
 
-        # Gerar código de recuperação (6 dígitos aleatórios)
-        codigo_recuperacao = str(secrets.randbelow(1000000)).zfill(6)
+        codigo = str(secrets.randbelow(1000000)).zfill(6)
 
-        try:
-            # Atualizar usuário com código de recuperação e timestamp
-            from datetime import datetime, timedelta
-
-            usuario.update_one(
-                {"_id": usuario_encontrado["_id"]},
-                {
-                    "$set": {
-                        "codigo_recuperacao": codigo_recuperacao,
-                        "codigo_expiracy": datetime.now() + timedelta(minutes=15)
-                    }
+        usuario.update_one(
+            {"_id": user["_id"]},
+            {
+                "$set": {
+                    "codigo_recuperacao": codigo,
+                    "codigo_expiracao": datetime.now() + timedelta(minutes=10)
                 }
-            )
+            }
+        )
 
-            # TODO: Implementar envio de email com o código
-            # Para agora, apenas retorna sucesso
-            # Exemplo de implementação com Flask-Mail ou similar:
-            # send_recovery_email(email, codigo_recuperacao)
+        session["email_recuperacao"] = email
 
-            return jsonify({
-                "sucesso": True,
-                "mensagem": "Se este e-mail estiver cadastrado, você receberá um código de recuperação"
-            }), 200
+        sucesso_envio = enviar_email_codigo(email, codigo)
 
-        except Exception as e:
-            return jsonify({
-                "sucesso": False,
-                "mensagem": f"Erro ao processar solicitação: {str(e)}"
-            }), 500
+        if not sucesso_envio:
+            return jsonify({"sucesso": False, "mensagem": "Erro ao enviar email. Tente novamente."}), 500
+
+        return jsonify({
+            "sucesso": True,
+            "mensagem": "Código enviado para seu email!",
+            "redirect_url": url_for("verificar_codigo_route")
+        })
 
     return render_template("esqueceu_senha.html")
+
+
+# =================== VERIFICAR CÓDIGO ===================
+
+def verificar_codigo():
+
+    if request.method == "POST":
+        codigo = request.form.get("codigo", "").strip()
+        email = session.get("email_recuperacao")
+
+        if not codigo:
+            return render_template("verificar_codigo.html", erro="Digite o código")
+
+        if not email:
+            return redirect(url_for("esqueceu_senha_route"))
+
+        user = usuario.find_one({"email": email})
+
+        if not user:
+            return redirect(url_for("esqueceu_senha_route"))
+
+        if datetime.now() > user.get("codigo_expiracao"):
+            return render_template("verificar_codigo.html", erro="Código expirado")
+
+        if codigo != user.get("codigo_recuperacao"):
+            return render_template("verificar_codigo.html", erro="Código incorreto")
+
+        session["codigo_verificado"] = True
+
+        return redirect(url_for("resetar_senha_route"))
+
+    return render_template("verificar_codigo.html")
+
+
+# =================== RESETAR SENHA ===================
+
+def resetar_senha():
+
+    if not session.get("codigo_verificado"):
+        return redirect(url_for('esqueceu_senha_route'))
+
+    if request.method == "POST":
+        senha = request.form.get("nova_senha", "").strip()
+        confirmar = request.form.get("confirmar_senha", "").strip()
+
+        if not senha or not confirmar:
+            return render_template("redefinir_senha.html", erro=True, msg="Preencha todos os campos")
+
+        if senha != confirmar:
+            return render_template("redefinir_senha.html", erro=True, msg="As senhas não coincidem")
+
+        valido, msg = validar_senha(senha)
+        if not valido:
+            return render_template("redefinir_senha.html", erro=True, msg=msg)
+
+        email = session.get("email_recuperacao")
+
+        if not email:
+            return redirect(url_for('esqueceu_senha_route'))
+
+        user = usuario.find_one({"email": email})
+
+        if not user:
+            return redirect(url_for('esqueceu_senha_route'))
+
+        senha_hash = bcrypt.hashpw(senha.encode("utf-8"), bcrypt.gensalt())
+
+        usuario.update_one(
+            {"_id": user["_id"]},
+            {
+                "$set": {"senha": senha_hash},
+                "$unset": {
+                    "codigo_recuperacao": "",
+                    "codigo_expiracao": ""
+                }
+            }
+        )
+
+        session.clear()
+
+        return redirect(url_for("pagina_login"))
+
+    return render_template("redefinir_senha.html")
+
+
+# =================== REENVIAR CÓDIGO ===================
+
+def reenviar_codigo():
+    email = session.get("email_recuperacao")
+
+    if not email:
+        return redirect(url_for('esqueceu_senha_route'))
+
+    user = usuario.find_one({"email": email})
+
+    if not user:
+        return redirect(url_for('esqueceu_senha_route'))
+
+    codigo = user.get("codigo_recuperacao")
+
+    if not codigo:
+        codigo = str(secrets.randbelow(1000000)).zfill(6)
+        usuario.update_one(
+            {"_id": user["_id"]},
+            {
+                "$set": {
+                    "codigo_recuperacao": codigo,
+                    "codigo_expiracao": datetime.now() + timedelta(minutes=10)
+                }
+            }
+        )
+
+    sucesso = enviar_email_codigo(email, codigo)
+
+    if sucesso:
+        return render_template("verificar_codigo.html", sucesso=True, msg="Um novo código foi enviado para seu e-mail!")
+    else:
+        return render_template("verificar_codigo.html", erro=True, msg="Erro ao reenviar código. Tente novamente.")
