@@ -4,7 +4,7 @@ import os
 from dotenv import load_dotenv
 #------------------ IMPORTAÇÕES BACKEND ------------------
 # Importação user
-from backend.user import tela_cadastro, login, esqueceu_senha
+from backend.user import tela_cadastro, login
 # Importação dados
 from backend.dados.carregar_dados import carregar_dados
 from backend.dados.salvar_dados import salvar_dados_manuais
@@ -106,11 +106,6 @@ def logout():
     session.clear()
     return redirect(url_for('pagina_login'))
 
-# =================== ESQUECEU SENHA ===================
-@app.route("/esqueceu-senha", methods=["GET", "POST"])
-def esqueceu_senha_route():
-    return esqueceu_senha()
-
 # =================== CARREGAR DADOS ===================
 @app.route("/carregar-dados", methods=["GET"])
 @login_required
@@ -177,6 +172,29 @@ def api_graficos():
     periodo = request.args.get('periodo', '30_dias')
     return obter_dados_graficos(periodo)
 
+# ============ Verificar Senha =================
+@app.route('/verificar_codigo', methods=['GET', 'POST'])
+def verificar_codigo():
+    if request.method == 'POST':
+        codigo_digitado = request.form.get('codigo')
+        
+        codigo_correto = "123456" 
+        
+        if codigo_digitado == codigo_correto:
+           
+            return redirect(url_for('resetar_senha'))
+        else:
+            erro = "Código inválido ou expirado. Tente novamente."
+            return render_template('verificar_codigo.html', erro=erro)
+
+   
+    return render_template('verificar_codigo.html')
+
+@app.route('/reenviar-codigo')
+def reenviar_codigo():
+   
+    flash("Um novo código foi enviado para seu e-mail!")
+    return redirect(url_for('verificar_codigo'))
 # =================== RUN ===================
 if __name__ == "__main__":
     app.run(debug=True)
