@@ -1,25 +1,17 @@
-// =============================
-//     analise.js
-// =============================
-// Dados das métricas por mês (remover duplicação com script.js)
-// Usar os dados definidos em script.js se estiverem disponíveis
+
 
 let chartInstance = null;
 
-// Detecção de modo escuro
+// =============================
+// TEMA
+// =============================
 function isDarkMode() {
     return document.body.classList.contains('tema-escuro');
 }
 
-// Função para obter cores do tema
 function getThemeColors() {
     const isDark = isDarkMode();
     return {
-        texto: isDark ? '#f0f0f0' : '#111827',
-        suave: isDark ? '#cbd5e1' : '#6b7280',
-        primaria: isDark ? '#ff6b6b' : '#3b82f6',
-        borda: isDark ? '#334155' : '#e5e7eb',
-        fundo: isDark ? '#000000' : '#f9fafb',
         faturamento: isDark ? '#60a5fa' : '#3b82f6',
         despesas: isDark ? '#ef5350' : '#dc2626',
         lucro: isDark ? '#4ade80' : '#16a34a',
@@ -27,365 +19,324 @@ function getThemeColors() {
     };
 }
 
-// Função para selecionar/desselecionar métricas
-function selecionarMetrica(elemento, metrica) {
+// =============================
+// GRÁFICO
+// =============================
+function selecionarMetrica(elemento) {
     const checkbox = elemento.querySelector('.metrica-checkbox');
     checkbox.checked = !checkbox.checked;
 
-    // Adiciona/remove classe visual
-    if (checkbox.checked) {
-        elemento.style.borderLeft = '4px solid var(--primaria)';
-        elemento.style.background = 'rgba(59, 130, 246, 0.05)';
-    } else {
-        elemento.style.borderLeft = 'none';
-        elemento.style.background = 'transparent';
-    }
+    elemento.style.borderLeft = checkbox.checked ? '4px solid var(--primaria)' : 'none';
+    elemento.style.background = checkbox.checked ? 'rgba(59,130,246,0.05)' : 'transparent';
 
     atualizarGrafico();
 }
 
-// Função para atualizar o gráfico
 function atualizarGrafico() {
     const series = [];
 
-    if (document.getElementById('check-faturamento').checked) {
-        series.push({
-            name: 'Faturamento (R$)',
-            data: dadosMetricas.faturamento
-        });
-    }
-    if (document.getElementById('check-despesas').checked) {
-        series.push({
-            name: 'Despesas (R$)',
-            data: dadosMetricas.despesas
-        });
-    }
-    if (document.getElementById('check-lucro').checked) {
-        series.push({
-            name: 'Lucro (R$)',
-            data: dadosMetricas.lucro
-        });
-    }
-    if (document.getElementById('check-margem').checked) {
-        series.push({
-            name: 'Margem Líquida (%)',
-            data: dadosMetricas.margem
-        });
-    }
+    if (document.getElementById('check-faturamento')?.checked)
+        series.push({ name: 'Faturamento', data: dadosMetricas?.faturamento || [] });
+
+    if (document.getElementById('check-despesas')?.checked)
+        series.push({ name: 'Despesas', data: dadosMetricas?.despesas || [] });
+
+    if (document.getElementById('check-lucro')?.checked)
+        series.push({ name: 'Lucro', data: dadosMetricas?.lucro || [] });
+
+    if (document.getElementById('check-margem')?.checked)
+        series.push({ name: 'Margem (%)', data: dadosMetricas?.margem || [] });
 
     const container = document.getElementById('grafico-metricas');
 
+    if (!container) return;
+
     if (series.length === 0) {
-        container.innerHTML = '<div style="text-align: center; padding: 80px 40px; color: var(--suave);"><p style="font-size: 16px;">Selecione pelo menos uma métrica para visualizar o gráfico</p></div>';
+        container.innerHTML = `<div style="text-align:center;padding:80px;color:#999">
+            Selecione uma métrica
+        </div>`;
         return;
     }
 
-    const options = {
-        chart: {
-            type: 'line',
-            height: 400,
-            fontFamily: 'inherit',
-            foreColor: getThemeColors().suave,
-            toolbar: {
-                show: true,
-                tools: {
-                    download: true,
-                    selection: true,
-                    zoom: true,
-                    zoomin: true,
-                    zoomout: true,
-                    pan: true
-                }
-            },
-            animations: {
-                enabled: true,
-                speed: 800,
-                animateGradually: {
-                    enabled: true,
-                    delay: 150
-                },
-                dynamicAnimation: {
-                    enabled: true,
-                    speed: 150
-                }
-            }
-        },
-        series: series,
-        xaxis: {
-            categories: dadosMetricas.meses,
-            axisBorder: {
-                color: getThemeColors().borda
-            },
-            labels: {
-                style: {
-                    colors: getThemeColors().suave
-                }
-            }
-        },
-        yaxis: {
-            title: {
-                text: 'Valores',
-                style: {
-                    color: getThemeColors().suave
-                }
-            },
-            labels: {
-                formatter: function (value) {
-                    if (value >= 1000) {
-                        return 'R$ ' + (value / 1000).toFixed(0) + 'k';
-                    }
-                    return value.toFixed(1) + '%';
-                },
-                style: {
-                    colors: getThemeColors().suave
-                }
-            }
-        },
-        stroke: {
-            curve: 'smooth',
-            width: [2, 2, 2, 3]
-        },
-        colors: [getThemeColors().faturamento, getThemeColors().despesas, getThemeColors().lucro, getThemeColors().margem],
-        grid: {
-            borderColor: getThemeColors().borda,
-            xaxis: {
-                lines: {
-                    show: true
-                }
-            },
-            yaxis: {
-                lines: {
-                    show: true
-                }
-            }
-        },
-        tooltip: {
-            theme: isDarkMode() ? 'dark' : 'light',
-            x: {
-                show: true
-            },
-            y: {
-                formatter: function (value) {
-                    if (value >= 1000) {
-                        return 'R$ ' + (value / 1000).toFixed(1) + 'k';
-                    }
-                    return value.toFixed(2) + '%';
-                }
-            }
-        },
-        legend: {
-            position: 'top',
-            labels: {
-                colors: getThemeColors().suave
-            }
-        }
-    };
+    if (chartInstance) chartInstance.destroy();
+    container.innerHTML = '';
 
-    if (typeof ApexCharts !== 'undefined') {
-        // Destruir gráfico anterior se existir
-        if (chartInstance) {
-            chartInstance.destroy();
-        }
+    chartInstance = new ApexCharts(container, {
+        chart: { type: 'line', height: 400 },
+        series,
+        xaxis: { categories: dadosMetricas?.meses || [] },
+        colors: [
+            getThemeColors().faturamento,
+            getThemeColors().despesas,
+            getThemeColors().lucro,
+            getThemeColors().margem
+        ]
+    });
 
-        // Limpar o container
-        container.innerHTML = '';
-
-        // Criar novo gráfico
-        chartInstance = new ApexCharts(container, options);
-        chartInstance.render();
-    } else {
-        container.innerHTML = '<div style="text-align: center; padding: 80px 40px; color: var(--perigo);"><p>Erro ao carregar a biblioteca de gráficos</p></div>';
-    }
+    chartInstance.render();
 }
 
-// Funções auxiliares
-function exportarDados() {
-    alert('📥 Função de exportação: Será implementada em breve!');
-}
-
-
-function compartilharAnalise() {
-    alert('🔗 Compartilhar análise: Será implementada em breve!');
-}
-
+// =============================
+// FILTROS
+// =============================
 function aplicarFiltros() {
     const inicio = document.getElementById('data-inicio').value;
-    const fim    = document.getElementById('data-fim').value;
+    const fim = document.getElementById('data-fim').value;
 
     if (!inicio || !fim) {
-        alert('Selecione a data de início e fim!');
+        alert('Selecione as datas!');
         return;
     }
 
     if (inicio > fim) {
-        alert('A data de início não pode ser maior que a data de fim!');
+        alert('Data inválida!');
         return;
     }
 
+    localStorage.setItem('analise_periodo', JSON.stringify({ inicio, fim }));
+
     fetch(`/api/analise?data_inicio=${inicio}&data_fim=${fim}`)
         .then(r => {
-            if (!r.ok) throw new Error(`Erro HTTP: ${r.status}`);
+            if (!r.ok) {
+                return r.json().then(err => {
+                    throw new Error(err.mensagem || 'Erro na API');
+                });
+            }
             return r.json();
         })
         .then(data => {
+            console.log("API:", data);
             preencherCards(data);
             preencherTabela(data);
         })
         .catch(err => {
-            console.error('Erro ao buscar dados:', err);
-            alert('Erro ao carregar os dados. Tente novamente.');
+            console.error(err);
+            alert(err.message);
         });
 }
 
+// =============================
+// AUTO LOAD
+// =============================
+function carregarUltimoPeriodo() {
+    fetch('/api/ultimo-periodo')
+        .then(r => r.json())
+        .then(data => {
+            if (data.inicio && data.fim) {
+                setPeriodoEAplicar(data.inicio, data.fim);
+            } else {
+                carregarLocalStorage();
+            }
+        })
+        .catch(() => carregarLocalStorage());
+}
+
+function carregarLocalStorage() {
+    const salvo = localStorage.getItem('analise_periodo');
+    if (!salvo) return;
+
+    const { inicio, fim } = JSON.parse(salvo);
+    setPeriodoEAplicar(inicio, fim);
+}
+
+function setPeriodoEAplicar(inicio, fim) {
+    document.getElementById('data-inicio').value = inicio;
+    document.getElementById('data-fim').value = fim;
+    aplicarFiltros();
+}
+
+// =============================
+// UI
+// =============================
 function preencherCards(data) {
-    // Faturamento
-    document.getElementById('fat-valor').textContent = formatarMoeda(data.faturamento.valor);
-    document.getElementById('fat-variacao').textContent = formatarVariacao(data.faturamento.variacao);
-    document.getElementById('fat-variacao').style.color = data.faturamento.variacao >= 0 ? '#16a34a' : '#dc2626';
 
-    // Despesas
-    document.getElementById('desp-valor').textContent = formatarMoeda(data.despesa.valor);
-    document.getElementById('desp-variacao').textContent = formatarVariacao(data.despesa.variacao);
-    document.getElementById('desp-variacao').style.color = data.despesa.variacao <= 0 ? '#16a34a' : '#dc2626';
+    // ======================
+    // FATURAMENTO
+    // ======================
+    document.getElementById('fat-valor').textContent =
+        formatarMoeda(data.faturamento.valor);
 
-    // Lucro
-    document.getElementById('luc-valor').textContent = formatarMoeda(data.lucro.valor);
-    document.getElementById('luc-variacao').textContent = formatarVariacao(data.lucro.variacao);
-    document.getElementById('luc-variacao').style.color = data.lucro.variacao >= 0 ? '#16a34a' : '#dc2626';
+    const fatVar = document.getElementById('fat-variacao');
+    fatVar.textContent = formatarVariacao(data.faturamento.variacao);
+    fatVar.style.color =
+        data.faturamento.variacao >= 0 ? '#16a34a' : '#dc2626';
 
-    // Margem
-    document.getElementById('mg-valor').textContent = data.margem.valor.toFixed(1) + '%';
-    document.getElementById('mg-variacao').textContent = (data.margem.variacao >= 0 ? '↑ ' : '↓ ') + Math.abs(data.margem.variacao).toFixed(1) + ' pp';
-    document.getElementById('mg-variacao').style.color = data.margem.variacao >= 0 ? '#16a34a' : '#dc2626';
-}
 
-function formatarMoeda(valor) {
-    return new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(valor);
-}
+    // ======================
+    // DESPESAS
+    // ======================
+    document.getElementById('desp-valor').textContent =
+        formatarMoeda(data.despesa.valor);
 
-function formatarVariacao(variacao) {
-    const sinal = variacao >= 0 ? '↑ ' : '↓ ';
-    return sinal + Math.abs(variacao).toFixed(1) + '%';
+    const despVar = document.getElementById('desp-variacao');
+    despVar.textContent = formatarVariacao(data.despesa.variacao);
+    despVar.style.color =
+        data.despesa.variacao <= 0 ? '#16a34a' : '#dc2626';
+
+
+    // ======================
+    // LUCRO
+    // ======================
+    document.getElementById('luc-valor').textContent =
+        formatarMoeda(data.lucro.valor);
+
+    const lucVar = document.getElementById('luc-variacao');
+    lucVar.textContent = formatarVariacao(data.lucro.variacao);
+    lucVar.style.color =
+        data.lucro.variacao >= 0 ? '#16a34a' : '#dc2626';
+
+
+    // ======================
+    // MARGEM
+    // ======================
+    document.getElementById('mg-valor').textContent =
+        data.margem.valor.toFixed(1) + '%';
+
+    const mgVar = document.getElementById('mg-variacao');
+    mgVar.textContent =
+        (data.margem.variacao >= 0 ? '↑ ' : '↓ ') +
+        Math.abs(data.margem.variacao).toFixed(1) + ' pp';
+
+    mgVar.style.color =
+        data.margem.variacao >= 0 ? '#16a34a' : '#dc2626';
 }
 
 function preencherTabela(data) {
-    // Labels do período
-    document.getElementById('label-periodo-atual').textContent = formatarData(data.periodo.inicio) + ' a ' + formatarData(data.periodo.fim);
-    document.getElementById('label-periodo-anterior').textContent = formatarData(data.periodo.inicio_anterior) + ' a ' + formatarData(data.periodo.fim_anterior);
 
-    // Faturamento
-    document.getElementById('tab-fat-atual').textContent = formatarMoeda(data.faturamento.valor);
-    document.getElementById('tab-fat-anterior').textContent = formatarMoeda(data.faturamento.valor_anterior);
-    document.getElementById('tab-fat-variacao').textContent = formatarVariacao(data.faturamento.variacao);
-    document.getElementById('tab-fat-variacao').style.color = data.faturamento.variacao >= 0 ? '#16a34a' : '#dc2626';
+    document.getElementById('label-periodo-atual').textContent =
+        formatarData(data.periodo.inicio) + ' a ' + formatarData(data.periodo.fim);
 
-    // Despesas
-    document.getElementById('tab-desp-atual').textContent = formatarMoeda(data.despesa.valor);
-    document.getElementById('tab-desp-anterior').textContent = formatarMoeda(data.despesa.valor_anterior);
-    document.getElementById('tab-desp-variacao').textContent = formatarVariacao(data.despesa.variacao);
-    document.getElementById('tab-desp-variacao').style.color = data.despesa.variacao <= 0 ? '#16a34a' : '#dc2626';
+    document.getElementById('label-periodo-anterior').textContent =
+        formatarData(data.periodo.inicio_anterior) + ' a ' + formatarData(data.periodo.fim_anterior);
 
-    // Lucro
-    document.getElementById('tab-luc-atual').textContent = formatarMoeda(data.lucro.valor);
-    document.getElementById('tab-luc-anterior').textContent = formatarMoeda(data.lucro.valor_anterior);
-    document.getElementById('tab-luc-variacao').textContent = formatarVariacao(data.lucro.variacao);
-    document.getElementById('tab-luc-variacao').style.color = data.lucro.variacao >= 0 ? '#16a34a' : '#dc2626';
+    // FATURAMENTO
+    setLinha('fat', data.faturamento, true);
 
-    // Margem
+    // DESPESAS
+    setLinha('desp', data.despesa, false);
+
+    // LUCRO
+    setLinha('luc', data.lucro, true);
+
+    // MARGEM
     document.getElementById('tab-mg-atual').textContent = data.margem.valor.toFixed(1) + '%';
     document.getElementById('tab-mg-anterior').textContent = data.margem.valor_anterior.toFixed(1) + '%';
-    document.getElementById('tab-mg-variacao').textContent = (data.margem.variacao >= 0 ? '↑ ' : '↓ ') + Math.abs(data.margem.variacao).toFixed(1) + ' pp';
-    document.getElementById('tab-mg-variacao').style.color = data.margem.variacao >= 0 ? '#16a34a' : '#dc2626';
+
+    const variacao = data.margem.variacao;
+    const el = document.getElementById('tab-mg-variacao');
+
+    el.textContent = (variacao >= 0 ? '↑ ' : '↓ ') + Math.abs(variacao).toFixed(1) + ' pp';
+    el.style.color = variacao >= 0 ? '#16a34a' : '#dc2626';
+}
+
+// helper para linhas
+function setLinha(prefixo, dados, positivoBom) {
+    document.getElementById(`tab-${prefixo}-atual`).textContent = formatarMoeda(dados.valor);
+    document.getElementById(`tab-${prefixo}-anterior`).textContent = formatarMoeda(dados.valor_anterior);
+
+    const el = document.getElementById(`tab-${prefixo}-variacao`);
+    el.textContent = formatarVariacao(dados.variacao);
+
+    const positivo = dados.variacao >= 0;
+    el.style.color = (positivo === positivoBom) ? '#16a34a' : '#dc2626';
+}
+
+// =============================
+// FORMATADORES
+// =============================
+function formatarMoeda(valor) {
+    return new Intl.NumberFormat('pt-BR', {
+        style: 'currency',
+        currency: 'BRL'
+    }).format(valor || 0);
+}
+
+function formatarVariacao(v) {
+    const sinal = v >= 0 ? '↑ ' : '↓ ';
+    return sinal + Math.abs(v).toFixed(1) + '%';
 }
 
 function formatarData(dataStr) {
+    if (!dataStr) return '--';
     const [ano, mes, dia] = dataStr.split('-');
     return `${dia}/${mes}/${ano}`;
 }
 
+// =============================
+// LIMPAR
+// =============================
 function limparFiltros() {
-    // Limpa os inputs de data
+    // limpa inputs
     document.getElementById('data-inicio').value = '';
     document.getElementById('data-fim').value = '';
 
-    // Reseta os cards
-    document.getElementById('fat-valor').textContent = '--';
-    document.getElementById('fat-variacao').textContent = '--';
-    document.getElementById('desp-valor').textContent = '--';
-    document.getElementById('desp-variacao').textContent = '--';
-    document.getElementById('luc-valor').textContent = '--';
-    document.getElementById('luc-variacao').textContent = '--';
-    document.getElementById('mg-valor').textContent = '--';
-    document.getElementById('mg-variacao').textContent = '--';
+    // limpa localStorage
+    localStorage.removeItem('analise_periodo');
 
-    // Reseta a tabela
+    // limpa gráfico
+    const grafico = document.getElementById('grafico-metricas');
+    if (chartInstance) {
+        chartInstance.destroy();
+        chartInstance = null;
+    }
+
+    if (grafico) {
+        grafico.innerHTML = 'Selecione um período';
+    }
+
+    // limpa CARDS
+    document.getElementById('fat-valor').textContent = '--';
+    document.getElementById('desp-valor').textContent = '--';
+    document.getElementById('luc-valor').textContent = '--';
+    document.getElementById('mg-valor').textContent = '--';
+
+    // limpa TABELA
+    const ids = [
+        'tab-fat-atual','tab-fat-anterior','tab-fat-variacao',
+        'tab-desp-atual','tab-desp-anterior','tab-desp-variacao',
+        'tab-luc-atual','tab-luc-anterior','tab-luc-variacao',
+        'tab-mg-atual','tab-mg-anterior','tab-mg-variacao'
+    ];
+
+    ids.forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.textContent = '--';
+    });
+
+    // limpa labels
     document.getElementById('label-periodo-atual').textContent = 'Período selecionado';
     document.getElementById('label-periodo-anterior').textContent = 'Período anterior';
-    document.getElementById('tab-fat-atual').textContent = '--';
-    document.getElementById('tab-fat-anterior').textContent = '--';
-    document.getElementById('tab-fat-variacao').textContent = '--';
-    document.getElementById('tab-desp-atual').textContent = '--';
-    document.getElementById('tab-desp-anterior').textContent = '--';
-    document.getElementById('tab-desp-variacao').textContent = '--';
-    document.getElementById('tab-luc-atual').textContent = '--';
-    document.getElementById('tab-luc-anterior').textContent = '--';
-    document.getElementById('tab-luc-variacao').textContent = '--';
-    document.getElementById('tab-mg-atual').textContent = '--';
-    document.getElementById('tab-mg-anterior').textContent = '--';
-    document.getElementById('tab-mg-variacao').textContent = '--';
-
-    // Limpa o gráfico
-    const container = document.getElementById('grafico-metricas');
-    container.innerHTML = '<div style="text-align: center; padding: 80px 40px; color: var(--suave);"><p>Selecione um período para visualizar os dados</p></div>';
 }
 
-// Funções auxiliares
-function exportarDados() {
-    alert('📥 Função de exportação: Será implementada em breve!');
-}
-
-function compartilharAnalise() {
-    alert('🔗 Compartilhar análise: Será implementada em breve!');
-}
-
-// Inicializar quando a página carregar
+// =============================
+// INIT
+// =============================
 function iniciarAnalise() {
-    // Verificar se ApexCharts está carregado
+
     if (typeof ApexCharts === 'undefined') {
-        console.log('ApexCharts ainda não foi carregado, aguardando...');
         setTimeout(iniciarAnalise, 500);
         return;
     }
-    
-    // Verificar se os elementos do DOM existem
-    const container = document.getElementById('grafico-metricas');
-    const checkLucro = document.getElementById('check-lucro');
-    
-    if (!container || !checkLucro) {
-        console.log('Elementos do DOM não encontrados, aguardando...');
+
+    if (!document.getElementById('grafico-metricas')) {
         setTimeout(iniciarAnalise, 500);
         return;
     }
-    
-    console.log('Análise inicializada com sucesso!');
+
+    console.log('Sistema pronto');
+
+    carregarUltimoPeriodo();
     atualizarGrafico();
 }
 
-// Inicializar após DOM estar pronto
-if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', iniciarAnalise);
-} else {
-    setTimeout(iniciarAnalise, 500);
-}
+document.addEventListener('DOMContentLoaded', iniciarAnalise);
 
-// Integração com alteração de tema
+// =============================
+// TEMA
+// =============================
 const originalAlternarTema = window.alternarTema;
-window.alternarTema = function() {
-    if (originalAlternarTema) {
-        originalAlternarTema();
-    }
-    // Aguardar um pouco para a classe tema-escuro ser aplicada
-    setTimeout(() => {
-        atualizarGrafico();
-    }, 100);
+
+window.alternarTema = function () {
+    if (originalAlternarTema) originalAlternarTema();
+    setTimeout(atualizarGrafico, 100);
 };
