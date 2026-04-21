@@ -4,17 +4,23 @@ from datetime import datetime, timedelta
 import pandas as pd
 
 
+<<<<<<< Updated upstream
 # ======================
 # COLUNAS RECONHECIDAS
 # ======================
+=======
+>>>>>>> Stashed changes
 COL_FATURAMENTO = ["Total", "Faturamento", "faturamento", "Vendas", "vendas", "Receita", "receita"]
 COL_DESPESA     = ["Custo", "Despesa", "despesa", "Despesas", "despesas", "Gastos", "gastos"]
 COL_LUCRO       = ["Lucro", "lucro", "Profit", "profit"]
 
 
+<<<<<<< Updated upstream
 # ======================
 # UTILITÁRIOS
 # ======================
+=======
+>>>>>>> Stashed changes
 def encontrar_coluna_data(df):
     return next((c for c in df.columns if c.lower() == "data"), None)
 
@@ -26,7 +32,11 @@ def calcular_total(df, colunas):
         if col in df.columns:
             return float(pd.to_numeric(df[col], errors="coerce").sum())
     return 0.0
+<<<<<<< Updated upstream
 
+=======
+    
+>>>>>>> Stashed changes
 
 def variacao_percentual(anterior, atual):
     if anterior == 0:
@@ -46,6 +56,7 @@ def calcular_metricas(df):
     fat  = calcular_total(df, COL_FATURAMENTO)
     desp = calcular_total(df, COL_DESPESA)
     luc  = calcular_total(df, COL_LUCRO) or (fat - desp)
+<<<<<<< Updated upstream
     mg   = 0.0 if fat == 0 else round((luc / fat) * 100, 2)
     return fat, desp, luc, mg
 
@@ -65,10 +76,29 @@ def analise_por_periodo():
     data_fim_str    = request.args.get("data_fim", "")
 
     if not data_inicio_str or not data_fim_str:
+=======
+    mg = 0.0 if fat == 0 else round((luc/fat) * 100, 2)
+    return fat, desp, luc, mg
+
+
+def analise_por_periodo():
+
+    #verificar se o usuário está logado
+    user = session.get('usuario_id')
+    if not user:
+        return jsonify({"messagem": "Usuário não autenticado"}), 401
+
+    #Recebe e valida as datas 
+    data_inicio_str = request.args.get("data_inicio", "")
+    data_fim_str = request.args.get("data_fim", "")
+
+    if not data_inicio_str or not data_inicio_str:
+>>>>>>> Stashed changes
         return jsonify({"mensagem": "Informe data_inicio e data_fim"}), 400
 
     try:
         data_inicio = datetime.strptime(data_inicio_str, "%Y-%m-%d")
+<<<<<<< Updated upstream
         data_fim    = datetime.strptime(data_fim_str,    "%Y-%m-%d")
     except ValueError:
         return jsonify({"mensagem": "Formato de data inválido. Use YYYY-MM-DD"}), 400
@@ -86,16 +116,44 @@ def analise_por_periodo():
         if df.empty:
             return jsonify({"mensagem": "Nenhum dado encontrado"}), 200
 
+=======
+        data_fim = datetime.strptime(data_fim_str, "%Y-%m-%d")
+    except ValueError:
+        return jsonify({"mensagem":"Formato de data inválido. Use YYYY-MM-DD"}), 400
+    
+    if data_inicio_str > data_fim_str:
+        return jsonify({"mensagem":"A data inicial não pode ser maior que a data de início"}), 400
+    
+    # Buscar dados e calcular
+    try:
+        doc = dados_colecao.find_one({"usuario_id":user}, sort=[("criado_em", -1)])
+        if not doc:
+            return jsonify({"mensagem":"Nenhum dado encontrado"}), 200
+        
+        df = pd.DataFrame(doc.get("dados", []))
+        if df.empty:
+            return jsonify({"mensagem":"Nenhum dado encontrado"}), 200
+        
+>>>>>>> Stashed changes
         col_data = encontrar_coluna_data(df)
 
         df_atual = filtrar_por_periodo(df.copy(), col_data, data_inicio, data_fim)
 
+<<<<<<< Updated upstream
         duracao    = (data_fim - data_inicio).days + 1
         fim_ant    = data_inicio - timedelta(days=1)
         inicio_ant = fim_ant - timedelta(days=duracao - 1)
         df_ant     = filtrar_por_periodo(df.copy(), col_data, inicio_ant, fim_ant)
 
         fat,  desp,  luc,  mg  = calcular_metricas(df_atual)
+=======
+        duracao = (data_fim - data_inicio).days + 1
+        fim_ant = data_inicio - timedelta(days=1)
+        inicio_ant = fim_ant - timedelta(days=duracao - 1)
+        df_ant = filtrar_por_periodo(df.copy(), col_data, inicio_ant, fim_ant)
+
+        fat, desp, luc, mg = calcular_metricas(df_atual)
+>>>>>>> Stashed changes
         fat_a, desp_a, luc_a, mg_a = calcular_metricas(df_ant)
 
         return jsonify({
@@ -126,7 +184,15 @@ def analise_por_periodo():
                 "variacao":       round(mg - mg_a, 2),
             },
         }), 200
+<<<<<<< Updated upstream
 
     except Exception as e:
         print(f"Erro em analise_por_periodo: {e}")
         return jsonify({"mensagem": f"Erro interno: {str(e)}"}), 500
+=======
+    
+    except Exception as e:
+        print(f"Erro em analise_por_periodo: {e}")
+        return jsonify({"mensagem":f"Erro interno{str(e)}"}), 500
+
+>>>>>>> Stashed changes

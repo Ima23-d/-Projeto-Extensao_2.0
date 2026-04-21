@@ -38,7 +38,7 @@ def limpar_dados(df):
     df = df.dropna(how="all")
 
     # limpar strings
-    df = df.applymap(lambda x: x.strip() if isinstance(x, str) else x)
+    df = df.map(lambda x: x.strip() if isinstance(x, str) else x)
 
     # tratar datas
     col_data = encontrar_coluna_data(df)

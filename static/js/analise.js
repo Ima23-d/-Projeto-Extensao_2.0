@@ -203,10 +203,15 @@ function exportarDados() {
     alert('📥 Função de exportação: Será implementada em breve!');
 }
 
+
 function compartilharAnalise() {
     alert('🔗 Compartilhar análise: Será implementada em breve!');
 }
 
+<<<<<<< Updated upstream
+=======
+
+>>>>>>> Stashed changes
 function aplicarFiltros() {
     const inicio = document.getElementById('data-inicio').value;
     const fim    = document.getElementById('data-fim').value;
@@ -236,6 +241,10 @@ function aplicarFiltros() {
         });
 }
 
+<<<<<<< Updated upstream
+=======
+
+>>>>>>> Stashed changes
 function preencherCards(data) {
     // Faturamento
     document.getElementById('fat-valor').textContent = formatarMoeda(data.faturamento.valor);
@@ -258,15 +267,29 @@ function preencherCards(data) {
     document.getElementById('mg-variacao').style.color = data.margem.variacao >= 0 ? '#16a34a' : '#dc2626';
 }
 
+<<<<<<< Updated upstream
 function formatarMoeda(valor) {
     return new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(valor);
 }
 
 function formatarVariacao(variacao) {
+=======
+
+function formatarMoeda(valor){
+    return new Intl.NumberFormat('pt-BR',{style:'currency', currency:'BRL'}).format(valor);
+}
+
+
+function formatarVariacao(variacao){
+>>>>>>> Stashed changes
     const sinal = variacao >= 0 ? '↑ ' : '↓ ';
     return sinal + Math.abs(variacao).toFixed(1) + '%';
 }
 
+<<<<<<< Updated upstream
+=======
+
+>>>>>>> Stashed changes
 function preencherTabela(data) {
     // Labels do período
     document.getElementById('label-periodo-atual').textContent = formatarData(data.periodo.inicio) + ' a ' + formatarData(data.periodo.fim);
@@ -297,11 +320,19 @@ function preencherTabela(data) {
     document.getElementById('tab-mg-variacao').style.color = data.margem.variacao >= 0 ? '#16a34a' : '#dc2626';
 }
 
+<<<<<<< Updated upstream
+=======
+
+>>>>>>> Stashed changes
 function formatarData(dataStr) {
     const [ano, mes, dia] = dataStr.split('-');
     return `${dia}/${mes}/${ano}`;
 }
 
+<<<<<<< Updated upstream
+=======
+
+>>>>>>> Stashed changes
 function limparFiltros() {
     // Limpa os inputs de data
     document.getElementById('data-inicio').value = '';
@@ -338,6 +369,10 @@ function limparFiltros() {
     container.innerHTML = '<div style="text-align: center; padding: 80px 40px; color: var(--suave);"><p>Selecione um período para visualizar os dados</p></div>';
 }
 
+<<<<<<< Updated upstream
+=======
+
+>>>>>>> Stashed changes
 // Funções auxiliares
 function exportarDados() {
     alert('📥 Função de exportação: Será implementada em breve!');

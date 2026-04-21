@@ -11,7 +11,11 @@ from backend.dados.carregar_dados import carregar_dados
 from backend.dados.salvar_dados import salvar_dados_manuais
 from backend.dados.apagar_dados import apagar_dados_usuario
 from backend.dados.upload_arquivo import upload_arquivo
+<<<<<<< Updated upstream
 #Importação analise
+=======
+# Importação analise
+>>>>>>> Stashed changes
 from backend.analise import analise_por_periodo
 # Importação relatorio
 from backend.relatorio.gerar_relatorio import gerar_relatorio
@@ -194,6 +198,7 @@ def api_desempenho():
     periodo = request.args.get('periodo', '30_dias')
     return calcular_desempenho(periodo)
 
+
 @app.route('/api/graficos', methods=['GET'])
 @login_required
 def api_graficos():
@@ -201,6 +206,10 @@ def api_graficos():
     periodo = request.args.get('periodo', '30_dias')
     return obter_dados_graficos(periodo)
 
+<<<<<<< Updated upstream
+=======
+
+>>>>>>> Stashed changes
 @app.route('/api/analise', methods=['GET'])
 @login_required
 def api_analise():
