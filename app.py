@@ -12,7 +12,7 @@ from backend.dados.salvar_dados import salvar_dados_manuais
 from backend.dados.apagar_dados import apagar_dados_usuario
 from backend.dados.upload_arquivo import upload_arquivo
 #Importação analise
-from backend.analise import analise_por_periodo
+from backend.analise.analise import analise_por_periodo, obter_ultimo_periodo
 # Importação relatorio
 from backend.relatorio.gerar_relatorio import gerar_relatorio
 from backend.relatorio.pagina_relatorio import pagina_relatorio_pdf as pagina_relatorio_pdf_backend
@@ -207,6 +207,10 @@ def api_graficos():
 def api_analise():
     return analise_por_periodo()
 
+@app.route('/api/ultimo-periodo', methods=['GET'])
+@login_required
+def ultimo_periodo():
+    return obter_ultimo_periodo()
 # ============ Verificar Senha =================
 @app.route('/verificar_codigo', methods=['GET', 'POST'])
 def verificar_codigo_route():
