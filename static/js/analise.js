@@ -207,6 +207,137 @@ function compartilharAnalise() {
     alert('🔗 Compartilhar análise: Será implementada em breve!');
 }
 
+function aplicarFiltros() {
+    const inicio = document.getElementById('data-inicio').value;
+    const fim    = document.getElementById('data-fim').value;
+
+    if (!inicio || !fim) {
+        alert('Selecione a data de início e fim!');
+        return;
+    }
+
+    if (inicio > fim) {
+        alert('A data de início não pode ser maior que a data de fim!');
+        return;
+    }
+
+    fetch(`/api/analise?data_inicio=${inicio}&data_fim=${fim}`)
+        .then(r => {
+            if (!r.ok) throw new Error(`Erro HTTP: ${r.status}`);
+            return r.json();
+        })
+        .then(data => {
+            preencherCards(data);
+            preencherTabela(data);
+        })
+        .catch(err => {
+            console.error('Erro ao buscar dados:', err);
+            alert('Erro ao carregar os dados. Tente novamente.');
+        });
+}
+
+function preencherCards(data) {
+    // Faturamento
+    document.getElementById('fat-valor').textContent = formatarMoeda(data.faturamento.valor);
+    document.getElementById('fat-variacao').textContent = formatarVariacao(data.faturamento.variacao);
+    document.getElementById('fat-variacao').style.color = data.faturamento.variacao >= 0 ? '#16a34a' : '#dc2626';
+
+    // Despesas
+    document.getElementById('desp-valor').textContent = formatarMoeda(data.despesa.valor);
+    document.getElementById('desp-variacao').textContent = formatarVariacao(data.despesa.variacao);
+    document.getElementById('desp-variacao').style.color = data.despesa.variacao <= 0 ? '#16a34a' : '#dc2626';
+
+    // Lucro
+    document.getElementById('luc-valor').textContent = formatarMoeda(data.lucro.valor);
+    document.getElementById('luc-variacao').textContent = formatarVariacao(data.lucro.variacao);
+    document.getElementById('luc-variacao').style.color = data.lucro.variacao >= 0 ? '#16a34a' : '#dc2626';
+
+    // Margem
+    document.getElementById('mg-valor').textContent = data.margem.valor.toFixed(1) + '%';
+    document.getElementById('mg-variacao').textContent = (data.margem.variacao >= 0 ? '↑ ' : '↓ ') + Math.abs(data.margem.variacao).toFixed(1) + ' pp';
+    document.getElementById('mg-variacao').style.color = data.margem.variacao >= 0 ? '#16a34a' : '#dc2626';
+}
+
+function formatarMoeda(valor) {
+    return new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(valor);
+}
+
+function formatarVariacao(variacao) {
+    const sinal = variacao >= 0 ? '↑ ' : '↓ ';
+    return sinal + Math.abs(variacao).toFixed(1) + '%';
+}
+
+function preencherTabela(data) {
+    // Labels do período
+    document.getElementById('label-periodo-atual').textContent = formatarData(data.periodo.inicio) + ' a ' + formatarData(data.periodo.fim);
+    document.getElementById('label-periodo-anterior').textContent = formatarData(data.periodo.inicio_anterior) + ' a ' + formatarData(data.periodo.fim_anterior);
+
+    // Faturamento
+    document.getElementById('tab-fat-atual').textContent = formatarMoeda(data.faturamento.valor);
+    document.getElementById('tab-fat-anterior').textContent = formatarMoeda(data.faturamento.valor_anterior);
+    document.getElementById('tab-fat-variacao').textContent = formatarVariacao(data.faturamento.variacao);
+    document.getElementById('tab-fat-variacao').style.color = data.faturamento.variacao >= 0 ? '#16a34a' : '#dc2626';
+
+    // Despesas
+    document.getElementById('tab-desp-atual').textContent = formatarMoeda(data.despesa.valor);
+    document.getElementById('tab-desp-anterior').textContent = formatarMoeda(data.despesa.valor_anterior);
+    document.getElementById('tab-desp-variacao').textContent = formatarVariacao(data.despesa.variacao);
+    document.getElementById('tab-desp-variacao').style.color = data.despesa.variacao <= 0 ? '#16a34a' : '#dc2626';
+
+    // Lucro
+    document.getElementById('tab-luc-atual').textContent = formatarMoeda(data.lucro.valor);
+    document.getElementById('tab-luc-anterior').textContent = formatarMoeda(data.lucro.valor_anterior);
+    document.getElementById('tab-luc-variacao').textContent = formatarVariacao(data.lucro.variacao);
+    document.getElementById('tab-luc-variacao').style.color = data.lucro.variacao >= 0 ? '#16a34a' : '#dc2626';
+
+    // Margem
+    document.getElementById('tab-mg-atual').textContent = data.margem.valor.toFixed(1) + '%';
+    document.getElementById('tab-mg-anterior').textContent = data.margem.valor_anterior.toFixed(1) + '%';
+    document.getElementById('tab-mg-variacao').textContent = (data.margem.variacao >= 0 ? '↑ ' : '↓ ') + Math.abs(data.margem.variacao).toFixed(1) + ' pp';
+    document.getElementById('tab-mg-variacao').style.color = data.margem.variacao >= 0 ? '#16a34a' : '#dc2626';
+}
+
+function formatarData(dataStr) {
+    const [ano, mes, dia] = dataStr.split('-');
+    return `${dia}/${mes}/${ano}`;
+}
+
+function limparFiltros() {
+    // Limpa os inputs de data
+    document.getElementById('data-inicio').value = '';
+    document.getElementById('data-fim').value = '';
+
+    // Reseta os cards
+    document.getElementById('fat-valor').textContent = '--';
+    document.getElementById('fat-variacao').textContent = '--';
+    document.getElementById('desp-valor').textContent = '--';
+    document.getElementById('desp-variacao').textContent = '--';
+    document.getElementById('luc-valor').textContent = '--';
+    document.getElementById('luc-variacao').textContent = '--';
+    document.getElementById('mg-valor').textContent = '--';
+    document.getElementById('mg-variacao').textContent = '--';
+
+    // Reseta a tabela
+    document.getElementById('label-periodo-atual').textContent = 'Período selecionado';
+    document.getElementById('label-periodo-anterior').textContent = 'Período anterior';
+    document.getElementById('tab-fat-atual').textContent = '--';
+    document.getElementById('tab-fat-anterior').textContent = '--';
+    document.getElementById('tab-fat-variacao').textContent = '--';
+    document.getElementById('tab-desp-atual').textContent = '--';
+    document.getElementById('tab-desp-anterior').textContent = '--';
+    document.getElementById('tab-desp-variacao').textContent = '--';
+    document.getElementById('tab-luc-atual').textContent = '--';
+    document.getElementById('tab-luc-anterior').textContent = '--';
+    document.getElementById('tab-luc-variacao').textContent = '--';
+    document.getElementById('tab-mg-atual').textContent = '--';
+    document.getElementById('tab-mg-anterior').textContent = '--';
+    document.getElementById('tab-mg-variacao').textContent = '--';
+
+    // Limpa o gráfico
+    const container = document.getElementById('grafico-metricas');
+    container.innerHTML = '<div style="text-align: center; padding: 80px 40px; color: var(--suave);"><p>Selecione um período para visualizar os dados</p></div>';
+}
+
 // Funções auxiliares
 function exportarDados() {
     alert('📥 Função de exportação: Será implementada em breve!');

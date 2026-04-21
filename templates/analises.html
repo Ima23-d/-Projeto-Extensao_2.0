@@ -62,12 +62,12 @@
                         <div class="grade grade--3" style="margin-top:16px;">
                             <div class="campo">
                                 <label for="periodo-inicio">Período - Início</label>
-                                <input type="date" class="entrada" id="periodo-inicio" />
+                                <input type="date" class="entrada" id="data-inicio" />
                             </div>
 
                             <div class="campo">
                                 <label for="periodo-fim">Período - Fim</label>
-                                <input type="date" class="entrada" id="periodo-fim" />
+                                <input type="date" class="entrada" id="data-fim" />
                             </div>
 
                             <div class="campo">
@@ -83,7 +83,7 @@
 
                         <div style="display:flex; gap: 12px; flex-wrap: wrap; margin-top: 16px;">
                             <button class="botao botao--delet" type="button">✕ Limpar filtros</button>
-                            <button class="botao botao--primario" type="button">Aplicar filtros</button>
+                            <button class="botao botao--primario" type="button" onclick="aplicarFiltros()">Aplicar filtros</button>
                         </div>
                     </section>
 
@@ -105,10 +105,10 @@
                                     <input type="checkbox" id="check-faturamento" class="metrica-checkbox"
                                         style="width: 20px; height: 20px; cursor: pointer;" />
                                 </div>
-                                <div style="margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--borda);">
-                                    <span style="font-weight: 600; color: var(--primaria); font-size: 28px;">R$ 245.680</span>
-                                    <!-- <span style="font-size: 12px; color: var(--sucesso); margin-left: 8px;">↑12.5%</span> -->
-                                </div>
+                              <div style="margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--borda);">
+                                <span id="fat-valor" style="font-weight: 600; color: var(--primaria); font-size: 28px;">--</span>
+                                <span id="fat-variacao" style="font-size: 12px; margin-left: 8px;">--</span>
+                            </div>
                             </div>
 
                             <!-- Métrica 2 -->
@@ -125,8 +125,8 @@
                                         style="width: 20px; height: 20px; cursor: pointer;" />
                                 </div>
                                 <div style="margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--borda);">
-                                    <span style="font-weight: 600; color: var(--perigo); font-size: 28px;">R$ 160.250 </span>
-                                    <!-- <span style="font-size: 12px; color: var(--perigo); margin-left: 8px;">↑ 8.3%</span> -->
+                                    <span id="desp-valor" style="font-weight: 600; color: var(--perigo); font-size: 28px;">--</span>
+                                    <span id="desp-variacao" style="font-size: 12px; margin-left: 8px;">--</span>
                                 </div>
                             </div>
 
@@ -144,8 +144,8 @@
                                         style="width: 20px; height: 20px; cursor: pointer;" />
                                 </div>
                                 <div style="margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--borda);">
-                                    <span style="font-weight: 600; color: var(--sucesso); font-size: 28px;">R$ 85.430</span>
-                                    <!-- <span style="font-size: 12px; color: var(--sucesso); margin-left: 8px;">↑15.2%</span> -->
+                                    <span id="luc-valor" style="font-weight: 600; color: var(--sucesso); font-size: 28px;">--</span>
+                                    <span id="luc-variacao" style="font-size: 12px; margin-left: 8px;">--</span>
                                 </div>
                             </div>
 
@@ -162,10 +162,10 @@
                                     <input type="checkbox" id="check-margem" class="metrica-checkbox"
                                         style="width: 20px; height: 20px; cursor: pointer;" />
                                 </div>
-                                <div style="margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--borda);">
-                                    <span style="font-weight: 600; color: var(--aviso); font-size: 28px;">34.8%</span>
-                                    <!-- <span style="font-size: 12px; color: var(--sucesso); margin-left: 8px;">↑ 2.1%</span> -->
-                                </div>
+                              <div style="margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--borda);">
+                                <span id="mg-valor" style="font-weight: 600; color: var(--aviso); font-size: 28px;">--</span>
+                                <span id="mg-variacao" style="font-size: 12px; margin-left: 8px;">--</span>
+                            </div>
                             </div>
 
                         </div>
@@ -229,72 +229,49 @@
                         </div>
                     </section>
 
-                    <!-- COMPARAÇÃO ENTRE PERÍODOS -->
+                   <!-- COMPARAÇÃO ENTRE PERÍODOS -->
                     <section class="cartao" aria-label="Comparação entre períodos" style="margin-top: 24px;">
-                        <h2 class="h2" style="margin-bottom: 16px;">Comparação entre Períodos</h2>
+                        <h2 class="h2" style="margin-bottom: 8px;">Comparação entre Períodos</h2>
+                        <p class="p" style="font-size: 14px; color: var(--suave); margin-bottom: 16px;">
+                            <span id="label-periodo-atual">Período selecionado</span>
+                            vs
+                            <span id="label-periodo-anterior">Período anterior</span>
+                        </p>
 
                         <div style="overflow-x: auto;">
                             <table style="width: 100%; border-collapse: collapse;">
                                 <thead>
                                     <tr style="background: rgba(229, 231, 235, 0.3);">
-                                        <th
-                                            style="padding: 12px; text-align: left; font-weight: 600; border: 1px solid var(--borda); color: var(--suave);">
-                                            Métrica</th>
-                                        <th
-                                            style="padding: 12px; text-align: center; font-weight: 600; border: 1px solid var(--borda); color: var(--suave);">
-                                            Período Atual</th>
-                                        <th
-                                            style="padding: 12px; text-align: center; font-weight: 600; border: 1px solid var(--borda); color: var(--suave);">
-                                            Período Anterior</th>
-                                        <th
-                                            style="padding: 12px; text-align: center; font-weight: 600; border: 1px solid var(--borda); color: var(--suave);">
-                                            Variação</th>
+                                        <th style="padding: 12px; text-align: left; font-weight: 600; border: 1px solid var(--borda); color: var(--suave);">Métrica</th>
+                                        <th style="padding: 12px; text-align: center; font-weight: 600; border: 1px solid var(--borda); color: var(--suave);">Período Selecionado</th>
+                                        <th style="padding: 12px; text-align: center; font-weight: 600; border: 1px solid var(--borda); color: var(--suave);">Período Anterior</th>
+                                        <th style="padding: 12px; text-align: center; font-weight: 600; border: 1px solid var(--borda); color: var(--suave);">Variação</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <tr>
-                                        <td style="padding: 12px; border: 1px solid var(--borda); font-weight: 600;">
-                                            Faturamento</td>
-                                        <td style="padding: 12px; border: 1px solid var(--borda); text-align: center;">
-                                            R$ 245.680</td>
-                                        <td style="padding: 12px; border: 1px solid var(--borda); text-align: center;">
-                                            R$ 218.300</td>
-                                        <td
-                                            style="padding: 12px; border: 1px solid var(--borda); text-align: center; color: var(--sucesso); font-weight: 600;">
-                                            ↑ 12.5%</td>
+                                        <td style="padding: 12px; border: 1px solid var(--borda); font-weight: 600;">Faturamento</td>
+                                        <td style="padding: 12px; border: 1px solid var(--borda); text-align: center;" id="tab-fat-atual">--</td>
+                                        <td style="padding: 12px; border: 1px solid var(--borda); text-align: center;" id="tab-fat-anterior">--</td>
+                                        <td style="padding: 12px; border: 1px solid var(--borda); text-align: center; font-weight: 600;" id="tab-fat-variacao">--</td>
                                     </tr>
                                     <tr style="background: rgba(229, 231, 235, 0.1);">
-                                        <td style="padding: 12px; border: 1px solid var(--borda); font-weight: 600;">
-                                            Despesas</td>
-                                        <td style="padding: 12px; border: 1px solid var(--borda); text-align: center;">
-                                            R$ 160.250</td>
-                                        <td style="padding: 12px; border: 1px solid var(--borda); text-align: center;">
-                                            R$ 148.000</td>
-                                        <td
-                                            style="padding: 12px; border: 1px solid var(--borda); text-align: center; color: var(--perigo); font-weight: 600;">
-                                            ↑ 8.3%</td>
+                                        <td style="padding: 12px; border: 1px solid var(--borda); font-weight: 600;">Despesas</td>
+                                        <td style="padding: 12px; border: 1px solid var(--borda); text-align: center;" id="tab-desp-atual">--</td>
+                                        <td style="padding: 12px; border: 1px solid var(--borda); text-align: center;" id="tab-desp-anterior">--</td>
+                                        <td style="padding: 12px; border: 1px solid var(--borda); text-align: center; font-weight: 600;" id="tab-desp-variacao">--</td>
                                     </tr>
                                     <tr>
-                                        <td style="padding: 12px; border: 1px solid var(--borda); font-weight: 600;">
-                                            Lucro</td>
-                                        <td style="padding: 12px; border: 1px solid var(--borda); text-align: center;">
-                                            R$ 85.430</td>
-                                        <td style="padding: 12px; border: 1px solid var(--borda); text-align: center;">
-                                            R$ 70.300</td>
-                                        <td
-                                            style="padding: 12px; border: 1px solid var(--borda); text-align: center; color: var(--sucesso); font-weight: 600;">
-                                            ↑ 15.2%</td>
+                                        <td style="padding: 12px; border: 1px solid var(--borda); font-weight: 600;">Lucro</td>
+                                        <td style="padding: 12px; border: 1px solid var(--borda); text-align: center;" id="tab-luc-atual">--</td>
+                                        <td style="padding: 12px; border: 1px solid var(--borda); text-align: center;" id="tab-luc-anterior">--</td>
+                                        <td style="padding: 12px; border: 1px solid var(--borda); text-align: center; font-weight: 600;" id="tab-luc-variacao">--</td>
                                     </tr>
                                     <tr style="background: rgba(229, 231, 235, 0.1);">
-                                        <td style="padding: 12px; border: 1px solid var(--borda); font-weight: 600;">
-                                            Margem Líquida</td>
-                                        <td style="padding: 12px; border: 1px solid var(--borda); text-align: center;">
-                                            34.8%</td>
-                                        <td style="padding: 12px; border: 1px solid var(--borda); text-align: center;">
-                                            32.2%</td>
-                                        <td
-                                            style="padding: 12px; border: 1px solid var(--borda); text-align: center; color: var(--sucesso); font-weight: 600;">
-                                            ↑ 2.6 pp</td>
+                                        <td style="padding: 12px; border: 1px solid var(--borda); font-weight: 600;">Margem Líquida</td>
+                                        <td style="padding: 12px; border: 1px solid var(--borda); text-align: center;" id="tab-mg-atual">--</td>
+                                        <td style="padding: 12px; border: 1px solid var(--borda); text-align: center;" id="tab-mg-anterior">--</td>
+                                        <td style="padding: 12px; border: 1px solid var(--borda); text-align: center; font-weight: 600;" id="tab-mg-variacao">--</td>
                                     </tr>
                                 </tbody>
                             </table>

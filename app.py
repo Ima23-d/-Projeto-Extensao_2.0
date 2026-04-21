@@ -11,6 +11,8 @@ from backend.dados.carregar_dados import carregar_dados
 from backend.dados.salvar_dados import salvar_dados_manuais
 from backend.dados.apagar_dados import apagar_dados_usuario
 from backend.dados.upload_arquivo import upload_arquivo
+#Importação analise
+from backend.analise import analise_por_periodo
 # Importação relatorio
 from backend.relatorio.gerar_relatorio import gerar_relatorio
 from backend.relatorio.pagina_relatorio import pagina_relatorio_pdf as pagina_relatorio_pdf_backend
@@ -198,6 +200,11 @@ def api_graficos():
     """Retorna dados para os gráficos"""
     periodo = request.args.get('periodo', '30_dias')
     return obter_dados_graficos(periodo)
+
+@app.route('/api/analise', methods=['GET'])
+@login_required
+def api_analise():
+    return analise_por_periodo()
 
 # ============ Verificar Senha =================
 @app.route('/verificar_codigo', methods=['GET', 'POST'])
