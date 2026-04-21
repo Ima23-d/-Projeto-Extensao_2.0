@@ -190,6 +190,24 @@ def analise_por_periodo():
 
         salvar_ultimo_periodo(user, data_inicio_str, data_fim_str)
 
+        # Salvar análise no histórico da sessão
+        historico = session.get('analises_realizadas', [])
+        
+        item_historico = {
+            'periodo_inicio': data_inicio_str,
+            'periodo_fim': data_fim_str,
+            'período_display': f"{data_inicio_str} até {data_fim_str}",
+            'data': datetime.now().strftime("%d/%m/%Y"),
+            'hora': datetime.now().strftime("%H:%M"),
+            'faturamento': round(fat, 2),
+            'despesa': round(desp, 2),
+            'lucro': round(luc, 2),
+            'margem': mg,
+        }
+        
+        historico.insert(0, item_historico)
+        session['analises_realizadas'] = historico[:10]  # Manter apenas 10 últimas
+
         return jsonify({
             "periodo": {
                 "inicio": data_inicio_str,

@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>DataInsight • Análise</title>
+    <title>DataInsight • Métricas</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/estilo.css') }}" />
     <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
@@ -359,6 +359,18 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
     <script src="{{ url_for('static', filename='acessibilidade/acessibilidade.js') }}"></script>
     <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+    
+    <script>
+        // Se existe análise selecionada, passar para o analise.js
+        window.analise_selecionada = null;
+        {% if session.get('analise_selecionada') %}
+            window.analise_selecionada = {
+                periodo_inicio: '{{ session.analise_selecionada.periodo_inicio }}',
+                periodo_fim: '{{ session.analise_selecionada.periodo_fim }}'
+            };
+        {% endif %}
+    </script>
+    
     <script src="{{ url_for('static', filename='js/analise.js') }}"></script>
 
 </body>

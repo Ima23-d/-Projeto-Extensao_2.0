@@ -119,6 +119,15 @@ function aplicarFiltros() {
 // AUTO LOAD
 // =============================
 function carregarUltimoPeriodo() {
+    // Se existe uma análise selecionada da página de perfil, usar ela
+    if (window.analise_selecionada && window.analise_selecionada.periodo_inicio) {
+        const { periodo_inicio, periodo_fim } = window.analise_selecionada;
+        setPeriodoEAplicar(periodo_inicio, periodo_fim);
+        // Limpar depois de usar para não interferir com novas análises
+        window.analise_selecionada = null;
+        return;
+    }
+
     fetch('/api/ultimo-periodo')
         .then(r => r.json())
         .then(data => {

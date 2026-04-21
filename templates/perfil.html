@@ -72,33 +72,30 @@
               </header>
               <div class="cartao__conteudo">
                 <ul class="lista" id="listaUltimasAnalises">
-                  <li class="lista__item">
-                    <div class="lista__texto">
-                      <strong>Análise</strong>
-                      <span class="lista__titulo">Relatório de vendas mensal</span>
-                    </div>
-                    <span class="lista__meta">há 2 dias</span>
-                  </li>
-                  <li class="lista__item">
-                    <div class="lista__texto">
-                      <strong>Análise</strong>
-                      <span class="lista__titulo">Comparativo de despesas por departamento</span>
-                    </div>
-                    <span class="lista__meta">há 5 dias</span>
-                  </li>
-                  <li class="lista__item">
-                    <div class="lista__texto">
-                      <strong>Análise</strong>
-                      <span class="lista__titulo">Projeção de crescimento anual</span>
-                    </div>
-                    <span class="lista__meta">há 1 semana</span>
-                  </li>
+                  {% if ultimas_analises and ultimas_analises | length > 0 %}
+                    {% for item in ultimas_analises %}
+                      <li class="lista__item">
+                        <div class="lista__texto">
+                          <strong>Análise</strong>
+                          <span class="lista__titulo">{{ item.período_display }}</span>
+                          <span class="lista__meta" style="display:block; font-size: 12px; color:#666;">{{ item.data }} às {{ item.hora }}</span>
+                        </div>
+                        <a class="botao botao--suave" href="{{ url_for('visualizar_analise_route', index=loop.index0) }}" aria-label="Abrir análise {{ item.período_display }}">
+                          <i class="fa-solid fa-eye"></i> Abrir
+                        </a>
+                      </li>
+                    {% endfor %}
+                  {% else %}
+                    <li class="lista__item" style="color: var(--texto);">
+                      Nenhuma análise realizada ainda. Gere uma análise na página Análises de Métricas e ela aparecerá aqui.
+                    </li>
+                  {% endif %}
                 </ul>
 
                 <div class="cartao__acoes">
-                  <button class="botao botao--suave" type="button">
-                    <i class="fa-solid fa-list"></i> Ver todas as análises
-                  </button>
+                  <a class="botao botao--suave" href="{{ url_for('pagina_analise') }}">
+                    <i class="fa-solid fa-chart-line"></i> Realizar nova análise
+                  </a>
                 </div>
               </div>
             </section>

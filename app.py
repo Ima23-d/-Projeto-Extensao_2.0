@@ -19,6 +19,7 @@ from backend.relatorio.pagina_relatorio import pagina_relatorio_pdf as pagina_re
 # Importação perfil
 from backend.perfil.pagina_de_perfil import pagina_perfil as pagina_perfil_backend
 from backend.perfil.vizualizar_relatorio import vizualizar_relatorio
+from backend.perfil.visualizar_analise import visualizar_analise
 # Importação home
 from backend.home.home import calcular_desempenho, obter_dados_graficos
 load_dotenv()
@@ -185,6 +186,11 @@ def pagina_perfil():
 @login_required
 def visualizar_relatorio(index):
     return vizualizar_relatorio(index)
+
+@app.route('/analise/visualizar/<int:index>' )
+@login_required
+def visualizar_analise_route(index):
+    return visualizar_analise(index)
 
 # =================== Desempenho ===================
 @app.route('/api/desempenho', methods=['GET'])
