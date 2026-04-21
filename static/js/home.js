@@ -238,7 +238,7 @@ function destruir(chart) {
   if (chart) chart.destroy();
 }
 
-function renderVazio(container, altura) {
+function renderVazio(container, altura) {  
   container.innerHTML = `
     <div style="display:flex;align-items:center;justify-content:center;height:${altura}px;color:#9ca3af;">
       Sem dados para ${PERIODOS[periodoAtual]}
