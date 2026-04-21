@@ -209,7 +209,12 @@
             if (dados.sucesso) {
               exibirFeedback(dados.mensagem || 'Código enviado! Verifique seu e-mail.', 'sucesso');
               inputEmail.value = '';
-              inputEmail.focus();
+              // Redirecionar para verificar código após 2 segundos
+              setTimeout(() => {
+                if (dados.redirect_url) {
+                  window.location.href = dados.redirect_url;
+                }
+              }, 2000);
             } else {
               exibirFeedback(dados.mensagem || 'Erro ao enviar o código. Tente novamente.', 'erro');
               inputEmail.focus();
