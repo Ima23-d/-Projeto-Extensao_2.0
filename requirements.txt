@@ -6,3 +6,4 @@ python-dotenv
 wkhtmltopdf
 pandas
 openpyxl
+Flask-Mail
