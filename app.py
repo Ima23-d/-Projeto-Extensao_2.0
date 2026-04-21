@@ -46,7 +46,7 @@ mail = Mail(app)
 # REGISTRA NO FLASK
 app.mail_instance = mail
 
-print(f"✅ Flask-Mail inicializado com sucesso!\n")
+print(f" Flask-Mail inicializado com sucesso!\n")
 # =================== UPLOAD ===================
 UPLOAD_FOLDER = "uploads"
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
