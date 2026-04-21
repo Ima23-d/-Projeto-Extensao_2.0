@@ -1,10 +1,11 @@
-from flask import Flask, render_template, session, redirect, url_for, request, flash
+from flask import Flask, render_template, session, redirect, url_for, request, flash, jsonify
+from flask_mail import Mail
 from functools import wraps
 import os
 from dotenv import load_dotenv
 #------------------ IMPORTAÇÕES BACKEND ------------------
 # Importação user
-from backend.user import tela_cadastro, login, esqueceu_senha
+from backend.user import tela_cadastro, login, esqueceu_senha, verificar_codigo, resetar_senha, reenviar_codigo
 # Importação dados
 from backend.dados.carregar_dados import carregar_dados
 from backend.dados.salvar_dados import salvar_dados_manuais
@@ -25,6 +26,27 @@ key = os.getenv('SECRET_KEY')
 app = Flask(__name__)
 app.secret_key = key
 
+# =================== EMAIL ===================
+app.config['MAIL_SERVER'] = os.getenv('MAIL_SERVER', 'smtp.gmail.com')
+app.config['MAIL_PORT'] = int(os.getenv('MAIL_PORT', 587))
+app.config['MAIL_USE_TLS'] = True
+app.config['MAIL_USERNAME'] = os.getenv("EMAIL_USER")
+app.config['MAIL_PASSWORD'] = os.getenv("EMAIL_PASS")
+app.config['MAIL_DEFAULT_SENDER'] = os.getenv("EMAIL_USER")
+
+# Configurações adicionais para Gmail
+app.config['MAIL_MAX_EMAILS'] = 5
+app.config['MAIL_SUPPRESS_SEND'] = False  # Não suprimir envio
+app.config['TESTING'] = False  # Desativar modo teste
+
+
+# Inicializar Flask-Mail
+mail = Mail(app)
+
+# REGISTRA NO FLASK
+app.mail_instance = mail
+
+print(f"✅ Flask-Mail inicializado com sucesso!\n")
 # =================== UPLOAD ===================
 UPLOAD_FOLDER = "uploads"
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
@@ -179,26 +201,22 @@ def api_graficos():
 
 # ============ Verificar Senha =================
 @app.route('/verificar_codigo', methods=['GET', 'POST'])
-def verificar_codigo():
-    if request.method == 'POST':
-        codigo_digitado = request.form.get('codigo')
-        
-        codigo_correto = "123456" 
-        
-        if codigo_digitado == codigo_correto:
-           
-            return redirect(url_for('resetar_senha'))
-        else:
-            erro = "Código inválido ou expirado. Tente novamente."
-            return render_template('verificar_codigo.html', erro=erro)
+def verificar_codigo_route():
+    return verificar_codigo()
 
-   
-    return render_template('verificar_codigo.html')
 
+# ============ resetar Senha =================
+@app.route('/resetar_senha', methods=['GET', 'POST'])
+def resetar_senha_route():
+    return resetar_senha()
+
+# ============ reenviar codigo =================
 @app.route('/reenviar-codigo')
-def reenviar_codigo():
-    flash("Um novo código foi enviado para seu e-mail!")
-    return redirect(url_for('verificar_codigo'))
+def route_reenviar_codigo():
+    """Reenvia o código de recuperação para o email"""
+    return reenviar_codigo()
+
+
 # =================== RUN ===================
 if __name__ == "__main__":
     app.run(debug=True)
