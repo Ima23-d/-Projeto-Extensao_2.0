@@ -39,6 +39,7 @@ def filtrar_por_periodo(df, col_data, inicio, fim):
     df[col_data] = pd.to_datetime(df[col_data], errors="coerce", dayfirst=False)
     df = df.dropna(subset=[col_data])
     return df[(df[col_data] >= inicio) & (df[col_data] <= fim)]
+    
 
 
 def calcular_metricas(df):
@@ -124,8 +125,38 @@ def analise_por_periodo():
                 "valor_anterior": mg_a,
                 "variacao":       round(mg - mg_a, 2),
             },
+            "grafico": agrupar_por_data(df_atual, col_data) if col_data else {"labels": [], "series": []},
         }), 200
 
     except Exception as e:
         print(f"Erro em analise_por_periodo: {e}")
         return jsonify({"mensagem": f"Erro interno: {str(e)}"}), 500
+
+
+
+def agrupar_por_data(df, col_data):
+    if df.empty or not col_data:
+        return {"labels": [], "series": []}
+
+    df = df.copy()
+    df["_label"] = df[col_data].dt.strftime("%d/%m/%Y")
+
+    fat_serie  = df.groupby("_label").apply(lambda x: calcular_total(x, COL_FATURAMENTO))
+    desp_serie = df.groupby("_label").apply(lambda x: calcular_total(x, COL_DESPESA))
+    luc_serie  = df.groupby("_label").apply(
+        lambda x: calcular_total(x, COL_LUCRO) or (calcular_total(x, COL_FATURAMENTO) - calcular_total(x, COL_DESPESA))
+    )
+
+    try:
+        labels = sorted(fat_serie.index.tolist(), key=lambda d: datetime.strptime(d, "%d/%m/%Y"))
+    except Exception:
+        labels = fat_serie.index.tolist()
+
+    return {
+        "labels": labels,
+        "series": [
+            {"name": "Faturamento", "data": [round(fat_serie.get(l, 0), 2)  for l in labels]},
+            {"name": "Despesas",    "data": [round(desp_serie.get(l, 0), 2) for l in labels]},
+            {"name": "Lucro",       "data": [round(luc_serie.get(l, 0), 2)  for l in labels]},
+        ],
+    }

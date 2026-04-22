@@ -230,6 +230,7 @@ function aplicarFiltros() {
         .then(data => {
             preencherCards(data);
             preencherTabela(data);
+            atualizarGraficoAPI(data.grafico);  // ← adiciona essa linha
         })
         .catch(err => {
             console.error('Erro ao buscar dados:', err);
@@ -337,6 +338,58 @@ function limparFiltros() {
     // Limpa o gráfico
     const container = document.getElementById('grafico-metricas');
     container.innerHTML = '<div style="text-align: center; padding: 80px 40px; color: var(--suave);"><p>Selecione um período para visualizar os dados</p></div>';
+}
+
+function atualizarGraficoAPI(grafico) {
+    const container = document.getElementById('grafico-metricas');
+
+    if (!grafico || !grafico.labels || grafico.labels.length === 0) {
+        container.innerHTML = '<div style="text-align: center; padding: 80px 40px; color: var(--suave);"><p>Sem dados para o período selecionado</p></div>';
+        return;
+    }
+
+    if (chartInstance) {
+        chartInstance.destroy();
+    }
+
+    container.innerHTML = '';
+
+    chartInstance = new ApexCharts(container, {
+        chart: {
+            type: 'line',
+            height: 400,
+            fontFamily: 'inherit',
+            foreColor: getThemeColors().suave,
+            toolbar: { show: true }
+        },
+        series: grafico.series,
+        xaxis: {
+            categories: grafico.labels,
+            labels: { style: { colors: getThemeColors().suave } }
+        },
+        yaxis: {
+            labels: {
+                formatter: formatarMoeda,
+                style: { colors: getThemeColors().suave }
+            }
+        },
+        colors: [
+            getThemeColors().faturamento,
+            getThemeColors().despesas,
+            getThemeColors().lucro
+        ],
+        stroke: { curve: 'smooth', width: 2 },
+        tooltip: {
+            theme: isDarkMode() ? 'dark' : 'light',
+            y: { formatter: formatarMoeda }
+        },
+        legend: {
+            position: 'top',
+            labels: { colors: getThemeColors().suave }
+        }
+    });
+
+    chartInstance.render();
 }
 
 // Funções auxiliares
