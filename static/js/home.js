@@ -184,7 +184,7 @@ function renderGraficoBarras(dados) {
 
     series: dados.series,
 
-    colors: ['#3b82f6', '#10b981', '#ef4444'],
+    colors: ['#3b82f6', '#ef4444', '#10b981'],
 
     xaxis: {
       categories: dados.labels,

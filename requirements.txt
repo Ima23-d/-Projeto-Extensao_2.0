@@ -7,3 +7,4 @@ wkhtmltopdf
 pandas
 openpyxl
 Flask-Mail
+datetime

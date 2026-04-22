@@ -51,7 +51,7 @@ def calcular_metricas(df):
 
 
 # ======================
-# 🔥 NOVO: GERAR SÉRIES
+#  NOVO: GERAR SÉRIES
 # ======================
 def gerar_series(df, col_data):
     if df.empty or not col_data:
@@ -69,7 +69,7 @@ def gerar_series(df, col_data):
 
     df["mes"] = df[col_data].dt.strftime("%m/%Y")
 
-    # 🔥 PEGAR SOMENTE COLUNAS NUMÉRICAS
+
     colunas_numericas = df.select_dtypes(include="number").columns
 
     df_num = df[["mes"] + list(colunas_numericas)]

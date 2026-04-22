@@ -111,7 +111,7 @@ function aplicarFiltros() {
         })
         .catch(err => {
             console.error(err);
-            alert(err.message);
+            alert("Atenção: Nenhum dado carregado");
         });
 }
 
