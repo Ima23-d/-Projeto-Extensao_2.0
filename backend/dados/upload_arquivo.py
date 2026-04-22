@@ -1,6 +1,7 @@
 
 from flask import request, jsonify, session, current_app
 import os
+import json
 import pandas as pd
 from backend.dados.dados import limpar_dados
 from backend.db import salvar_dados
@@ -21,12 +22,37 @@ def upload_arquivo():
 
     # Ler o arquivo e limpar os dados
     try:
+        df = None
+        
         if arquivo.filename.endswith(".csv"):
             df = pd.read_csv(caminho)
         elif arquivo.filename.endswith((".xlsx", ".xls")):
             df = pd.read_excel(caminho)
+        elif arquivo.filename.endswith(".json"):
+            with open(caminho, 'r', encoding='utf-8') as f:
+                dados_json = json.load(f)
+            if isinstance(dados_json, list):
+                df = pd.DataFrame(dados_json)
+            else:
+                df = pd.DataFrame([dados_json])
+        elif arquivo.filename.endswith(".txt"):
+            # Tenta ler como CSV/TSV
+            try:
+                df = pd.read_csv(caminho, sep='\t', engine='python')
+                if len(df.columns) == 1:
+                    df = pd.read_csv(caminho, sep=' ', engine='python')
+                if len(df.columns) == 1:
+                    df = pd.read_csv(caminho, engine='python')
+            except:
+                # Se falhar, trata como arquivo de texto puro
+                with open(caminho, 'r', encoding='utf-8') as f:
+                    lines = f.readlines()
+                df = pd.DataFrame({'conteudo': [line.strip() for line in lines if line.strip()]})
         else:
-            return jsonify({"mensagem": "Formato de arquivo não suportado"}), 400
+            return jsonify({"mensagem": "Formato de arquivo não suportado. Use: CSV, XLSX, XLS, JSON ou TXT"}), 400
+
+        if df is None or df.empty:
+            return jsonify({"mensagem": "Arquivo vazio ou inválido"}), 400
 
         # Aplicar limpeza dos dados
         df = limpar_dados(df)

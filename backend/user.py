@@ -10,15 +10,11 @@ from datetime import datetime, timedelta
 def enviar_email_codigo(destinatario, codigo):
     """Envia o código de recuperação por email"""
     try:
-        # Obter a instância do Mail do contexto da aplicação
-        from flask_mail import Mail
-
-        if not hasattr(current_app, 'mail_instance'):
-            if 'flask_mail' not in current_app.extensions:
-                return False
-            mail_instance = current_app.extensions['flask_mail']
-        else:
-            mail_instance = current_app.mail_instance
+        # Usar a instância de Mail armazenada no app
+        mail = current_app.mail
+        if not mail:
+            print("✗ Flask-Mail não está inicializado")
+            return False
 
         sender = current_app.config.get('MAIL_USERNAME')
 
@@ -57,10 +53,14 @@ DataInsight © 2026
         </div>
         """
 
-        mail_instance.send(msg)
+        mail.send(msg)
+        print(f"✓ Email enviado para {destinatario}")
         return True
 
-    except Exception:
+    except Exception as e:
+        print(f"✗ Erro ao enviar email: {e}")
+        import traceback
+        traceback.print_exc()
         return False
 
 

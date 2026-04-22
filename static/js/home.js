@@ -184,7 +184,7 @@ function renderGraficoBarras(dados) {
 
     series: dados.series,
 
-    colors: ['#3b82f6', '#10b981', '#ef4444'],
+    colors: ['#3b82f6', '#ef4444', '#10b981'],
 
     xaxis: {
       categories: dados.labels,
@@ -238,7 +238,7 @@ function destruir(chart) {
   if (chart) chart.destroy();
 }
 
-function renderVazio(container, altura) {
+function renderVazio(container, altura) {  
   container.innerHTML = `
     <div style="display:flex;align-items:center;justify-content:center;height:${altura}px;color:#9ca3af;">
       Sem dados para ${PERIODOS[periodoAtual]}

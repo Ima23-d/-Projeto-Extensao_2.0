@@ -24,8 +24,8 @@
         </a>
       </div>
 
-    <!-- Navegação lateral -->
-    {% include 'partials/navbar.html' %}
+      <!-- Navegação lateral -->
+      {% include 'partials/navbar.html' %}
 
     </aside>
 
@@ -53,17 +53,17 @@
               </div>
               <div class="perfil-dados">
                 <h1><strong>{{ session.usuario_nome }}</strong></h1>
-              <div class="perfil-acoes">
-                <button class="botao botao--primario" type="button" id="botaoEditarPerfil">
-                  <i class="fa-solid fa-pen"></i> Editar perfil
-                </button>
-                <a href="{{ url_for('logout') }}" class="botao botao--suave">
-                  <i class="fa-solid fa-right-from-bracket"></i> Trocar conta
-                </a>
+                <div class="perfil-acoes">
+                  <button class="botao botao--primario" type="button" id="botaoEditarPerfil">
+                    <i class="fa-solid fa-pen"></i> Editar perfil
+                  </button>
+                  <a href="{{ url_for('logout') }}" class="botao botao--suave">
+                    <i class="fa-solid fa-right-from-bracket"></i> Trocar conta
+                  </a>
+                </div>
               </div>
-            </div>
           </section>
-      <div style="height: 30px;"></div>
+          <div style="height: 30px;"></div>
           <div class="grade grade--2" style="gap: 24px;">
             <section class="cartao" aria-labelledby="titulo-ultimas-analises">
               <header class="cartao__cabecalho">
@@ -72,33 +72,33 @@
               </header>
               <div class="cartao__conteudo">
                 <ul class="lista" id="listaUltimasAnalises">
+                  {% if ultimas_analises and ultimas_analises | length > 0 %}
+                  {% for item in ultimas_analises %}
                   <li class="lista__item">
                     <div class="lista__texto">
                       <strong>Análise</strong>
-                      <span class="lista__titulo">Relatório de vendas mensal</span>
+                      <span class="lista__titulo">{{ item.período_display }}</span>
+                      <span class="lista__meta" style="display:block; font-size: 12px; color:#666;">{{ item.data }} às
+                        {{ item.hora }}</span>
                     </div>
-                    <span class="lista__meta">há 2 dias</span>
+                    <a class="botao botao--suave" href="{{ url_for('visualizar_analise_route', index=loop.index0) }}"
+                      aria-label="Abrir análise {{ item.período_display }}">
+                      <i class="fa-solid fa-eye"></i> Abrir
+                    </a>
                   </li>
-                  <li class="lista__item">
-                    <div class="lista__texto">
-                      <strong>Análise</strong>
-                      <span class="lista__titulo">Comparativo de despesas por departamento</span>
-                    </div>
-                    <span class="lista__meta">há 5 dias</span>
+                  {% endfor %}
+                  {% else %}
+                  <li class="lista__item" style="color: var(--texto);">
+                    Nenhuma análise realizada ainda. Gere uma análise na página Análises de Métricas e ela aparecerá
+                    aqui.
                   </li>
-                  <li class="lista__item">
-                    <div class="lista__texto">
-                      <strong>Análise</strong>
-                      <span class="lista__titulo">Projeção de crescimento anual</span>
-                    </div>
-                    <span class="lista__meta">há 1 semana</span>
-                  </li>
+                  {% endif %}
                 </ul>
 
                 <div class="cartao__acoes">
-                  <button class="botao botao--suave" type="button">
-                    <i class="fa-solid fa-list"></i> Ver todas as análises
-                  </button>
+                  <a class="botao botao--suave" href="{{ url_for('pagina_analise') }}">
+                    <i class="fa-solid fa-chart-line"></i> Realizar nova análise
+                  </a>
                 </div>
               </div>
             </section>
@@ -111,22 +111,24 @@
               <div class="cartao__conteudo">
                 <ul class="lista" id="listaUltimosRelatorios">
                   {% if ultimos_relatorios and ultimos_relatorios | length > 0 %}
-                    {% for item in ultimos_relatorios %}
-                      <li class="lista__item">
-                        <div class="lista__texto">
-                          <strong>Relatório</strong>
-                          <span class="lista__titulo">{{ item.nome }}</span>
-                          <span class="lista__meta" style="display:block; font-size: 12px; color:#666;">{{ item.periodo }} • {{ item.data }}</span>
-                        </div>
-                        <a class="botao botao--suave" href="{{ url_for('visualizar_relatorio', index=loop.index0) }}" aria-label="Abrir relatório {{ item.nome }}">
-                          <i class="fa-solid fa-eye"></i> Abrir
-                        </a>
-                      </li>
-                    {% endfor %}
+                  {% for item in ultimos_relatorios %}
+                  <li class="lista__item">
+                    <div class="lista__texto">
+                      <strong>Relatório</strong>
+                      <span class="lista__titulo">{{ item.nome }}</span>
+                      <span class="lista__meta" style="display:block; font-size: 12px; color:#666;">{{ item.periodo }} •
+                        {{ item.data }}</span>
+                    </div>
+                    <a class="botao botao--suave" href="{{ url_for('visualizar_relatorio', index=loop.index0) }}"
+                      aria-label="Abrir relatório {{ item.nome }}">
+                      <i class="fa-solid fa-eye"></i> Abrir
+                    </a>
+                  </li>
+                  {% endfor %}
                   {% else %}
-                    <li class="lista__item" style="color: var(--texto);">
-                      Nenhum relatório gerado ainda. Gere um relatório na página Relatórios e ele aparecerá aqui.
-                    </li>
+                  <li class="lista__item" style="color: var(--texto);">
+                    Nenhum relatório gerado ainda. Gere um relatório na página Relatórios e ele aparecerá aqui.
+                  </li>
                   {% endif %}
                 </ul>
 

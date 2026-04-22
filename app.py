@@ -11,16 +11,20 @@ from backend.dados.carregar_dados import carregar_dados
 from backend.dados.salvar_dados import salvar_dados_manuais
 from backend.dados.apagar_dados import apagar_dados_usuario
 from backend.dados.upload_arquivo import upload_arquivo
+from backend.dados.exclusao_dados import solicitar_exclusao_dados, confirmar_exclusao_dados, pagina_confirmacao_exclusao
 #Importação analise
-from backend.analise import analise_por_periodo
+from backend.analise.analise import analise_por_periodo, obter_ultimo_periodo
 # Importação relatorio
 from backend.relatorio.gerar_relatorio import gerar_relatorio
 from backend.relatorio.pagina_relatorio import pagina_relatorio_pdf as pagina_relatorio_pdf_backend
 # Importação perfil
 from backend.perfil.pagina_de_perfil import pagina_perfil as pagina_perfil_backend
 from backend.perfil.vizualizar_relatorio import vizualizar_relatorio
+from backend.perfil.visualizar_analise import visualizar_analise
 # Importação home
 from backend.home.home import calcular_desempenho, obter_dados_graficos
+from backend.DashBoard.dashboard_rotas import dashboard_page, dashboard_dados
+# Dashboard Import
 load_dotenv()
 
 key = os.getenv('SECRET_KEY')
@@ -41,13 +45,10 @@ app.config['MAIL_MAX_EMAILS'] = 5
 app.config['MAIL_SUPPRESS_SEND'] = False  # Não suprimir envio
 app.config['TESTING'] = False  # Desativar modo teste
 
-
 # Inicializar Flask-Mail
 mail = Mail(app)
-
-# REGISTRA NO FLASK
-app.mail_instance = mail
-
+# Armazenar como atributo do app para acesso em context
+app.mail = mail
 print(f" Flask-Mail inicializado com sucesso!\n")
 # =================== UPLOAD ===================
 UPLOAD_FOLDER = "uploads"
@@ -156,6 +157,26 @@ def apagar_dados():
     """Deleta os últimos dados salvos do usuário"""
     return apagar_dados_usuario()
 
+# =================== SOLICITAR EXCLUSÃO DE DADOS ===================
+@app.route("/solicitar-exclusao-dados", methods=["POST"])
+@login_required
+def solicitar_exclusao():
+    """Solicita a exclusão de dados enviando email de confirmação"""
+    return solicitar_exclusao_dados()
+
+# =================== CONFIRMAR EXCLUSÃO DE DADOS ===================
+@app.route("/confirmar-exclusao", methods=["GET"])
+@login_required
+def confirmar_exclusao():
+    """Página de confirmação de exclusão de dados"""
+    return pagina_confirmacao_exclusao()
+
+@app.route("/processar-exclusao", methods=["POST"])
+@login_required
+def processar_exclusao():
+    """Processa a confirmação de exclusão de dados"""
+    return confirmar_exclusao_dados()
+
 # =================== UPLOAD ARQUIVO ===================
 @app.route("/upload", methods=["POST"])
 @login_required
@@ -175,6 +196,18 @@ def gerar_relatorio_endpoint():
 def pagina_relatorio_pdf():
     return pagina_relatorio_pdf_backend()
 
+# ===============DashBoard======================
+
+@app.route("/dashboard")
+@login_required
+def pagina_dashboard():
+    return dashboard_page()
+
+@app.route("/dashboard/dados", methods=["GET"])
+@login_required
+def api_dashboard_dados():
+    return dashboard_dados()
+
 # =================== Perfil ===================
 @app.route("/perfil")
 @login_required
@@ -185,6 +218,11 @@ def pagina_perfil():
 @login_required
 def visualizar_relatorio(index):
     return vizualizar_relatorio(index)
+
+@app.route('/analise/visualizar/<int:index>' )
+@login_required
+def visualizar_analise_route(index):
+    return visualizar_analise(index)
 
 # =================== Desempenho ===================
 @app.route('/api/desempenho', methods=['GET'])
@@ -207,6 +245,10 @@ def api_graficos():
 def api_analise():
     return analise_por_periodo()
 
+@app.route('/api/ultimo-periodo', methods=['GET'])
+@login_required
+def ultimo_periodo():
+    return obter_ultimo_periodo()
 # ============ Verificar Senha =================
 @app.route('/verificar_codigo', methods=['GET', 'POST'])
 def verificar_codigo_route():
