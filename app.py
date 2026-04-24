@@ -24,6 +24,8 @@ from backend.perfil.visualizar_analise import visualizar_analise
 # Importação home
 from backend.home.home import calcular_desempenho, obter_dados_graficos
 from backend.DashBoard.dashboard_rotas import dashboard_page, dashboard_dados
+# Importação contato
+from backend.contato.contato import enviar_mensagem_contato
 # Dashboard Import
 load_dotenv()
 
@@ -46,10 +48,14 @@ app.config['MAIL_SUPPRESS_SEND'] = False  # Não suprimir envio
 app.config['TESTING'] = False  # Desativar modo teste
 
 # Inicializar Flask-Mail
-mail = Mail(app)
-# Armazenar como atributo do app para acesso em context
-app.mail = mail
-print(f" Flask-Mail inicializado com sucesso!\n")
+try:
+    mail = Mail(app)
+    # Armazenar como atributo do app para acesso em context
+    app.mail = mail
+    print(f"✓ Flask-Mail inicializado com sucesso!\n")
+except Exception as e:
+    print(f"✗ Erro ao inicializar Flask-Mail: {str(e)}\n")
+    mail = None
 # =================== UPLOAD ===================
 UPLOAD_FOLDER = "uploads"
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
@@ -112,6 +118,12 @@ def pagina_relatorio():
 @login_required
 def pagina_contato():
     return render_template("contato.html")
+
+@app.route("/enviar-contato", methods=["POST"])
+@login_required
+def enviar_contato():
+    """Envia a mensagem de contato"""
+    return enviar_mensagem_contato()
 
 @app.route("/termos/termos_de_uso")
 def pagina_termos_uso():
