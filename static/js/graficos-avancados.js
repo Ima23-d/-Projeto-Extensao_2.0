@@ -239,8 +239,27 @@ function criarSeletorPeriodoRapido(chartId, chartInstance) {
       transition: all 0.2s;
     `;
 
-    btn.addEventListener('mouseenter', () => btn.style.background = getThemeColors().borda);
-    btn.addEventListener('mouseleave', () => btn.style.background = getThemeColors().fundo);
+    btn.addEventListener('click', async () => {
+  const periodoSelect = document.getElementById('periodoDash');
+  if (periodoSelect) {
+    periodoSelect.value = periodo.dias;
+    periodoSelect.dispatchEvent(new Event('change'));
+
+    
+    document.querySelectorAll('.rapid-period-selector button').forEach(b => {
+      b.style.background = getThemeColors().fundo;
+      b.style.color = getThemeColors().texto; 
+      b.style.fontWeight = 'normal';
+    });
+
+    
+    btn.style.background = '#3B82F6';
+    btn.style.color = '#FFFFFF';
+    btn.style.fontWeight = 'bold';
+
+    btn.blur();
+  }
+});
     btn.addEventListener('click', async () => {
       const periodoSelect = document.getElementById('periodoDash');
       if (periodoSelect) {
