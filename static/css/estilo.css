@@ -100,11 +100,15 @@
   box-sizing: border-box;
 }
 
+html,
 body {
   font-family: var(--fonte);
   background: var(--fundo);
   color: var(--texto);
   line-height: 1.5;
+  overflow-x: hidden;
+  width: 100%;
+  max-width: 100%;
 
   /* Fonte dinâmica */
   font-size: calc(16px * var(--escala-fonte));
@@ -1976,6 +1980,25 @@ table td {
     width: 100%;
   }
 
+  /* Hero section responsivo */
+  .grid.lg\\:grid-cols-2 {
+    grid-template-columns: 1fr;
+  }
+
+  /* Remover altura fixa do container da mockup em mobile */
+  .relative.rounded-2xl.overflow-hidden.shadow-2xl {
+    overflow: auto !important;
+  }
+
+  .bg-white.min-h-\\[400px\\] {
+    min-height: auto !important;
+  }
+
+  /* Recursos grid */
+  .grid.md\\:grid-cols-2 {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
 }
 
 
@@ -2018,6 +2041,45 @@ table td {
     flex-direction: column;
     align-items: center;
     text-align: center;
+  }
+}
+
+/* Mobile Extra Pequeno (< 375px) */
+@media (max-width: 374px) {
+  /* Reduzir padding em seções */
+  section {
+    padding-left: 12px !important;
+    padding-right: 12px !important;
+  }
+
+  /* Reduzir tamanho do ícone em cards */
+  .bg-white.rounded-2xl.p-8 {
+    padding: 16px !important;
+  }
+
+  .w-12.h-12 {
+    width: 40px !important;
+    height: 40px !important;
+  }
+
+  /* Ajustar gap em flex items */
+  .flex.items-start.gap-4 {
+    gap: 12px !important;
+  }
+
+  /* Reduzir altura da mockup do dashboard */
+  .relative.rounded-2xl {
+    margin: 0 -12px;
+  }
+
+  /* Ajustar grid de recursos para mobile pequeno */
+  .grid.md\\:grid-cols-2 {
+    grid-template-columns: 1fr !important;
+    gap: 16px !important;
+  }
+
+  h1, h2, h3 {
+    word-break: break-word;
   }
 }
 
@@ -2468,5 +2530,92 @@ table td {
 
   .sugestoes-grid {
     grid-template-columns: 1fr;
+  }
+}
+
+/* ============================
+   CORREÇÕES RESPONSIVIDADE MOBILE
+   ============================ */
+
+/* Seção Hero - Mobile */
+@media (max-width: 768px) {
+  section.bg-white.pt-4.pb-20 {
+    padding-top: 16px;
+    padding-bottom: 40px;
+  }
+
+  .max-w-7xl {
+    width: 100%;
+    padding-left: 16px;
+    padding-right: 16px;
+    box-sizing: border-box;
+  }
+}
+
+/* Cards de Recursos - Mobile */
+@media (max-width: 640px) {
+  .bg-white.rounded-2xl.p-8 {
+    padding: 20px;
+  }
+
+  .flex.items-start.gap-4 {
+    gap: 16px;
+  }
+
+  /* Ícone alinhado */
+  .w-12.h-12.rounded-lg.bg-gradient-to-br {
+    width: 40px;
+    height: 40px;
+    flex-shrink: 0;
+  }
+
+  /* Texto das features */
+  .text-xl.font-semibold.text-gray-900 {
+    font-size: 18px;
+  }
+
+  .text-gray-600.leading-relaxed {
+    font-size: 14px;
+  }
+}
+
+/* Mobile Extra Pequeno (< 375px) */
+@media (max-width: 374px) {
+  .max-w-7xl {
+    padding-left: 12px;
+    padding-right: 12px;
+  }
+
+  section.bg-white,
+  section.bg-gray-50 {
+    padding-left: 0;
+    padding-right: 0;
+  }
+
+  .px-4.sm\\:px-6.lg\\:px-8 {
+    padding-left: 12px !important;
+    padding-right: 12px !important;
+  }
+
+  .bg-white.rounded-2xl.p-8 {
+    padding: 16px;
+  }
+
+  .w-12.h-12 {
+    width: 36px;
+    height: 36px;
+  }
+
+  .text-4xl.sm\\:text-5xl.lg\\:text-6xl,
+  .text-3xl.sm\\:text-4xl {
+    font-size: 24px;
+  }
+
+  .bg-gray-50.px-4.py-3 {
+    padding: 8px 12px;
+  }
+
+  .h-3.bg-gray-200.rounded {
+    height: 6px;
   }
 }
