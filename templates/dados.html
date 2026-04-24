@@ -55,74 +55,75 @@
           <!-- CONTAINER PRINCIPAL (tudo na mesma linha) -->
           <section class="d-flex flex-wrap gap-4 mt-4">
 
-  <!-- ================= APAGAR DADOS ================= -->
-  <article class="cartao" style="flex:1; min-width:300px; padding:24px; border:2px solid var(--borda);">
+            <!-- ================= APAGAR DADOS ================= -->
+            <article class="cartao" style="flex:1; min-width:300px; padding:24px; border:2px solid var(--borda);">
 
-    <div style="display:flex; align-items:center; gap:12px; margin-bottom:16px;">
-      <i class="fa-solid fa-trash" style="font-size:28px; color:var(--perigo);"></i>
-      <h2 class="h2" style="margin:0;">Apagar Todos os Dados</h2>
-    </div>
+              <div style="display:flex; align-items:center; gap:12px; margin-bottom:16px;">
+                <i class="fa-solid fa-trash" style="font-size:28px; color:var(--perigo);"></i>
+                <h2 class="h2" style="margin:0;">Apagar Todos os Dados</h2>
+              </div>
 
-    <div style="background:rgba(220,38,38,0.1); padding:12px; border-radius:6px; margin-bottom:16px;">
-      <p style="color:var(--perigo); margin:0;">
-        <strong>⚠️ Atenção:</strong> Esta ação é irreversível!
-      </p>
-    </div>
+              <div style="background:rgba(220,38,38,0.1); padding:12px; border-radius:6px; margin-bottom:16px;">
+                <p style="color:var(--perigo); margin:0;">
+                  <strong>⚠️ Atenção:</strong> Esta ação é irreversível!
+                </p>
+              </div>
 
-    <p class="p" style="margin-bottom:16px;">
-      Será enviado um email para confirmar a exclusão dos dados.
-    </p>
+              <p class="p" style="margin-bottom:16px;">
+                Será enviado um email para confirmar a exclusão dos dados.
+              </p>
 
-    <button class="botao botao--delet" type="button" style="width:100%; justify-content:center;" id="btnSolicitarExclusao">
-      Solicitar Exclusão
-    </button>
+              <button class="botao botao--delet" type="button" style="width:100%; justify-content:center;"
+                id="btnSolicitarExclusao">
+                Solicitar Exclusão
+              </button>
 
-  </article>
+            </article>
 
-  <!-- ================= UPLOAD ================= -->
-  <article class="cartao" style="flex:1; min-width:300px;">
-    <h2 class="h2">Carregar de Arquivo</h2>
-    <p class="p" style="margin-top:6px;">Selecione o tipo de arquivo que deseja carregar</p>
+            <!-- ================= UPLOAD ================= -->
+            <article class="cartao" style="flex:1; min-width:300px;">
+              <h2 class="h2">Carregar de Arquivo</h2>
+              <p class="p" style="margin-top:6px;">Selecione o tipo de arquivo que deseja carregar</p>
 
-    <input type="file" id="uploadArquivo" accept=".csv,.xlsx,.xls,.txt,.json" style="display:none" />
+              <input type="file" id="uploadArquivo" accept=".csv,.xlsx,.xls,.txt,.json" style="display:none" />
 
-    <div style="display: flex; flex-wrap: wrap; gap: 16px; margin-top: 24px;">
+              <div style="display: flex; flex-wrap: wrap; gap: 16px; margin-top: 24px;">
 
-      <button class="card-upload" data-type="excel" type="button"
-        style="flex:1; min-width:120px; padding:20px; border-radius:12px; color:white; background:linear-gradient(135deg,#1f7e3d,#107c3f);">
-        <i class="fa-solid fa-file-excel" style="font-size:28px;"></i>
-        <div>Excel</div>
-      </button>
+                <button class="card-upload" data-type="excel" type="button"
+                  style="flex:1; min-width:120px; padding:20px; border-radius:12px; color:white; background:linear-gradient(135deg,#1f7e3d,#107c3f);">
+                  <i class="fa-solid fa-file-excel" style="font-size:28px;"></i>
+                  <div>Excel</div>
+                </button>
 
-      <button class="card-upload" data-type="csv" type="button"
-        style="flex:1; min-width:120px; padding:20px; border-radius:12px; color:white; background:linear-gradient(135deg,#f39c12,#e67e22);">
-        <i class="fa-solid fa-file-csv" style="font-size:28px;"></i>
-        <div>CSV</div>
-      </button>
+                <button class="card-upload" data-type="csv" type="button"
+                  style="flex:1; min-width:120px; padding:20px; border-radius:12px; color:white; background:linear-gradient(135deg,#f39c12,#e67e22);">
+                  <i class="fa-solid fa-file-csv" style="font-size:28px;"></i>
+                  <div>CSV</div>
+                </button>
 
-      <button class="card-upload" data-type="json" type="button"
-        style="flex:1; min-width:120px; padding:20px; border-radius:12px; color:white; background:linear-gradient(135deg,#8b5cf6,#7c3aed);">
-        <i class="fa-solid fa-file-code" style="font-size:28px;"></i>
-        <div>JSON</div>
-      </button>
+                <button class="card-upload" data-type="json" type="button"
+                  style="flex:1; min-width:120px; padding:20px; border-radius:12px; color:white; background:linear-gradient(135deg,#8b5cf6,#7c3aed);">
+                  <i class="fa-solid fa-file-code" style="font-size:28px;"></i>
+                  <div>JSON</div>
+                </button>
 
-      <button class="card-upload" data-type="txt" type="button"
-        style="flex:1; min-width:120px; padding:20px; border-radius:12px; color:white; background:linear-gradient(135deg,#3b82f6,#2563eb);">
-        <i class="fa-solid fa-file-lines" style="font-size:28px;"></i>
-        <div>TXT</div>
-      </button>
+                <button class="card-upload" data-type="txt" type="button"
+                  style="flex:1; min-width:120px; padding:20px; border-radius:12px; color:white; background:linear-gradient(135deg,#3b82f6,#2563eb);">
+                  <i class="fa-solid fa-file-lines" style="font-size:28px;"></i>
+                  <div>TXT</div>
+                </button>
 
-    </div>
+              </div>
 
-    <div style="margin-top:20px;">
-      <button class="botao botao--delet" type="button" id="btnLimparUpload">✕ Limpar</button>
-    </div>
+              <div style="margin-top:20px;">
+                <button class="botao botao--delet" type="button" id="btnLimparUpload">✕ Limpar</button>
+              </div>
 
-    <div id="uploadStatus" style="margin-top:16px; display:none;"></div>
-    <div id="uploadError" style="margin-top:16px; display:none;"></div>
-  </article>
+              <div id="uploadStatus" style="margin-top:16px; display:none;"></div>
+              <div id="uploadError" style="margin-top:16px; display:none;"></div>
+            </article>
 
-</section>
+          </section>
           <section style="margin-top: 32px;" aria-label="Adicionar dados manualmente">
             <h2 class="h2" style="margin-bottom: 16px;">Adicionar Dados Manualmente</h2>
             <div class="cartao">
