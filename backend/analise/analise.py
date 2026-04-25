@@ -22,9 +22,11 @@ def encontrar_coluna_data(df):
 def calcular_total(df, colunas):
     if df.empty:
         return 0.0
+
     for col in colunas:
         if col in df.columns:
             return float(pd.to_numeric(df[col], errors="coerce").sum())
+
     return 0.0
 
 
@@ -37,8 +39,11 @@ def variacao_percentual(anterior, atual):
 def filtrar_por_periodo(df, col_data, inicio, fim):
     if df.empty or not col_data:
         return df
+
+    df = df.copy()
     df[col_data] = pd.to_datetime(df[col_data], errors="coerce")
     df = df.dropna(subset=[col_data])
+
     return df[(df[col_data] >= inicio) & (df[col_data] <= fim)]
 
 
@@ -47,11 +52,12 @@ def calcular_metricas(df):
     desp = calcular_total(df, COL_DESPESA)
     luc  = calcular_total(df, COL_LUCRO) or (fat - desp)
     mg   = 0.0 if fat == 0 else round((luc / fat) * 100, 2)
+
     return fat, desp, luc, mg
 
 
 # ======================
-#  NOVO: GERAR SÉRIES
+# 🔥 GERAR SÉRIES MENSAIS (GRÁFICO NOVO)
 # ======================
 def gerar_series(df, col_data):
     if df.empty or not col_data:
@@ -63,19 +69,21 @@ def gerar_series(df, col_data):
             "margem": []
         }
 
+    df = df.copy()
     df[col_data] = pd.to_datetime(df[col_data], errors="coerce")
     df = df.dropna(subset=[col_data])
     df = df.sort_values(col_data)
 
-    df["mes"] = df[col_data].dt.strftime("%m/%Y")
+    # Criar coluna de mês/ano
+    df["mes"] = df[col_data].dt.strftime("%Y-%m-%d")
 
-
+    # Pegar apenas colunas numéricas
     colunas_numericas = df.select_dtypes(include="number").columns
-
     df_num = df[["mes"] + list(colunas_numericas)]
 
     agrupado = df_num.groupby("mes").sum().reset_index()
 
+    # 🔥 MESES EM ISO
     meses = agrupado["mes"].tolist()
 
     def soma_colunas(row, colunas):
@@ -105,6 +113,8 @@ def gerar_series(df, col_data):
         "lucro": lucro,
         "margem": margem
     }
+
+
 # ======================
 # SALVAR ÚLTIMO PERÍODO
 # ======================
@@ -128,6 +138,7 @@ def salvar_ultimo_periodo(user, inicio, fim):
 # ======================
 def obter_ultimo_periodo():
     user = session.get("usuario_id")
+
     if not user:
         return jsonify({"mensagem": "Usuário não autenticado"}), 401
 
@@ -164,49 +175,68 @@ def analise_por_periodo():
         return jsonify({"mensagem": "Data inválida"}), 400
 
     try:
-        doc = dados_colecao.find_one({"usuario_id": user}, sort=[("criado_em", -1)])
+        # Buscar dados do usuário
+        doc = dados_colecao.find_one(
+            {"usuario_id": user},
+            sort=[("criado_em", -1)]
+        )
+
         if not doc:
             return jsonify({"mensagem": "Nenhum dado encontrado"}), 200
 
         df = pd.DataFrame(doc.get("dados", []))
+
         if df.empty:
             return jsonify({"mensagem": "Nenhum dado encontrado"}), 200
 
         col_data = encontrar_coluna_data(df)
 
-        df_atual = filtrar_por_periodo(df.copy(), col_data, data_inicio, data_fim)
+        # Período atual
+        df_atual = filtrar_por_periodo(df, col_data, data_inicio, data_fim)
 
-        duracao    = (data_fim - data_inicio).days + 1
-        fim_ant    = data_inicio - timedelta(days=1)
+        # Período anterior
+        duracao = (data_fim - data_inicio).days + 1
+        fim_ant = data_inicio - timedelta(days=1)
         inicio_ant = fim_ant - timedelta(days=duracao - 1)
 
-        df_ant = filtrar_por_periodo(df.copy(), col_data, inicio_ant, fim_ant)
+        df_ant = filtrar_por_periodo(df, col_data, inicio_ant, fim_ant)
 
-        fat,  desp,  luc,  mg  = calcular_metricas(df_atual)
+        # Métricas
+        fat, desp, luc, mg = calcular_metricas(df_atual)
         fat_a, desp_a, luc_a, mg_a = calcular_metricas(df_ant)
 
-        # 🔥 GERAR SÉRIE PARA O GRÁFICO
+        # 🔥 GRÁFICO NOVO
         series = gerar_series(df_atual, col_data)
 
+        # Salvar período
         salvar_ultimo_periodo(user, data_inicio_str, data_fim_str)
 
-        # Salvar análise no histórico da sessão
+        # Histórico
         historico = session.get('analises_realizadas', [])
-        
-        item_historico = {
-            'periodo_inicio': data_inicio_str,
-            'periodo_fim': data_fim_str,
-            'período_display': f"{data_inicio_str} até {data_fim_str}",
-            'data': datetime.now().strftime("%d/%m/%Y"),
-            'hora': datetime.now().strftime("%H:%M"),
-            'faturamento': round(fat, 2),
-            'despesa': round(desp, 2),
-            'lucro': round(luc, 2),
-            'margem': mg,
+
+        historico.insert(0, {
+            "periodo_inicio": data_inicio_str,
+            "periodo_fim": data_fim_str,
+            "data": datetime.now().strftime("%d/%m/%Y"),
+            "hora": datetime.now().strftime("%H:%M"),
+            "faturamento": round(fat, 2),
+            "despesa": round(desp, 2),
+            "lucro": round(luc, 2),
+            "margem": mg,
+        })
+
+        session['analises_realizadas'] = historico[:10]
+
+        # Formatar dados para o gráfico no frontend
+        grafico_dados = {
+            "labels": series["meses"],
+            "series": [
+                {"name": "Faturamento", "data": series["faturamento"]},
+                {"name": "Despesas", "data": series["despesas"]},
+                {"name": "Lucro", "data": series["lucro"]},
+                {"name": "Margem", "data": series["margem"]}
+            ]
         }
-        
-        historico.insert(0, item_historico)
-        session['analises_realizadas'] = historico[:10]  # Manter apenas 10 últimas
 
         return jsonify({
             "periodo": {
@@ -235,7 +265,10 @@ def analise_por_periodo():
                 "valor_anterior": mg_a,
                 "variacao": round(mg - mg_a, 2),
             },
-            "series": series  # 🔥 ESSENCIAL
+
+            # 🔥 NOVO FORMATO PARA GRÁFICO
+            "grafico": grafico_dados
+
         }), 200
 
     except Exception as e:

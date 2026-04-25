@@ -1,6 +1,31 @@
 
 
 let chartInstance = null;
+let dadosAtualGrafico = null;
+
+// =============================
+// FORMATAÇÃO
+// =============================
+function formatarMoeda(valor) {
+    if (typeof valor !== 'number') valor = parseFloat(valor) || 0;
+    return new Intl.NumberFormat('pt-BR', {
+        style: 'currency',
+        currency: 'BRL',
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2
+    }).format(valor);
+}
+
+function formatarData(dataStr) {
+    if (!dataStr) return '';
+    const partes = dataStr.split('-');
+    return `${partes[2]}/${partes[1]}/${partes[0]}`;
+}
+
+function formatarVariacao(valor) {
+    const sinal = valor >= 0 ? '↑ ' : '↓ ';
+    return sinal + Math.abs(valor).toFixed(1) + '%';
+}
 
 // =============================
 // TEMA
@@ -20,6 +45,45 @@ function getThemeColors() {
 }
 
 // =============================
+// SALVAR/RESTAURAR MÉTRICAS
+// =============================
+function salvarMetricasSelecionadas() {
+    const metricas = {
+        faturamento: document.getElementById('check-faturamento')?.checked || false,
+        despesas: document.getElementById('check-despesas')?.checked || false,
+        lucro: document.getElementById('check-lucro')?.checked || false,
+        margem: document.getElementById('check-margem')?.checked || false
+    };
+    localStorage.setItem('analise_metricas', JSON.stringify(metricas));
+}
+
+function restaurarMetricasSelecionadas() {
+    const salvo = localStorage.getItem('analise_metricas');
+    if (!salvo) return;
+
+    const metricas = JSON.parse(salvo);
+    if (metricas.faturamento) document.getElementById('check-faturamento').checked = true;
+    if (metricas.despesas) document.getElementById('check-despesas').checked = true;
+    if (metricas.lucro) document.getElementById('check-lucro').checked = true;
+    if (metricas.margem) document.getElementById('check-margem').checked = true;
+
+    // Atualizar estilos
+    atualizarEstilosMetricas();
+}
+
+function atualizarEstilosMetricas() {
+    const metricas = ['faturamento', 'despesas', 'lucro', 'margem'];
+    metricas.forEach(metrica => {
+        const checkbox = document.getElementById(`check-${metrica}`);
+        const elemento = checkbox?.closest('.cartao');
+        if (elemento) {
+            elemento.style.borderLeft = checkbox.checked ? '4px solid var(--primaria)' : 'none';
+            elemento.style.background = checkbox.checked ? 'rgba(59,130,246,0.05)' : 'transparent';
+        }
+    });
+}
+
+// =============================
 // GRÁFICO
 // =============================
 function selecionarMetrica(elemento) {
@@ -29,23 +93,41 @@ function selecionarMetrica(elemento) {
     elemento.style.borderLeft = checkbox.checked ? '4px solid var(--primaria)' : 'none';
     elemento.style.background = checkbox.checked ? 'rgba(59,130,246,0.05)' : 'transparent';
 
+    salvarMetricasSelecionadas();
     atualizarGrafico();
 }
 
 function atualizarGrafico() {
+    if (!dadosAtualGrafico || !dadosAtualGrafico.labels) {
+        const container = document.getElementById('grafico-metricas');
+        if (container) {
+            container.innerHTML = '<div style="text-align:center;padding:80px;color:#999">Selecione um período para visualizar</div>';
+        }
+        return;
+    }
+
     const series = [];
 
-    if (document.getElementById('check-faturamento')?.checked)
-        series.push({ name: 'Faturamento', data: dadosMetricas?.faturamento || [] });
+    if (document.getElementById('check-faturamento')?.checked) {
+        series.push({ 
+            name: 'Faturamento', 
+            data: dadosAtualGrafico.series.find(s => s.name === 'Faturamento')?.data || [] 
+        });
+    }
 
-    if (document.getElementById('check-despesas')?.checked)
-        series.push({ name: 'Despesas', data: dadosMetricas?.despesas || [] });
+    if (document.getElementById('check-despesas')?.checked) {
+        series.push({ 
+            name: 'Despesas', 
+            data: dadosAtualGrafico.series.find(s => s.name === 'Despesas')?.data || [] 
+        });
+    }
 
-    if (document.getElementById('check-lucro')?.checked)
-        series.push({ name: 'Lucro', data: dadosMetricas?.lucro || [] });
-
-    if (document.getElementById('check-margem')?.checked)
-        series.push({ name: 'Margem (%)', data: dadosMetricas?.margem || [] });
+    if (document.getElementById('check-lucro')?.checked) {
+        series.push({ 
+            name: 'Lucro', 
+            data: dadosAtualGrafico.series.find(s => s.name === 'Lucro')?.data || [] 
+        });
+    }
 
     const container = document.getElementById('grafico-metricas');
 
@@ -55,6 +137,10 @@ function atualizarGrafico() {
         container.innerHTML = `<div style="text-align:center;padding:80px;color:#999">
             Selecione uma métrica
         </div>`;
+        if (chartInstance) {
+            chartInstance.destroy();
+            chartInstance = null;
+        }
         return;
     }
 
@@ -62,15 +148,51 @@ function atualizarGrafico() {
     container.innerHTML = '';
 
     chartInstance = new ApexCharts(container, {
-        chart: { type: 'line', height: 400 },
+        chart: { 
+            type: 'line', 
+            height: 400,
+            fontFamily: 'inherit',
+            foreColor: getThemeColors().suave,
+            toolbar: { show: true }
+        },
         series,
-        xaxis: { categories: dadosMetricas?.meses || [] },
+        xaxis: { 
+            categories: dadosAtualGrafico.labels,
+            labels: { 
+                style: { colors: getThemeColors().suave },
+                formatter: function(value) {
+                    // Exibir data em ISO (YYYY-MM-DD)
+                    return value;
+                }
+            }
+        },
+        yaxis: {
+            labels: {
+                formatter: formatarMoeda,
+                style: { colors: getThemeColors().suave }
+            }
+        },
         colors: [
             getThemeColors().faturamento,
             getThemeColors().despesas,
             getThemeColors().lucro,
             getThemeColors().margem
-        ]
+        ],
+        stroke: { curve: 'smooth', width: 2 },
+        tooltip: {
+            theme: isDarkMode() ? 'dark' : 'light',
+            y: { formatter: formatarMoeda },
+            x: {
+                formatter: function(val) {
+                    // Mostrar data ISO no tooltip
+                    return `Data: ${val}`;
+                }
+            }
+        },
+        legend: {
+            position: 'top',
+            labels: { colors: getThemeColors().suave }
+        }
     });
 
     chartInstance.render();
@@ -106,9 +228,10 @@ function aplicarFiltros() {
         })
         .then(data => {
             console.log("API:", data);
+            dadosAtualGrafico = data.grafico;
             preencherCards(data);
             preencherTabela(data);
-            atualizarGraficoAPI(data.grafico);  // ← adiciona essa linha
+            atualizarGrafico();
         })
         .catch(err => {
             console.error(err);
@@ -152,6 +275,15 @@ function carregarLocalStorage() {
 function setPeriodoEAplicar(inicio, fim) {
     document.getElementById('data-inicio').value = inicio;
     document.getElementById('data-fim').value = fim;
+    
+    // Se não há métricas salvas, usar padrão (faturamento e lucro)
+    if (!localStorage.getItem('analise_metricas')) {
+        document.getElementById('check-faturamento').checked = true;
+        document.getElementById('check-lucro').checked = true;
+        salvarMetricasSelecionadas();
+        atualizarEstilosMetricas();
+    }
+    
     aplicarFiltros();
 }
 
@@ -282,6 +414,10 @@ function limparFiltros() {
 
     // limpa localStorage
     localStorage.removeItem('analise_periodo');
+    localStorage.removeItem('analise_metricas');
+
+    // limpa dados
+    dadosAtualGrafico = null;
 
     // limpa gráfico
     const grafico = document.getElementById('grafico-metricas');
@@ -294,18 +430,32 @@ function limparFiltros() {
         grafico.innerHTML = 'Selecione um período';
     }
 
+    // limpa checkboxes
+    document.getElementById('check-faturamento').checked = false;
+    document.getElementById('check-despesas').checked = false;
+    document.getElementById('check-lucro').checked = false;
+    document.getElementById('check-margem').checked = false;
+
+    atualizarEstilosMetricas();
+
     // limpa CARDS
     document.getElementById('fat-valor').textContent = '--';
     document.getElementById('desp-valor').textContent = '--';
     document.getElementById('luc-valor').textContent = '--';
     document.getElementById('mg-valor').textContent = '--';
 
+    // limpa variações
+    document.getElementById('fat-variacao').textContent = '--';
+    document.getElementById('desp-variacao').textContent = '--';
+    document.getElementById('luc-variacao').textContent = '--';
+    document.getElementById('mg-variacao').textContent = '--';
+
     // limpa TABELA
     const ids = [
-        'tab-fat-atual','tab-fat-anterior','tab-fat-variacao',
-        'tab-desp-atual','tab-desp-anterior','tab-desp-variacao',
-        'tab-luc-atual','tab-luc-anterior','tab-luc-variacao',
-        'tab-mg-atual','tab-mg-anterior','tab-mg-variacao'
+        'tab-fat-atual', 'tab-fat-anterior', 'tab-fat-variacao',
+        'tab-desp-atual', 'tab-desp-anterior', 'tab-desp-variacao',
+        'tab-luc-atual', 'tab-luc-anterior', 'tab-luc-variacao',
+        'tab-mg-atual', 'tab-mg-anterior', 'tab-mg-variacao'
     ];
 
     ids.forEach(id => {
@@ -319,55 +469,8 @@ function limparFiltros() {
 }
 
 function atualizarGraficoAPI(grafico) {
-    const container = document.getElementById('grafico-metricas');
-
-    if (!grafico || !grafico.labels || grafico.labels.length === 0) {
-        container.innerHTML = '<div style="text-align: center; padding: 80px 40px; color: var(--suave);"><p>Sem dados para o período selecionado</p></div>';
-        return;
-    }
-
-    if (chartInstance) {
-        chartInstance.destroy();
-    }
-
-    container.innerHTML = '';
-
-    chartInstance = new ApexCharts(container, {
-        chart: {
-            type: 'line',
-            height: 400,
-            fontFamily: 'inherit',
-            foreColor: getThemeColors().suave,
-            toolbar: { show: true }
-        },
-        series: grafico.series,
-        xaxis: {
-            categories: grafico.labels,
-            labels: { style: { colors: getThemeColors().suave } }
-        },
-        yaxis: {
-            labels: {
-                formatter: formatarMoeda,
-                style: { colors: getThemeColors().suave }
-            }
-        },
-        colors: [
-            getThemeColors().faturamento,
-            getThemeColors().despesas,
-            getThemeColors().lucro
-        ],
-        stroke: { curve: 'smooth', width: 2 },
-        tooltip: {
-            theme: isDarkMode() ? 'dark' : 'light',
-            y: { formatter: formatarMoeda }
-        },
-        legend: {
-            position: 'top',
-            labels: { colors: getThemeColors().suave }
-        }
-    });
-
-    chartInstance.render();
+    dadosAtualGrafico = grafico;
+    atualizarGrafico();
 }
 
 // Funções auxiliares
@@ -394,8 +497,8 @@ function iniciarAnalise() {
 
     console.log('Sistema pronto');
 
+    restaurarMetricasSelecionadas();
     carregarUltimoPeriodo();
-    atualizarGrafico();
 }
 
 document.addEventListener('DOMContentLoaded', iniciarAnalise);
@@ -407,5 +510,26 @@ const originalAlternarTema = window.alternarTema;
 
 window.alternarTema = function () {
     if (originalAlternarTema) originalAlternarTema();
-    setTimeout(atualizarGrafico, 100);
+    setTimeout(() => {
+        if (chartInstance) {
+            chartInstance.updateOptions({
+                chart: {
+                    foreColor: getThemeColors().suave,
+                    toolbar: { show: true }
+                },
+                xaxis: {
+                    labels: { style: { colors: getThemeColors().suave } }
+                },
+                yaxis: {
+                    labels: { style: { colors: getThemeColors().suave } }
+                },
+                tooltip: {
+                    theme: isDarkMode() ? 'dark' : 'light'
+                },
+                legend: {
+                    labels: { colors: getThemeColors().suave }
+                }
+            });
+        }
+    }, 100);
 };

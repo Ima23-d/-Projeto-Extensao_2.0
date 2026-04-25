@@ -111,7 +111,7 @@
   <!-- Footer -->
   {% include 'partials/footer.html' %}
 
-  <!-- Painel Acessibilidae -->
+  <!-- Painel Acessibilidade -->
   {% include 'partials/painel_acessibilidade.html' %}
 
   <div vw class="enabled" id="Vlibras">
@@ -130,6 +130,51 @@
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
   <script src="{{ url_for('static', filename='acessibilidade/acessibilidade.js') }}"></script>
   <script src="{{ url_for('static', filename='js/script.js') }}"></script>
-</body>
+
+  <script>
+    // Controlar o toggle de acessibilidade na página de configurações
+    document.addEventListener('DOMContentLoaded', function() {
+      const checkboxAcessibilidade = document.getElementById('toggleAcessibilidade');
+      const botaoAumentar = document.getElementById('botaoAumentar');
+      const botaoDiminuir = document.getElementById('botaoDiminuir');
+      
+      // Carregar estado salvo da acessibilidade
+      const acessibilidadeAtiva = localStorage.getItem('acessibilidadeAtiva') !== 'false';
+      checkboxAcessibilidade.checked = acessibilidadeAtiva;
+      
+      // Evento de mudança do checkbox
+      checkboxAcessibilidade.addEventListener('change', function() {
+        setAcessibilidadeAtiva(this.checked);
+      });
+
+      // Controle de escala de fonte
+      const obterEscalaFonte = () => {
+        const escala = document.documentElement.style.getPropertyValue('--escala-fonte') || '1';
+        return parseFloat(escala);
+      };
+
+      const definirEscalaFonte = (escala) => {
+        const novaEscala = Math.max(0.8, Math.min(1.5, escala));
+        document.documentElement.style.setProperty('--escala-fonte', novaEscala);
+        localStorage.setItem('escalaFonte', novaEscala);
+      };
+
+      botaoAumentar.addEventListener('click', () => {
+        const escalaAtual = obterEscalaFonte();
+        definirEscalaFonte(escalaAtual + 0.1);
+      });
+
+      botaoDiminuir.addEventListener('click', () => {
+        const escalaAtual = obterEscalaFonte();
+        definirEscalaFonte(escalaAtual - 0.1);
+      });
+
+      // Aplicar escala de fonte salva ao carregar
+      const escalaSalva = localStorage.getItem('escalaFonte');
+      if (escalaSalva) {
+        document.documentElement.style.setProperty('--escala-fonte', escalaSalva);
+      }
+    });
+  </script>
 
 </html>

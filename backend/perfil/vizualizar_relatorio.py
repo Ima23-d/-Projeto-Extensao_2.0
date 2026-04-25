@@ -6,4 +6,4 @@ def vizualizar_relatorio(index):
         return redirect(url_for('pagina_perfil'))
 
     session['relatorio_dados'] = historico[index]
-    return redirect(url_for('pagina_relatorio_pdf'))
+    return redirect(url_for('pagina_relatorio_pdf'))  

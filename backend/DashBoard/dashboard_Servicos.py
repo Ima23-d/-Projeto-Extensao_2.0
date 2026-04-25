@@ -141,8 +141,17 @@ def evolucao_financeira(df, mapa):
         lucro=("_l", "sum"),
     ).reset_index()
 
+    # 🔥 FORMATAR LABELS COM ISO
+    labels = []
+    for val in g[cdata]:
+        if isinstance(val, (pd.Timestamp, datetime)):
+            # Formato ISO (YYYY-MM-DD)
+            labels.append(val.strftime("%Y-%m-%d"))
+        else:
+            labels.append(str(val))
+
     return {
-        "labels": g[cdata].astype(str).tolist(),
+        "labels": labels,
         "series": [
             {"name": "Receita", "data": g["receita"].round(2).tolist()},
             {"name": "Despesa", "data": g["despesa"].round(2).tolist()},

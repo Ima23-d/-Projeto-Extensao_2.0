@@ -130,7 +130,13 @@ function renderGraficoLinha(dados) {
 
     xaxis: {
       categories: dados.labels,
-      labels: { style: { colors: corTexto } }
+      labels: { 
+        style: { colors: corTexto },
+        formatter: function(value) {
+          // Exibir data em ISO (YYYY-MM-DD)
+          return value;
+        }
+      }
     },
 
     yaxis: {
@@ -140,7 +146,15 @@ function renderGraficoLinha(dados) {
       }
     },
 
-    tooltip: { y: { formatter: formatarMoeda } },
+    tooltip: { 
+      y: { formatter: formatarMoeda },
+      x: {
+        formatter: function(val) {
+          // Mostrar data ISO no tooltip
+          return `Data: ${val}`;
+        }
+      }
+    },
 
     stroke: { curve: 'smooth' },
 
