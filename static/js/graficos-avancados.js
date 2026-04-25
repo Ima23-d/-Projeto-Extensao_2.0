@@ -85,7 +85,7 @@ function getChartLinhaOptions() {
       y: { formatter: (val) => 'R$ ' + val.toLocaleString('pt-BR') },
       x: { formatter: (val) => 'Período: ' + val }
     },
-    legend: { position: 'top', horizontalAlign: 'center' },
+    legend: { position: 'bottom', horizontalAlign: 'center' },
     grid: { borderColor: colors.borda, strokeDashArray: 5 },
     responsive: [{ breakpoint: 768, options: { chart: { height: 350 }, legend: { position: 'bottom' } } }]
   };
