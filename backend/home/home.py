@@ -86,15 +86,36 @@ def empty_graph():
 
 
 # ======================
+# MAPEAMENTO DINÂMICO
+# ======================
+def obter_colunas_mapeadas(usuario_id):
+    from backend.db import usuario
+    from bson import ObjectId
+    user = usuario.find_one({"_id": ObjectId(usuario_id)})
+    return user.get("mapeamento", {}) if user else {}
+
+def calcular_total_dinamico(df, indicador, mapeamento, colunas_fallback):
+    coluna = mapeamento.get(indicador)
+    if coluna and coluna in df.columns:
+        return float(pd.to_numeric(df[coluna], errors='coerce').sum())
+    
+    # Fallback para as listas fixas se não houver mapeamento
+    for col in colunas_fallback:
+        if col in df.columns:
+            return float(pd.to_numeric(df[col], errors='coerce').sum())
+    return 0
+
+
+# ======================
 # DESempenho
 # ======================
 def calcular_desempenho(periodo="30_dias"):
-    user = session.get('usuario_id')
-    if not user:
+    user_id = session.get('usuario_id')
+    if not user_id:
         return jsonify({"mensagem": "Usuário não autenticado"}), 401
 
     try:
-        doc = dados_colecao.find_one({"usuario_id": user}, sort=[("criado_em", -1)])
+        doc = dados_colecao.find_one({"usuario_id": user_id}, sort=[("criado_em", -1)])
         if not doc:
             return jsonify(empty()), 200
 
@@ -102,18 +123,28 @@ def calcular_desempenho(periodo="30_dias"):
         if df.empty:
             return jsonify(empty()), 200
 
-        col = encontrar_coluna_data(df)
-        df = converter_datas(df, col)
+        # Mapeamento do usuário
+        mapeamento = obter_colunas_mapeadas(user_id)
+        
+        # Encontrar coluna de data (mapeada ou fallback)
+        col_data = mapeamento.get("data")
+        if not col_data or col_data not in df.columns:
+            col_data = encontrar_coluna_data(df)
+            
+        df = converter_datas(df, col_data)
 
-        atual, anterior = filtrar_periodo(df, col, periodo)
+        atual, anterior = filtrar_periodo(df, col_data, periodo)
 
-        fat = calcular_total(atual, COL_FATURAMENTO)
-        desp = calcular_total(atual, COL_DESPESA)
-        luc = calcular_total(atual, COL_LUCRO) or (fat - desp)
+        # Cálculos Dinâmicos
+        fat = calcular_total_dinamico(atual, "faturamento", mapeamento, COL_FATURAMENTO)
+        desp = calcular_total_dinamico(atual, "despesa", mapeamento, COL_DESPESA)
+        
+        # Lucro pode ser coluna direta ou calculada
+        luc = calcular_total_dinamico(atual, "lucro", mapeamento, COL_LUCRO) or (fat - desp)
 
-        fat_ant = calcular_total(anterior, COL_FATURAMENTO)
-        desp_ant = calcular_total(anterior, COL_DESPESA)
-        luc_ant = calcular_total(anterior, COL_LUCRO) or (fat_ant - desp_ant)
+        fat_ant = calcular_total_dinamico(anterior, "faturamento", mapeamento, COL_FATURAMENTO)
+        desp_ant = calcular_total_dinamico(anterior, "despesa", mapeamento, COL_DESPESA)
+        luc_ant = calcular_total_dinamico(anterior, "lucro", mapeamento, COL_LUCRO) or (fat_ant - desp_ant)
 
         return jsonify({
             "faturamento": {
@@ -133,24 +164,23 @@ def calcular_desempenho(periodo="30_dias"):
             },
             "crescimento": {
                 "valor": round(percentual(fat_ant, fat), 1)
-            }
+            },
+            "mapeamento_ativo": bool(mapeamento),
+            "mapeamento": mapeamento
         }), 200
 
     except Exception as e:
         print("Erro:", e)
         return jsonify(empty()), 500
-
-
-# ======================
 # GRÁFICOS
 # ======================
 def obter_dados_graficos(periodo="30_dias"):
-    user = session.get('usuario_id')
-    if not user:
+    user_id = session.get('usuario_id')
+    if not user_id:
         return jsonify({"mensagem": "Usuário não autenticado"}), 401
 
     try:
-        doc = dados_colecao.find_one({"usuario_id": user}, sort=[("criado_em", -1)])
+        doc = dados_colecao.find_one({"usuario_id": user_id}, sort=[("criado_em", -1)])
         if not doc:
             return jsonify({
                 "grafico_linha": empty_graph(),
@@ -158,19 +188,31 @@ def obter_dados_graficos(periodo="30_dias"):
             }), 200
 
         df = pd.DataFrame(doc.get("dados", []))
-        col = encontrar_coluna_data(df)
+        if df.empty:
+             return jsonify({
+                "grafico_linha": empty_graph(),
+                "grafico_barras": empty_graph()
+            }), 200
 
-        if not col:
+        # Mapeamento do usuário
+        mapeamento = obter_colunas_mapeadas(user_id)
+        
+        # Encontrar coluna de data
+        col_data = mapeamento.get("data")
+        if not col_data or col_data not in df.columns:
+            col_data = encontrar_coluna_data(df)
+
+        if not col_data:
             return jsonify({
                 "grafico_linha": empty_graph(),
                 "grafico_barras": empty_graph()
             }), 200
 
-        df = converter_datas(df, col).dropna(subset=[col])
+        df = converter_datas(df, col_data).dropna(subset=[col_data])
 
         return jsonify({
-            "grafico_linha": grafico_linha(df, col, periodo),
-            "grafico_barras": grafico_barras(df, col, periodo)
+            "grafico_linha": grafico_linha(df, col_data, periodo, mapeamento),
+            "grafico_barras": grafico_barras(df, col_data, periodo, mapeamento)
         }), 200
 
     except Exception as e:
@@ -182,6 +224,7 @@ def obter_dados_graficos(periodo="30_dias"):
 # PROCESSAMENTO GRÁFICOS
 # ======================
 def filtrar_df(df, col, periodo):
+    if df.empty: return df
     fim = df[col].max()
 
     dias = {"7_dias": 7, "30_dias": 30, "90_dias": 90}
@@ -195,14 +238,26 @@ def filtrar_df(df, col, periodo):
     return df[(df[col] >= inicio) & (df[col] <= fim)]
 
 
-def grafico_linha(df, col, periodo):
+def grafico_linha(df, col, periodo, mapeamento):
     df = filtrar_df(df, col, periodo)
     if df.empty:
         return empty_graph()
 
-    df["data"] = df[col].dt.strftime('%d/%m')
+    df["data_str"] = df[col].dt.strftime('%d/%m')
 
-    agrupado = df.groupby("data").apply(lambda x: calcular_total(x, COL_FATURAMENTO))
+    # Usar coluna mapeada para faturamento
+    col_fat = mapeamento.get("faturamento")
+    if not col_fat or col_fat not in df.columns:
+        # Fallback para nomes comuns
+        for c in COL_FATURAMENTO:
+            if c in df.columns:
+                col_fat = c
+                break
+    
+    if not col_fat:
+        return empty_graph()
+
+    agrupado = df.groupby("data_str")[col_fat].sum()
 
     labels = sorted(agrupado.index, key=lambda x: datetime.strptime(x + "/2000", "%d/%m/%Y"))
 
@@ -215,25 +270,26 @@ def grafico_linha(df, col, periodo):
     }
 
 
-def grafico_barras(df, col, periodo):
+def grafico_barras(df, col, periodo, mapeamento):
     df = filtrar_df(df, col, periodo)
     if df.empty:
         return empty_graph()
 
-    df["periodo"] = df[col].dt.strftime('%b/%Y')
-    grupos = df.groupby("periodo")
+    df["periodo_agrupado"] = df[col].dt.strftime('%b/%Y')
+    grupos = df.groupby("periodo_agrupado")
 
     labels, fat, desp, luc = [], [], [], []
 
     for nome, g in grupos:
         labels.append(nome)
-        f = calcular_total(g, COL_FATURAMENTO)
-        d = calcular_total(g, COL_DESPESA)
-        l = calcular_total(g, COL_LUCRO) or (f - d)
+        
+        f = calcular_total_dinamico(g, "faturamento", mapeamento, COL_FATURAMENTO)
+        d = calcular_total_dinamico(g, "despesa", mapeamento, COL_DESPESA)
+        l = calcular_total_dinamico(g, "lucro", mapeamento, COL_LUCRO) or (f - d)
 
-        fat.append(f)
-        desp.append(d)
-        luc.append(l)
+        fat.append(round(f, 2))
+        desp.append(round(d, 2))
+        luc.append(round(l, 2))
 
     return {
         "labels": labels,
@@ -242,4 +298,4 @@ def grafico_barras(df, col, periodo):
             {"name": "Despesas", "data": desp},
             {"name": "Lucro", "data": luc}
         ]
-    }
+    }

@@ -40,27 +40,37 @@
           
           <div class="campo">
             <label class="obrigatorio" for="nova_senha">Nova senha</label>
-            <input
-              placeholder="Ex: Xxx20xx@"
-              class="entrada"
-              id="nova_senha"
-              name="nova_senha"
-              type="password"
-              required
-            />
+            <div class="campo-senha">
+              <input
+                placeholder="Ex: Xxx20xx@"
+                class="entrada"
+                id="nova_senha"
+                name="nova_senha"
+                type="password"
+                required
+              />
+              <span class="olho-senha" onclick="togglePassword('nova_senha', this)" aria-label="Mostrar ou ocultar senha">
+                <i class="fa-solid fa-eye"></i>
+              </span>
+            </div>
           </div>
 
           
           <div class="campo">
             <label class="obrigatorio" for="confirmar_senha">Confirmar senha</label>
-            <input
-              placeholder="Digite novamente"
-              class="entrada"
-              id="confirmar_senha"
-              name="confirmar_senha"
-              type="password"
-              required
-            />
+            <div class="campo-senha">
+              <input
+                placeholder="Digite novamente"
+                class="entrada"
+                id="confirmar_senha"
+                name="confirmar_senha"
+                type="password"
+                required
+              />
+              <span class="olho-senha" onclick="togglePassword('confirmar_senha', this)" aria-label="Mostrar ou ocultar senha">
+                <i class="fa-solid fa-eye"></i>
+              </span>
+            </div>
           </div>
 
           <button class="botao botao--primario" type="submit">
@@ -77,6 +87,9 @@
 
     <!-- u{2672} Painel Avan�ado de Acessibilidade -->
   {% include 'partials/painel_acessibilidade.html' %}
+
+  <!-- Chatbot Flutuante -->
+  {% include 'partials/chatbot.html' %}
 
     
     <div vw class="enabled" id="Vlibras">

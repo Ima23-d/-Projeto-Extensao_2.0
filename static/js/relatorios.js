@@ -130,7 +130,8 @@ function getPeriodoDados(periodo) {
   if (totalMeses === 0) return { meses: [], faturamento: [], despesas: [], lucro: [], margem: [] };
 
   const regras = {
-    'Últimos 30 dias': Math.min(1, totalMeses),
+    'Últimos 7 dias': Math.min(7, totalMeses),
+    'Últimos 30 dias': Math.min(30, totalMeses),
     'Últimos 6 meses': Math.min(6, totalMeses),
     'Este ano': totalMeses
   };
@@ -158,20 +159,16 @@ function gerarKpis(faturamentoTotal, lucroTotal, despesasTotal, crescimentoPerio
   return `\n    <div class="preview-secao">\n      <div class="preview-titulo"><i class="fa-solid fa-chart-bar"></i> KPIs Principais</div>\n      <div class="kpi-grid">\n        <div class="kpi-card"><div class="kpi-val">R$ ${formatarValor(faturamentoTotal)}</div><div class="kpi-lbl">Faturamento Total</div></div>\n        <div class="kpi-card"><div class="kpi-val">R$ ${formatarValor(lucroTotal)}</div><div class="kpi-lbl">Lucro Líquido</div></div>\n        <div class="kpi-card"><div class="kpi-val">R$ ${formatarValor(despesasTotal)}</div><div class="kpi-lbl">Despesas Totais</div></div>\n        <div class="kpi-card"><div class="kpi-val">${crescimentoPeriodo}</div><div class="kpi-lbl">Crescimento</div></div>\n      </div>\n    </div>\n  `;
 }
 
-function gerarSecaoTendencias() {
-  const rows = dadosApp.meses.map((mes, i) => {
-    const variacao = i === 0
-      ? '-'
-      : `${(((dadosApp.faturamento[i] - dadosApp.faturamento[i - 1]) / dadosApp.faturamento[i - 1]) * 100).toFixed(1)}%`;
-    const cor = i === 0 ? 'var(--suave)' : 'var(--sucesso)';
-    return `\n      <tr><td>${mes}</td><td>R$ ${formatarValor(dadosApp.faturamento[i])}</td><td style="color: ${cor};">${variacao}</td></tr>\n    `;
+function gerarSecaoTendencias(periodoDados) {
+  const rows = periodoDados.meses.map((mes, i) => {
+    return `\n      <tr><td>${mes}</td><td>R$ ${formatarValor(periodoDados.faturamento[i])}</td></tr>\n    `;
   }).join('');
 
-  return `\n    <div class="preview-secao">\n      <div class="preview-titulo"><i class="fa-solid fa-chart-line"></i> Tendências de Crescimento</div>\n      <p style="font-size: 13px; color: var(--texto); margin-bottom: 12px;">O faturamento apresentou crescimento progressivo ao longo do período selecionado.</p>\n      <table><tr><th>Mês</th><th>Faturamento</th><th>Variação %</th></tr>${rows}</table>\n    </div>\n  `;
+  return `\n    <div class="preview-secao">\n      <div class="preview-titulo"><i class="fa-solid fa-chart-line"></i> Tendências de Crescimento</div>\n      <p style="font-size: 13px; color: var(--texto); margin-bottom: 12px;">Acompanhamento do faturamento ao longo do período selecionado.</p>\n      <table><tr><th>Período</th><th>Faturamento</th></tr>${rows}</table>\n    </div>\n  `;
 }
 
-function gerarSecaoMargem() {
-  const rows = dadosApp.meses.map((mes, i) => `<tr><td>${mes}</td><td>${dadosApp.margem[i]}%</td></tr>`).join('');
+function gerarSecaoMargem(periodoDados) {
+  const rows = periodoDados.meses.map((mes, i) => `<tr><td>${mes}</td><td>${periodoDados.margem[i]}%</td></tr>`).join('');
 
   return `\n    <div class="preview-secao">\n      <div class="preview-titulo"><i class="fa-solid fa-percent"></i> Análise de Margem</div>\n      <p style="font-size: 13px; color: var(--texto); margin-bottom: 12px;">A margem de lucro se manteve estável no período.</p>\n      <table><tr><th>Mês</th><th>Margem %</th></tr>${rows}</table>\n    </div>\n  `;
 }
@@ -180,8 +177,8 @@ function gerarSecaoGrafico() {
   return `\n    <div class="preview-secao">\n      <div class="preview-titulo"><i class="fa-solid fa-chart-simple"></i> Gráfico de Faturamento</div>\n      <div id="grafico-relatorio" style="max-width:100%; height:320px;"></div>\n    </div>\n  `;
 }
 
-function gerarSecaoDados() {
-  const rows = dadosApp.meses.map((mes, i) => `<tr><td>${mes}</td><td>R$ ${formatarValor(dadosApp.faturamento[i])}</td><td>R$ ${formatarValor(dadosApp.despesas[i])}</td><td>R$ ${formatarValor(dadosApp.lucro[i])}</td></tr>`).join('');
+function gerarSecaoDados(periodoDados) {
+  const rows = periodoDados.meses.map((mes, i) => `<tr><td>${mes}</td><td>R$ ${formatarValor(periodoDados.faturamento[i])}</td><td>R$ ${formatarValor(periodoDados.despesas[i])}</td><td>R$ ${formatarValor(periodoDados.lucro[i])}</td></tr>`).join('');
 
   return `\n    <div class="preview-secao">\n      <div class="preview-titulo"><i class="fa-solid fa-table"></i> Dados Completos</div>\n      <table><tr><th>Mês</th><th>Faturamento</th><th>Despesas</th><th>Lucro</th></tr>${rows}</table>\n    </div>\n  `;
 }
@@ -220,10 +217,10 @@ function gerarPreview() {
 
   let html = gerarCabecalhoRelatorio(nome, data, periodo);
   if (getCheckbox('opt-kpi')) html += gerarKpis(faturamentoTotal, lucroTotal, despesasTotal, crescimentoPeriodo);
-  if (getCheckbox('opt-tendencias')) html += gerarSecaoTendencias();
-  if (getCheckbox('opt-margem')) html += gerarSecaoMargem();
+  if (getCheckbox('opt-tendencias')) html += gerarSecaoTendencias(periodoDados);
+  if (getCheckbox('opt-margem')) html += gerarSecaoMargem(periodoDados);
   if (getCheckbox('opt-grafico')) html += gerarSecaoGrafico();
-  if (getCheckbox('opt-dados')) html += gerarSecaoDados();
+  if (getCheckbox('opt-dados')) html += gerarSecaoDados(periodoDados);
   if (getCheckbox('opt-insights')) html += gerarSecaoInsights();
 
   preview.innerHTML = html;
@@ -263,27 +260,63 @@ function exportarPDF() {
 
   const periodoDados = getPeriodoDados(periodo);
 
+  // Lógica de Insights Dinâmicos
+  let insightsDinamicos = [];
+  if (getCheckbox('opt-insights') && periodoDados.meses.length > 0) {
+     const fatTotal = somaValores(periodoDados.faturamento);
+     const cresc = calcCrescimento(periodoDados.faturamento);
+     insightsDinamicos.push(`O faturamento total do período selecionado alcançou R$ ${formatarValor(fatTotal)}.`);
+     
+     if (cresc.startsWith('-')) {
+        insightsDinamicos.push(`Houve uma retração de ${cresc} no faturamento. Avalie redução de custos urgentes.`);
+     } else if (cresc === '0%') {
+        insightsDinamicos.push(`O faturamento permaneceu estagnado. Pode ser a hora de testar novas abordagens comerciais.`);
+     } else {
+        insightsDinamicos.push(`Crescimento consistente com variação positiva de ${cresc}. Mantenha a estratégia atual.`);
+     }
+
+     const margemMedia = (somaValores(periodoDados.margem) / periodoDados.margem.length).toFixed(1);
+     insightsDinamicos.push(`A margem de lucro operou em uma média de ${margemMedia}%.`);
+     
+     let maxLucro = -1;
+     let mesMaxLucro = '';
+     for (let i = 0; i < periodoDados.lucro.length; i++) {
+         if (periodoDados.lucro[i] > maxLucro) {
+             maxLucro = periodoDados.lucro[i];
+             mesMaxLucro = periodoDados.meses[i];
+         }
+     }
+     if (mesMaxLucro) {
+         insightsDinamicos.push(`Destaque positivo: ${mesMaxLucro} obteve o maior lucro do período (R$ ${formatarValor(maxLucro)}).`);
+     }
+  }
+
   const payload = {
     nome,
     periodo,
     data,
     kpis: {
-      faturamento: somaValores(periodoDados.faturamento),
-      lucro: somaValores(periodoDados.lucro),
-      despesas: somaValores(periodoDados.despesas),
+      faturamento: formatarValor(somaValores(periodoDados.faturamento)),
+      lucro: formatarValor(somaValores(periodoDados.lucro)),
+      despesas: formatarValor(somaValores(periodoDados.despesas)),
       crescimento: calcCrescimento(periodoDados.faturamento)
     },
     grafico: getCheckbox('opt-grafico'),
     tendencias: getCheckbox('opt-tendencias'),
     margem: getCheckbox('opt-margem'),
     dadosDetalhados: getCheckbox('opt-dados'),
-    insights: getCheckbox('opt-insights') ? [
-      'Crescimento consistente de 36,5% no período de 6 meses',
-      'Margem de lucro saudável mantida acima de 30%',
-      'Despesas sob controle com leve aumento proporcional ao crescimento',
-      'Lucro crescendo em ritmo acelerado (55% entre jan-jun)'
-    ] : [],
-    tabela: periodoDados.meses.map((mes, i) => ({ mes, fat: periodoDados.faturamento[i], desp: periodoDados.despesas[i], luc: periodoDados.lucro[i], margem: periodoDados.margem[i] }))
+    insights: insightsDinamicos,
+    tabela: periodoDados.meses.map((mes, i) => {
+       return { 
+          mes, 
+          fat_raw: periodoDados.faturamento[i], 
+          luc_raw: periodoDados.lucro[i],
+          fat: formatarValor(periodoDados.faturamento[i]), 
+          desp: formatarValor(periodoDados.despesas[i]), 
+          luc: formatarValor(periodoDados.lucro[i]), 
+          margem: periodoDados.margem[i] + '%'
+       }
+    })
   };
 
   fetch('/gerar-relatorio', {
@@ -300,7 +333,6 @@ function exportarPDF() {
     })
     .then(data => {
       if (data.success) {
-        // Força a abertura do PDF direto após o redirecionamento
         window.location.href = `${data.redirect}?auto=1`;
       } else {
         alert('Erro ao gerar relatório: ' + (data.mensagem || 'Verifique os dados.'));

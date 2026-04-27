@@ -136,6 +136,14 @@ def login():
             session["usuario_id"] = str(user["_id"])
             session["usuario_nome"] = user["nome"]
             session["usuario_email"] = user["email"]
+            
+            # Lógica Lembrar de mim
+            lembrar = request.form.get("lembrar")
+            if lembrar:
+                session.permanent = True
+            else:
+                session.permanent = False
+                
             return redirect(url_for("pagina_home"))
 
         return render_template("login.html", error=True, msg="Email ou senha inválidos")

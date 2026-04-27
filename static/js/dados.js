@@ -132,10 +132,87 @@ function configurarEventListeners() {
         });
 
         estado.elementos.dadosTbody.addEventListener('click', (e) => {
-            if (e.target.textContent === 'Deletar') {
+            if (e.target.textContent === 'Deletar' || e.target.closest('.botao-acao-planilha')) {
                 deletarLinha(e);
             }
         });
+
+        // Adicionar navegação por teclado (estilo Excel)
+        estado.elementos.dadosTbody.addEventListener('keydown', handleKeyboardNavigation);
+    }
+}
+
+function handleKeyboardNavigation(e) {
+    if (!e.target.classList.contains('entrada-linha')) return;
+
+    const currentCell = e.target.closest('td');
+    const currentRow = e.target.closest('tr');
+    
+    // Find index of cell in the row
+    const cells = Array.from(currentRow.querySelectorAll('td'));
+    const cellIndex = cells.indexOf(currentCell);
+
+    // Find index of row in the tbody
+    const tbody = currentRow.closest('tbody');
+    const rows = Array.from(tbody.querySelectorAll('tr'));
+    const rowIndex = rows.indexOf(currentRow);
+
+    let targetRowIndex = rowIndex;
+    let targetCellIndex = cellIndex;
+
+    if (e.key === 'ArrowUp') {
+        targetRowIndex = rowIndex - 1;
+        e.preventDefault();
+    } else if (e.key === 'ArrowDown' || e.key === 'Enter') {
+        targetRowIndex = rowIndex + 1;
+        e.preventDefault();
+        
+        // Auto-add row if at the end
+        if (targetRowIndex >= rows.length) {
+            // Only add if it's the last page or we're creating new data
+            adicionarNovaLinha();
+            
+            // Focus on the newly created row
+            setTimeout(() => {
+                const newRows = Array.from(tbody.querySelectorAll('tr'));
+                if (newRows[targetRowIndex]) {
+                    const targetCells = Array.from(newRows[targetRowIndex].querySelectorAll('td'));
+                    if (targetCells[cellIndex]) {
+                        const targetInput = targetCells[cellIndex].querySelector('.entrada-linha');
+                        if (targetInput) targetInput.focus();
+                    }
+                }
+            }, 50);
+            return;
+        }
+    } else if (e.key === 'ArrowLeft') {
+        if (e.target.selectionStart === 0) {
+           targetCellIndex = cellIndex - 1;
+           e.preventDefault();
+        } else return;
+    } else if (e.key === 'ArrowRight') {
+        if (e.target.selectionEnd === e.target.value.length) {
+            targetCellIndex = cellIndex + 1;
+            e.preventDefault();
+        } else return;
+    } else {
+        return; // Other keys do nothing
+    }
+
+    if (targetRowIndex >= 0 && targetRowIndex < rows.length) {
+        const targetRow = rows[targetRowIndex];
+        const targetCells = Array.from(targetRow.querySelectorAll('td'));
+        if (targetCellIndex > 0 && targetCellIndex < targetCells.length - 1) { // Skip row number and action
+            const targetInput = targetCells[targetCellIndex].querySelector('.entrada-linha');
+            if (targetInput) {
+                targetInput.focus();
+                
+                // Select text for easy overriding like Excel
+                if (e.key !== 'ArrowLeft' && e.key !== 'ArrowRight') {
+                    targetInput.select();
+                }
+            }
+        }
     }
 }
 
@@ -185,6 +262,13 @@ async function handleUpload(event) {
 
         mostrarMensagem('sucesso', `✓ ${data.mensagem}`);
         preencherTabela(data.colunas, data.dados);
+        
+        // Abrir modal de mapeamento após upload bem-sucedido
+        if (data.colunas && data.colunas.length > 0) {
+            if (typeof abrirModalMapeamento === 'function') {
+                setTimeout(() => abrirModalMapeamento(data.colunas), 1000);
+            }
+        }
     } catch (error) {
         console.error('Erro:', error);
         mostrarMensagem('erro', `✗ ${error.message}`);
@@ -300,9 +384,9 @@ function atualizarTabela() {
     }
 
     thead.innerHTML = `
-        <th style="padding: 12px; text-align: left; font-weight: 600; border: 1px solid var(--borda); min-width: 50px; color: var(--suave);">#</th>
-        ${colunas.map(c => `<th style="padding: 12px; text-align: left; font-weight: 600; border: 1px solid var(--borda); color: var(--suave); min-width: 150px;">${escapeHtml(c)}</th>`).join('')}
-        <th style="padding: 12px; text-align: center; font-weight: 600; border: 1px solid var(--borda); color: var(--suave); min-width: 80px;">Ação</th>
+        <th style="width: 50px; text-align: center;">#</th>
+        ${colunas.map(c => `<th>${escapeHtml(c)}</th>`).join('')}
+        <th style="width: 80px; text-align: center;">Ação</th>
     `;
 }
 
@@ -327,17 +411,17 @@ function exibirPagina() {
     tbody.innerHTML = dadosPagina.map((linha, i) => {
         const numeroLinha = inicio + i + 1;
         const celulas = colunas.map(col => `
-            <td style="padding: 10px; border: 1px solid var(--borda); min-width: 150px;">
-                <input type="text" class="entrada-linha" value="${escapeHtml(linha[col] ?? '')}" style="width: 100%; padding: 8px; border: none; background: transparent;">
+            <td>
+                <input type="text" class="entrada-linha" value="${escapeHtml(linha[col] ?? '')}" placeholder="Digite...">
             </td>
         `).join('');
 
         return `
             <tr class="linha-dados">
-                <td style="padding: 10px; border: 1px solid var(--borda); background: rgba(229, 231, 235, 0.15); font-weight: 600; color: var(--suave); min-width: 50px;">${numeroLinha}</td>
+                <td class="row-number">${numeroLinha}</td>
                 ${celulas}
-                <td style="padding: 10px; border: 1px solid var(--borda); text-align: center; white-space: nowrap; min-width: 80px;">
-                    <button class="botao botao--delet" type="button" style="padding: 8px 10px; font-size: 12px; width: auto; min-width: 70px;" title="Deletar">Deletar</button>
+                <td class="action-cell">
+                    <button class="botao-acao-planilha" type="button" title="Deletar linha"><i class="fa-solid fa-trash"></i></button>
                 </td>
             </tr>
         `;
@@ -531,10 +615,19 @@ async function salvarDados() {
         if (!response.ok) throw new Error();
 
         alert('✓ ' + data.mensagem);
-        limparUI();
-        estado.todosDados = [];
-        estado.colunasAtuais = [];
-        estado.paginaAtual = 1;
+        
+        // Abrir modal de mapeamento após salvamento manual
+        if (colunas && colunas.length > 0) {
+            if (typeof abrirModalMapeamento === 'function') {
+                setTimeout(() => abrirModalMapeamento(colunas), 500);
+            }
+        }
+
+        // Não limpar a UI imediatamente para o usuário ver o mapeamento
+        // limparUI(); 
+        // estado.todosDados = [];
+        // estado.colunasAtuais = [];
+        // estado.paginaAtual = 1;
         atualizarPaginacao();
     } catch (error) {
         alert('✗ Erro ao salvar!');

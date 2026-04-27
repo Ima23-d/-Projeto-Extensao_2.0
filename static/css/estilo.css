@@ -249,6 +249,36 @@ body {
   color: var(--texto);
 }
 
+/* Estilos para o Olho da Senha */
+.campo-senha {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.campo-senha .entrada {
+  width: 100%;
+  padding-right: 45px; /* Espaço para o ícone */
+}
+
+.olho-senha {
+  position: absolute;
+  right: 12px;
+  cursor: pointer;
+  color: var(--suave);
+  transition: color 0.2s;
+  padding: 8px;
+  z-index: 2;
+}
+
+.olho-senha:hover {
+  color: var(--primaria);
+}
+
+.tema-escuro .olho-senha {
+  color: #94a3b8;
+}
+
 .navbar-custom .nav-link:hover {
   color: var(--primaria);
 }

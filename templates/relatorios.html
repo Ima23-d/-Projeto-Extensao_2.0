@@ -24,6 +24,8 @@
         </a>
       </div>
 
+      <!-- Navegação lateral -->
+
 
     <!-- Navegação lateral -->
     {% include 'partials/navbar.html' %}
@@ -65,8 +67,9 @@
               <div class="campo">
                 <label for="perRel">Período</label>
                 <select class="selecao" id="perRel">
-                  <option selected>Últimos 6 meses</option>
+                  <option>Últimos 7 dias</option>
                   <option>Últimos 30 dias</option>
+                  <option selected>Últimos 6 meses</option>
                   <option>Este ano</option>
                 </select>
               </div>
@@ -158,6 +161,9 @@
 
   <!-- Painel Acessibilidae -->
   {% include 'partials/painel_acessibilidade.html' %}
+
+  <!-- Chatbot Flutuante -->
+  {% include 'partials/chatbot.html' %}
 
   <div vw class="enabled" id="Vlibras">
     <div vw-access-button class="active"></div>

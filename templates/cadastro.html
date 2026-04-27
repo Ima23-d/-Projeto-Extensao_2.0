@@ -47,9 +47,14 @@
 
         <div class="campo">
           <label class="obrigatorio" for="senha">Senha</label>
-          <input placeholder="Ex: Xxx20xx@" class="entrada" id="senha" name="senha" type="password" autocomplete="new-password" required
-            aria-describedby="dica-senha" />
-            <p id="mensagem" class="erro"></p>
+          <div class="campo-senha">
+            <input placeholder="Ex: Xxx20xx@" class="entrada" id="senha" name="senha" type="password" autocomplete="new-password" required
+              aria-describedby="dica-senha" />
+            <span class="olho-senha" onclick="togglePassword('senha', this)" aria-label="Mostrar ou ocultar senha">
+              <i class="fa-solid fa-eye"></i>
+            </span>
+          </div>
+          <p id="mensagem" class="erro"></p>
           <div id="dica-senha" class="ajuda">
             Dica: use no mínimo 8 caracteres, incluindo letras e números.
           </div>
@@ -57,7 +62,12 @@
 
         <div class="campo">
           <label class="obrigatorio" for="confirmar">Confirmar senha</label>
-          <input placeholder="Ex: Xxx20xx@" class="entrada" id="confirmar" name="confirmar" type="password" autocomplete="new-password" required />
+          <div class="campo-senha">
+            <input placeholder="Ex: Xxx20xx@" class="entrada" id="confirmar" name="confirmar" type="password" autocomplete="new-password" required />
+            <span class="olho-senha" onclick="togglePassword('confirmar', this)" aria-label="Mostrar ou ocultar senha">
+              <i class="fa-solid fa-eye"></i>
+            </span>
+          </div>
         </div>
 
         <label class="linha">
@@ -76,9 +86,11 @@
   </main>
 
 
-  <!-- Painel Acessibilidae -->
   <!-- Painel Acessibilidade -->
   {% include 'partials/painel_acessibilidade.html' %}
+
+  <!-- Chatbot Flutuante -->
+  {% include 'partials/chatbot.html' %}
 
 <div vw class="enabled" id="Vlibras">
   <div vw-access-button class="active"></div>

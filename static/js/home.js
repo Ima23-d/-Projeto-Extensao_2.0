@@ -70,6 +70,28 @@ function atualizarIndicadores(data) {
   atualizarCard('despesa', data.despesa, true);
 
   setTexto('crescimento-valor', `+${data.crescimento.valor.toFixed(1)}%`);
+
+  // Feedback sobre mapeamento
+  if (!data.mapeamento_ativo) {
+    exibirAlertaMapeamento();
+  }
+}
+
+function exibirAlertaMapeamento() {
+  const container = document.querySelector('.pagina__cabecalho');
+  if (!container || document.getElementById('alerta-mapeamento')) return;
+
+  const alerta = document.createElement('div');
+  alerta.id = 'alerta-mapeamento';
+  alerta.className = 'alert alert-info mt-3 d-flex align-items-center justify-content-between';
+  alerta.innerHTML = `
+    <div>
+      <i class="fa-solid fa-circle-info me-2"></i>
+      O sistema está usando detecção automática. Para maior precisão, <strong>configure o mapeamento das suas colunas</strong>.
+    </div>
+    <a href="/dados" class="btn btn-sm btn-info text-white">Configurar Agora</a>
+  `;
+  container.appendChild(alerta);
 }
 
 function atualizarCard(nome, dados, inverter = false) {

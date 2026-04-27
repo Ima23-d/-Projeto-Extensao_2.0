@@ -189,7 +189,14 @@ def analise_por_periodo():
         if df.empty:
             return jsonify({"mensagem": "Nenhum dado encontrado"}), 200
 
-        col_data = encontrar_coluna_data(df)
+        # Mapeamento do usuário
+        from backend.home.home import obter_colunas_mapeadas, calcular_total_dinamico
+        mapeamento = obter_colunas_mapeadas(user)
+        
+        # Encontrar coluna de data (mapeada ou fallback)
+        col_data = mapeamento.get("data")
+        if not col_data or col_data not in df.columns:
+            col_data = encontrar_coluna_data(df)
 
         # Período atual
         df_atual = filtrar_por_periodo(df, col_data, data_inicio, data_fim)
@@ -201,9 +208,16 @@ def analise_por_periodo():
 
         df_ant = filtrar_por_periodo(df, col_data, inicio_ant, fim_ant)
 
-        # Métricas
-        fat, desp, luc, mg = calcular_metricas(df_atual)
-        fat_a, desp_a, luc_a, mg_a = calcular_metricas(df_ant)
+        # Métricas Dinâmicas
+        def calcular_metricas_dinamicas(df_target):
+            fat  = calcular_total_dinamico(df_target, "faturamento", mapeamento, COL_FATURAMENTO)
+            desp = calcular_total_dinamico(df_target, "despesa", mapeamento, COL_DESPESA)
+            luc  = calcular_total_dinamico(df_target, "lucro", mapeamento, COL_LUCRO) or (fat - desp)
+            mg   = 0.0 if fat == 0 else round((luc / fat) * 100, 2)
+            return fat, desp, luc, mg
+
+        fat, desp, luc, mg = calcular_metricas_dinamicas(df_atual)
+        fat_a, desp_a, luc_a, mg_a = calcular_metricas_dinamicas(df_ant)
 
         # 🔥 GRÁFICO NOVO
         series = gerar_series(df_atual, col_data)

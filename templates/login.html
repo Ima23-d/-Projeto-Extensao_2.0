@@ -37,7 +37,12 @@
 
           <div class="campo">
             <label class="obrigatorio" for="senha">Senha</label>
-            <input placeholder="Ex: Xxx20xx@" class="entrada" id="senha" name="senha" type="password" autocomplete="current-password" required />
+            <div class="campo-senha">
+              <input placeholder="Ex: Xxx20xx@" class="entrada" id="senha" name="senha" type="password" autocomplete="current-password" required />
+              <span class="olho-senha" onclick="togglePassword('senha', this)" aria-label="Mostrar ou ocultar senha">
+                <i class="fa-solid fa-eye"></i>
+              </span>
+            </div>
           </div>
 
           <div style="display:flex; align-items:center; justify-content:space-between; gap: 12px; flex-wrap: wrap;">
@@ -56,6 +61,9 @@
 
     <!-- Painel Acessibilidade -->
   {% include 'partials/painel_acessibilidade.html' %}
+
+  <!-- Chatbot Flutuante -->
+  {% include 'partials/chatbot.html' %}
 
     <!-- VLibras -->
     <div vw class="enabled" id="Vlibras">

@@ -27,6 +27,24 @@ const alternarTema = () => {
   localStorage.setItem("tema", ativo ? "escuro" : "claro")
 }
 
+// Função para alternar visibilidade da senha
+function togglePassword(inputId, iconEl) {
+  const input = document.getElementById(inputId);
+  if (!input) return;
+
+  const icon = iconEl.querySelector('i');
+  
+  if (input.type === 'password') {
+    input.type = 'text';
+    icon.classList.remove('fa-eye');
+    icon.classList.add('fa-eye-slash');
+  } else {
+    input.type = 'password';
+    icon.classList.remove('fa-eye-slash');
+    icon.classList.add('fa-eye');
+  }
+}
+
 function initChart(canvasId, config, containerSelector, caption) {
   const canvas = document.getElementById(canvasId)
   if (!canvas) return null

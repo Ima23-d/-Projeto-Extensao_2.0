@@ -17,20 +17,20 @@
 
   <div class="layout">
     <aside class="sidebar" aria-label="Navegação principal">
-           <div class="sidebar__header">
-                <a class="marca" href="{{ url_for('pagina_landing') }}" aria-label="DataInsight - Início">
-                    <span class="marca__simbolo" aria-hidden="true">
-                        <i class="fa-solid fa-chart-column"></i>
-                    </span>
-                    DataInsight
-                </a>
-            </div>
-            
-    <!-- Navegação lateral -->
-    {% include 'partials/navbar.html' %}
+      <div class="sidebar__header">
+        <a class="marca" href="{{ url_for('pagina_landing') }}" aria-label="DataInsight - Início">
+          <span class="marca__simbolo" aria-hidden="true">
+            <i class="fa-solid fa-chart-column"></i>
+          </span>
+          DataInsight
+        </a>
+      </div>
+
+      <!-- Navegação lateral -->
+      {% include 'partials/navbar.html' %}
 
     </aside>
-   
+
     <!-- Navegação móvel -->
     {% include 'partials/navbar_mobile.html' %}
 
@@ -56,7 +56,7 @@
           </header>
 
           <!-- Filtro por período -->
-         
+
           <section class="cartao mb-4" aria-label="Filtros">
             <div class="d-flex gap-2 flex-wrap align-items-center">
               <label for="periodo" class="fw-bold mb-0">Período:</label>
@@ -69,13 +69,14 @@
             </div>
           </section>
 
-            <!-- STATUS DO NEGÓCIO -->
+          <!-- STATUS DO NEGÓCIO -->
           <section class="cartao mb-4" style="border-left: 4px solid var(--sucesso);">
             <h2 class="h2">Status do negócio</h2>
-            <p><strong>🟢 Saudável:</strong> O negócio apresenta crescimento consistente, lucro positivo e despesas sob controle.</p>
+            <p><strong>🟢 Saudável:</strong> O negócio apresenta crescimento consistente, lucro positivo e despesas sob
+              controle.</p>
           </section>
 
-          <!-- Alertas por enquanto sem --> 
+          <!-- Alertas por enquanto sem -->
           <!-- <section style="margin-top: 32px;">
             <h2 class="h2">Alertas e Destaques</h2>
             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 16px;">
@@ -98,81 +99,85 @@
               <article class="cartao" style=" border-left: 4px solid var(--primaria);">
                 <div class="cartao__meta">Faturamento</div>
                 <div style="margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--borda);">
-                  <p class="cartao__valor" style="color: var(--sucesso);  font-size: 28px;" data-indicador="faturamento-valor">--</p>
+                  <p class="cartao__valor" style="color: var(--sucesso);  font-size: 28px;"
+                    data-indicador="faturamento-valor">--</p>
                 </div>
                 <div class="cartao__descricao" data-indicador="faturamento-percent">--</div>
               </article>
               <article class="cartao" style=" border-left: 4px solid var(--primaria);">
                 <div class="cartao__meta">Lucro</div>
                 <div style="margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--borda);">
-                  <p class="cartao__valor" style="color: var(--sucesso);  font-size: 28px;" data-indicador="lucro-valor">--</p>
+                  <p class="cartao__valor" style="color: var(--sucesso);  font-size: 28px;"
+                    data-indicador="lucro-valor">--</p>
                   <div class="cartao__descricao" data-indicador="lucro-percent">--</div>
                 </div>
               </article>
               <article class="cartao" style=" border-left: 4px solid var(--primaria);">
                 <div class="cartao__meta">Despesas</div>
                 <div style="margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--borda);">
-                  <p class="cartao__valor" style="color: var(--perigo);  font-size: 28px;" data-indicador="despesa-valor">--</p>
+                  <p class="cartao__valor" style="color: var(--perigo);  font-size: 28px;"
+                    data-indicador="despesa-valor">--</p>
                   <div class="cartao__descricao" data-indicador="despesa-percent">--</div>
                 </div>
               </article>
               <article class="cartao" style=" border-left: 4px solid var(--primaria);">
                 <div class="cartao__meta">Crescimento</div>
                 <div style="margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--borda);">
-                  <p class="cartao__valor" style="color: var(--primaria);  font-size: 28px;" data-indicador="crescimento-valor">--</p>
+                  <p class="cartao__valor" style="color: var(--primaria);  font-size: 28px;"
+                    data-indicador="crescimento-valor">--</p>
                   <div class="cartao__descricao">Acumulado no período</div>
                 </div>
               </article>
             </div>
           </section>
-          
-        <div style="height: 30px;"></div>
-        <section class="mb-4">
-          <h2 class="h2 mb-3">Gráficos Principais</h2>
-          <div class="row g-3 m-0">
-        
-            <div class="col-12 col-lg-6 p-1">
-              <article class="cartao h-100 w-100 overflow-hidden">
-                <h3 class="h2 mb-3" style="font-size: 18px;">Evolução do Faturamento</h3>
-                <div id="graficoLinhaFaturamento" class="w-100"></div>
-              </article>
-            </div>
-        
-            <div class="col-12 col-lg-6 p-1">
-              <article class="cartao h-100 w-100 overflow-hidden">
-                <h3 class="h2 mb-3" style="font-size: 18px;">Comparativo de Métricas</h3>
-                <div id="graficoPizzaComparativa" class="w-100"></div>
-              </article>
-            </div>
-        
-          </div>
-        </section>
-        
-        <section class="cartao mb-4 w-100"
-          style="background: linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(59, 130, 246, 0.05)); border-left: 4px solid var(--primaria);">
-          <h2 class="h2 mb-3">Insights da IA</h2>
-          <div class="d-flex flex-column gap-3">
-            <div class="p-3 rounded" style="background: var(--cartao);">
-              <p class="p mb-0"><strong>📌 Tendência positiva:</strong> O faturamento cresceu consistentemente nos
-                últimos 3 meses.</p>
-            </div>
-            <div class="p-3 rounded" style="background: var(--cartao);">
-              <p class="p mb-0"><strong>⚡ Recomendação:</strong> Reduza despesas com fornecedores secundários e
-                realoque recursos.</p>
-            </div>
-            <div class="p-3 rounded" style="background: var(--cartao);">
-              <p class="p mb-0"><strong>🎯 Previsão:</strong> Com a tendência atual, o lucro deve aumentar 22% no
-                próximo período.</p>
-            </div>
-          </div>
-        </section>
 
-        
-         <!-- PRÓXIMA AÇÃO -->
-        <section class="cartao mb-4" style="border-left: 4px solid orange;">
-          <h2 class="h2">Próxima ação recomendada</h2>
-          <p>➡️ Revisar contratos com fornecedores e aumentar investimento na categoria mais rentável.</p>
-        </section>
+          <div style="height: 30px;"></div>
+          <section class="mb-4">
+            <h2 class="h2 mb-3">Gráficos Principais</h2>
+            <div class="row g-3 m-0">
+
+              <div class="col-12 col-lg-6 p-1">
+                <article class="cartao h-100 w-100 overflow-hidden">
+                  <h3 class="h2 mb-3" style="font-size: 18px;">Evolução do Faturamento</h3>
+                  <div id="graficoLinhaFaturamento" class="w-100"></div>
+                </article>
+              </div>
+
+              <div class="col-12 col-lg-6 p-1">
+                <article class="cartao h-100 w-100 overflow-hidden">
+                  <h3 class="h2 mb-3" style="font-size: 18px;">Comparativo de Métricas</h3>
+                  <div id="graficoPizzaComparativa" class="w-100"></div>
+                </article>
+              </div>
+
+            </div>
+          </section>
+
+          <section class="cartao mb-4 w-100"
+            style="background: linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(59, 130, 246, 0.05)); border-left: 4px solid var(--primaria);">
+            <h2 class="h2 mb-3">Insights da IA</h2>
+            <div class="d-flex flex-column gap-3">
+              <div class="p-3 rounded" style="background: var(--cartao);">
+                <p class="p mb-0"><strong>📌 Tendência positiva:</strong> O faturamento cresceu consistentemente nos
+                  últimos 3 meses.</p>
+              </div>
+              <div class="p-3 rounded" style="background: var(--cartao);">
+                <p class="p mb-0"><strong>⚡ Recomendação:</strong> Reduza despesas com fornecedores secundários e
+                  realoque recursos.</p>
+              </div>
+              <div class="p-3 rounded" style="background: var(--cartao);">
+                <p class="p mb-0"><strong>🎯 Previsão:</strong> Com a tendência atual, o lucro deve aumentar 22% no
+                  próximo período.</p>
+              </div>
+            </div>
+          </section>
+
+
+          <!-- PRÓXIMA AÇÃO -->
+          <section class="cartao mb-4" style="border-left: 4px solid orange;">
+            <h2 class="h2">Próxima ação recomendada</h2>
+            <p>➡️ Revisar contratos com fornecedores e aumentar investimento na categoria mais rentável.</p>
+          </section>
 
         </div>
       </main>
@@ -180,10 +185,13 @@
   </div>
 
   <!-- Footer -->
-   {% include 'partials/footer.html' %}
+  {% include 'partials/footer.html' %}
 
   <!-- Painel Acessibilidae -->
-   {% include 'partials/painel_acessibilidade.html' %}
+  {% include 'partials/painel_acessibilidade.html' %}
+
+  <!-- Chatbot Flutuante -->
+  {% include 'partials/chatbot.html' %}
 
   <div vw class="enabled" id="Vlibras">
     <div vw-access-button class="active"></div>
@@ -201,8 +209,7 @@
   <script src="{{ url_for('static', filename='acessibilidade/acessibilidade.js') }}"></script>
   <script src="{{ url_for('static', filename='js/script.js') }}"></script>
   <script src="{{ url_for('static', filename='js/home.js') }}"></script>
- 
+
 </body>
 
 </html>
-

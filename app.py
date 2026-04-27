@@ -1,4 +1,5 @@
 from flask import Flask, render_template, session, redirect, url_for, request, flash, jsonify
+from datetime import timedelta
 from flask_mail import Mail
 from functools import wraps
 import os
@@ -24,6 +25,8 @@ from backend.perfil.visualizar_analise import visualizar_analise
 # Importação home
 from backend.home.home import calcular_desempenho, obter_dados_graficos
 from backend.DashBoard.dashboard_rotas import dashboard_page, dashboard_dados
+# Importação mapeamento
+from backend.dados.mapeamento import obter_mapeamento, salvar_mapeamento
 # Importação contato
 from backend.contato.contato import enviar_mensagem_contato
 # Dashboard Import
@@ -60,6 +63,9 @@ except Exception as e:
 UPLOAD_FOLDER = "uploads"
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
+
+# Configuração de Sessão (Lembrar de mim)
+app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(days=30)
 
 # =================== PROTEÇÃO ===================
 def login_required(f):
@@ -195,6 +201,17 @@ def processar_exclusao():
 def upload():
     """Faz upload do arquivo e salva os dados no banco de dados"""
     return upload_arquivo()
+
+# =================== MAPEAMENTO ===================
+@app.route("/api/mapeamento", methods=["GET"])
+@login_required
+def get_mapeamento():
+    return obter_mapeamento()
+
+@app.route("/api/mapeamento", methods=["POST"])
+@login_required
+def set_mapeamento():
+    return salvar_mapeamento()
 
 # =================== Relatorio ===================
 @app.route('/gerar-relatorio', methods=['POST'])

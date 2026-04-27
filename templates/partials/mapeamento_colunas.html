@@ -1,0 +1,132 @@
+<!-- Modal de Mapeamento de Colunas -->
+<div class="modal fade" id="modalMapeamento" tabindex="-1" aria-labelledby="modalMapeamentoLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-dialog-centered">
+    <div class="modal-content" style="background: var(--cartao); color: var(--texto); border: 1px solid var(--borda);">
+      <div class="modal-header" style="border-bottom: 1px solid var(--borda);">
+        <h5 class="modal-title" id="modalMapeamentoLabel">
+          <i class="fa-solid fa-map-location-dot me-2 text-primary"></i>
+          Configurar Indicadores do Negócio
+        </h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" style="filter: var(--botao-fechar-filtro);"></button>
+      </div>
+      <div class="modal-body">
+        <p class="mb-4">Para que a IA e os gráficos funcionem corretamente, identifique quais colunas da sua planilha representam cada indicador abaixo:</p>
+        
+        <form id="formMapeamento">
+          <div class="row g-3">
+            <div class="col-md-6">
+              <label class="form-label fw-bold">Data dos Registros</label>
+              <select name="data" class="form-select select-coluna" required>
+                <option value="">Selecione a coluna...</option>
+              </select>
+              <div class="form-text">Coluna contendo as datas (ex: Data, Dia, Periodo)</div>
+            </div>
+            
+            <div class="col-md-6">
+              <label class="form-label fw-bold">Faturamento / Receita</label>
+              <select name="faturamento" class="form-select select-coluna" required>
+                <option value="">Selecione a coluna...</option>
+              </select>
+              <div class="form-text">Total bruto de vendas (ex: Valor, Total, Venda)</div>
+            </div>
+            
+            <div class="col-md-6">
+              <label class="form-label fw-bold">Despesas / Gastos</label>
+              <select name="despesa" class="form-select select-coluna">
+                <option value="">Opcional (Cálculo automático se omitido)</option>
+              </select>
+              <div class="form-text">Custos operacionais (ex: Custo, Despesa, Gasto)</div>
+            </div>
+            
+            <div class="col-md-6">
+              <label class="form-label fw-bold">Lucro Líquido</label>
+              <select name="lucro" class="form-select select-coluna">
+                <option value="">Opcional (Faturamento - Despesas)</option>
+              </select>
+              <div class="form-text">Resultado final (ex: Lucro, Profit)</div>
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer" style="border-top: 1px solid var(--borda);">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Configurar Depois</button>
+        <button type="button" class="btn btn-primary" onclick="salvarMapeamentoUsuario()">
+          <i class="fa-solid fa-check me-1"></i> Confirmar Configuração
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  :root {
+    --botao-fechar-filtro: none;
+  }
+  .tema-escuro {
+    --botao-fechar-filtro: invert(1) grayscale(100%) brightness(200%);
+  }
+</style>
+
+<script>
+async function abrirModalMapeamento(colunas) {
+  const selects = document.querySelectorAll('.select-coluna');
+  selects.forEach(select => {
+    // Manter a primeira opção (vazia/default)
+    const firstOption = select.options[0];
+    select.innerHTML = '';
+    select.appendChild(firstOption);
+    
+    colunas.forEach(col => {
+      const opt = document.createElement('option');
+      opt.value = col;
+      opt.textContent = col;
+      select.appendChild(opt);
+    });
+  });
+
+  // Tentar pré-selecionar baseado em nomes comuns
+  const sugestoes = {
+    data: ['data', 'date', 'periodo', 'dia', 'mês'],
+    faturamento: ['faturamento', 'venda', 'receita', 'total', 'valor'],
+    despesa: ['despesa', 'custo', 'gasto', 'saida'],
+    lucro: ['lucro', 'profit', 'resultado']
+  };
+
+  for (const [key, termos] of Object.entries(sugestoes)) {
+    const select = document.querySelector(`select[name="${key}"]`);
+    const match = colunas.find(col => termos.some(t => col.toLowerCase().includes(t)));
+    if (match) select.value = match;
+  }
+
+  const myModal = new bootstrap.Modal(document.getElementById('modalMapeamento'));
+  myModal.show();
+}
+
+async function salvarMapeamentoUsuario() {
+  const form = document.getElementById('formMapeamento');
+  const formData = new FormData(form);
+  const mapeamento = {};
+  
+  formData.forEach((value, key) => {
+    if (value) mapeamento[key] = value;
+  });
+
+  try {
+    const res = await fetch('/api/mapeamento', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(mapeamento)
+    });
+
+    if (res.ok) {
+      alert('Configuração salva! O sistema agora está adaptado aos seus dados.');
+      location.reload();
+    } else {
+      alert('Erro ao salvar configuração.');
+    }
+  } catch (e) {
+    console.error(e);
+    alert('Erro de conexão.');
+  }
+}
+</script>
