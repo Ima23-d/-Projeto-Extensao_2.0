@@ -1,0 +1,49 @@
+# ============================================================
+#  DataInsight — .dockerignore
+#  Arquivos que NÃO devem ser copiados para o container Docker
+#  (funciona como o .gitignore, mas para o Docker)
+# ============================================================
+
+# Ambiente virtual Python (as dependências são instaladas via requirements.txt)
+venv/
+.venv/
+env/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Arquivos de configuração sensíveis
+.env
+*.env
+
+# Git
+.git/
+.gitignore
+
+# Arquivos de IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Docker (não copiar o próprio Docker Compose)
+docker-compose*.yml
+Dockerfile*
+
+# Uploads locais (são montados via volume no docker-compose)
+uploads/
+
+# Documentação
+README.md
+SETUP.md
+*.md
+
+# Testes
+tests/
+test_*
+*_test.py
+
+# Logs
+*.log
+logs/
