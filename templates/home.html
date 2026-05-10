@@ -70,10 +70,11 @@
           </section>
 
           <!-- STATUS DO NEGÓCIO -->
-          <section class="cartao mb-4" style="border-left: 4px solid var(--sucesso);">
+          <section class="cartao mb-4" id="status-negocio-section" style="border-left: 4px solid var(--sucesso);">
             <h2 class="h2">Status do negócio</h2>
-            <p><strong>🟢 Saudável:</strong> O negócio apresenta crescimento consistente, lucro positivo e despesas sob
-              controle.</p>
+            <div id="status-negocio-container" style="animation: pulse 2s infinite;">
+              <p style="color: var(--texto-secundario);"> A IA está analisando seu negócio...</p>
+            </div>
           </section>
 
           <!-- Alertas por enquanto sem -->
@@ -156,28 +157,20 @@
           <section class="cartao mb-4 w-100"
             style="background: linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(59, 130, 246, 0.05)); border-left: 4px solid var(--primaria);">
             <h2 class="h2 mb-3">Insights da IA</h2>
-            <div class="d-flex flex-column gap-3">
-              <div class="p-3 rounded" style="background: var(--cartao);">
-                <p class="p mb-0"><strong>📌 Tendência positiva:</strong> O faturamento cresceu consistentemente nos
-                  últimos 3 meses.</p>
-              </div>
-              <div class="p-3 rounded" style="background: var(--cartao);">
-                <p class="p mb-0"><strong>⚡ Recomendação:</strong> Reduza despesas com fornecedores secundários e
-                  realoque recursos.</p>
-              </div>
-              <div class="p-3 rounded" style="background: var(--cartao);">
-                <p class="p mb-0"><strong>🎯 Previsão:</strong> Com a tendência atual, o lucro deve aumentar 22% no
-                  próximo período.</p>
+            <div id="container-insights-ia" class="d-flex flex-column gap-3">
+              <!-- Esqueleto de Carregamento -->
+              <div class="p-3 rounded" style="background: var(--cartao); animation: pulse 2s infinite;">
+                <p class="p mb-0" style="color: var(--texto-secundario);"> A IA está analisando seus dados para gerar o insight do dia...</p>
               </div>
             </div>
           </section>
 
 
-          <!-- PRÓXIMA AÇÃO -->
-          <section class="cartao mb-4" style="border-left: 4px solid orange;">
+      
+          <!-- <section class="cartao mb-4" style="border-left: 4px solid orange;">
             <h2 class="h2">Próxima ação recomendada</h2>
             <p>➡️ Revisar contratos com fornecedores e aumentar investimento na categoria mais rentável.</p>
-          </section>
+          </section> -->
 
         </div>
       </main>
