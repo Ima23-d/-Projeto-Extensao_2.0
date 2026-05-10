@@ -212,7 +212,8 @@ def obter_dados_graficos(periodo="30_dias"):
 
         return jsonify({
             "grafico_linha": grafico_linha(df, col_data, periodo, mapeamento),
-            "grafico_barras": grafico_barras(df, col_data, periodo, mapeamento)
+            "grafico_barras": grafico_barras(df, col_data, periodo, mapeamento),
+            "grafico_pizza": grafico_pizza(df, col_data, periodo, mapeamento)
         }), 200
 
     except Exception as e:
@@ -230,12 +231,19 @@ def filtrar_df(df, col, periodo):
     dias = {"7_dias": 7, "30_dias": 30, "90_dias": 90}
     if periodo in dias:
         inicio = fim - timedelta(days=dias[periodo])
+        return df[(df[col] >= inicio) & (df[col] <= fim)]
     elif periodo == "ano_atual":
         inicio = datetime(fim.year, 1, 1)
-    else:
-        return filtrar_df(df, col, "30_dias")
+        return df[(df[col] >= inicio) & (df[col] <= fim)]
+    elif periodo.startswith("mes_"):
+        try:
+            mes = int(periodo.split("_")[1])
+            ano = fim.year
+            return df[(df[col].dt.month == mes) & (df[col].dt.year == ano)]
+        except:
+            pass
 
-    return df[(df[col] >= inicio) & (df[col] <= fim)]
+    return filtrar_df(df, col, "30_dias")
 
 
 def grafico_linha(df, col, periodo, mapeamento):
@@ -244,29 +252,30 @@ def grafico_linha(df, col, periodo, mapeamento):
         return empty_graph()
 
     df["data_str"] = df[col].dt.strftime('%d/%m')
+    grupos = df.groupby("data_str")
 
-    # Usar coluna mapeada para faturamento
-    col_fat = mapeamento.get("faturamento")
-    if not col_fat or col_fat not in df.columns:
-        # Fallback para nomes comuns
-        for c in COL_FATURAMENTO:
-            if c in df.columns:
-                col_fat = c
-                break
-    
-    if not col_fat:
-        return empty_graph()
+    labels_raw = list(grupos.groups.keys())
+    labels = sorted(labels_raw, key=lambda x: datetime.strptime(x + "/2000", "%d/%m/%Y"))
 
-    agrupado = df.groupby("data_str")[col_fat].sum()
+    fat_list, desp_list, luc_list = [], [], []
 
-    labels = sorted(agrupado.index, key=lambda x: datetime.strptime(x + "/2000", "%d/%m/%Y"))
+    for label in labels:
+        g = grupos.get_group(label)
+        f = calcular_total_dinamico(g, "faturamento", mapeamento, COL_FATURAMENTO)
+        d = calcular_total_dinamico(g, "despesa", mapeamento, COL_DESPESA)
+        l = calcular_total_dinamico(g, "lucro", mapeamento, COL_LUCRO) or (f - d)
+
+        fat_list.append(round(f, 2))
+        desp_list.append(round(d, 2))
+        luc_list.append(round(l, 2))
 
     return {
         "labels": labels,
-        "series": [{
-            "name": "Faturamento",
-            "data": [float(agrupado[l]) for l in labels]
-        }]
+        "series": [
+            {"name": "Faturamento", "data": fat_list},
+            {"name": "Despesas", "data": desp_list},
+            {"name": "Lucro", "data": luc_list}
+        ]
     }
 
 
@@ -298,4 +307,94 @@ def grafico_barras(df, col, periodo, mapeamento):
             {"name": "Despesas", "data": desp},
             {"name": "Lucro", "data": luc}
         ]
-    }
+    }
+
+def grafico_pizza(df, col, periodo, mapeamento):
+    df = filtrar_df(df, col, periodo)
+    if df.empty:
+        return empty_graph()
+
+    f = calcular_total_dinamico(df, "faturamento", mapeamento, COL_FATURAMENTO)
+    d = calcular_total_dinamico(df, "despesa", mapeamento, COL_DESPESA)
+    l = calcular_total_dinamico(df, "lucro", mapeamento, COL_LUCRO) or (f - d)
+
+    return {
+        "labels": ["Faturamento", "Despesas", "Lucro"],
+        "series": [max(0, round(f, 2)), max(0, round(d, 2)), max(0, round(l, 2))]
+    }
+
+
+# ======================
+# STATUS DO NEGÓCIO
+# ======================
+def gerar_status_negocio(periodo="30_dias"):
+    """Gera o status do negócio (Saudável, Estável ou Em Perigo) baseado na análise dos dados"""
+    user_id = session.get('usuario_id')
+    if not user_id:
+        return jsonify({"mensagem": "Usuário não autenticado"}), 401
+
+    try:
+        # Obter dados de desempenho
+        response_desempenho, status_desempenho = calcular_desempenho(periodo)
+        if status_desempenho != 200:
+            return jsonify({"status": "indefinido", "mensagem": "Dados insuficientes"}), 200
+
+        dados = response_desempenho.get_json()
+        
+        faturamento = dados.get('faturamento', {})
+        lucro = dados.get('lucro', {})
+        despesa = dados.get('despesa', {})
+
+        lucro_valor = lucro.get('valor', 0)
+        lucro_percentual = lucro.get('percentual', 0)
+        faturamento_percentual = faturamento.get('percentual', 0)
+        despesa_percentual = despesa.get('percentual', 0)
+
+        # Análise de saúde do negócio
+        status = "indefinido"
+        cor = "#9ca3af"
+        emoji = "⚪"
+        descricao = "Sem dados suficientes para análise"
+
+        if lucro_valor > 0:
+            if lucro_percentual >= 10 and faturamento_percentual >= 5:
+                # Saudável: Lucro positivo com crescimento forte
+                status = "saudavel"
+                cor = "#10b981"
+                emoji = "🟢"
+                descricao = f"O negócio está saudável com lucro de R$ {lucro_valor:,.2f} e crescimento de {faturamento_percentual:.1f}%."
+            elif lucro_percentual >= 0 or faturamento_percentual >= 0:
+                # Estável: Lucro positivo mas crescimento moderado
+                status = "estavel"
+                cor = "#f59e0b"
+                emoji = "🟡"
+                descricao = f"O negócio está estável. Lucro de R$ {lucro_valor:,.2f}, mas o crescimento pode ser melhorado."
+            else:
+                # Em Perigo: Lucro positivo mas em queda
+                status = "em_perigo"
+                cor = "#ef4444"
+                emoji = "🔴"
+                descricao = f"O negócio está em perigo com redução de {abs(lucro_percentual):.1f}%. Revise as despesas."
+        else:
+            # Em Perigo: Lucro negativo (prejuízo)
+            status = "em_perigo"
+            cor = "#ef4444"
+            emoji = "🔴"
+            descricao = f"Atenção! Prejuízo de R$ {abs(lucro_valor):,.2f}. Despesas devem ser reduzidas urgentemente."
+
+        return jsonify({
+            "status": status,
+            "emoji": emoji,
+            "cor": cor,
+            "descricao": descricao,
+            "lucro_valor": round(lucro_valor, 2),
+            "lucro_percentual": round(lucro_percentual, 1),
+            "faturamento_valor": round(faturamento.get('valor', 0), 2),
+            "faturamento_percentual": round(faturamento_percentual, 1),
+            "despesa_valor": round(despesa.get('valor', 0), 2),
+            "periodo": periodo
+        }), 200
+
+    except Exception as e:
+        print("Erro ao gerar status:", e)
+        return jsonify({"status": "erro", "mensagem": str(e)}), 500
