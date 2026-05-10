@@ -29,7 +29,8 @@ from backend.DashBoard.dashboard_rotas import dashboard_page, dashboard_dados
 from backend.dados.mapeamento import obter_mapeamento, salvar_mapeamento
 # Importação contato
 from backend.contato.contato import enviar_mensagem_contato
-# Dashboard Import
+# Chatbot Import
+from backend.chatbot.chatbot import perguntar_chatbot
 load_dotenv()
 
 key = os.getenv('SECRET_KEY')
@@ -269,6 +270,30 @@ def api_graficos():
     periodo = request.args.get('periodo', '30_dias')
     return obter_dados_graficos(periodo)
 
+@app.route('/api/status_negocio', methods=['GET'])
+@login_required
+def api_status_negocio():
+    """Retorna o status do negócio (Saudável, Estável ou Em Perigo)"""
+    from backend.home.home import gerar_status_negocio
+    periodo = request.args.get('periodo', '30_dias')
+    return gerar_status_negocio(periodo)
+
+@app.route('/api/galeria/listar', methods=['GET'])
+@login_required
+def api_galeria_listar():
+    from backend.db import galeria
+    user_id = session.get('usuario_id')
+    periodo_filtro = request.args.get('periodo', None)
+    
+    query = {"usuario_id": user_id}
+    if periodo_filtro and periodo_filtro != 'todos':
+        query["periodo"] = periodo_filtro
+        
+    graficos = list(galeria.find(query).sort("criado_em", -1).limit(50))
+    for g in graficos:
+        g['_id'] = str(g['_id'])
+    return jsonify(graficos)
+
 @app.route('/api/analise', methods=['GET'])
 @login_required
 def api_analise():
@@ -278,6 +303,54 @@ def api_analise():
 @login_required
 def ultimo_periodo():
     return obter_ultimo_periodo()
+
+# =================== IA PAGE ===================
+@app.route("/ia")
+@login_required
+def pagina_ia():
+    return render_template("ia.html")
+
+@app.route("/api/download/<tipo>")
+@login_required
+def api_download_arquivo(tipo):
+    from backend.chatbot.chatbot import exportar_dados_usuario
+    return exportar_dados_usuario(tipo)
+
+# =================== Chatbot API ===================
+@app.route('/api/chatbot/perguntar', methods=['POST'])
+@login_required
+def perguntar():
+    return perguntar_chatbot()
+
+@app.route('/api/chatbot/sessoes', methods=['GET'])
+@login_required
+def api_sessoes_chatbot():
+    from backend.chatbot.chatbot import buscar_sessoes_chatbot
+    return buscar_sessoes_chatbot()
+
+@app.route('/api/chatbot/historico', methods=['GET'])
+@login_required
+def api_historico_chat():
+    from backend.chatbot.chatbot import buscar_historico_chatbot
+    return buscar_historico_chatbot()
+
+@app.route('/api/chatbot/historico/apagar', methods=['DELETE'])
+@login_required
+def api_apagar_historico():
+    from backend.chatbot.chatbot import limpar_historico_chatbot
+    return limpar_historico_chatbot()
+
+@app.route('/api/insight_diario', methods=['GET'])
+@login_required
+def api_insight_diario():
+    from backend.chatbot.chatbot import gerar_insight_diario
+    return gerar_insight_diario()
+
+@app.route('/api/download/<tipo_arquivo>')
+@login_required
+def baixar_arquivo_ia(tipo_arquivo):
+    from backend.chatbot.chatbot import exportar_dados_usuario
+    return exportar_dados_usuario(tipo_arquivo)
 # ============ Verificar Senha =================
 @app.route('/verificar_codigo', methods=['GET', 'POST'])
 def verificar_codigo_route():
