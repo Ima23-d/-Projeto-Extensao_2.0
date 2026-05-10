@@ -18,6 +18,8 @@ let chartBarras = null;
 document.addEventListener('DOMContentLoaded', () => {
   configurarPeriodo();
   atualizarTudo();
+  carregarStatus();
+  carregarInsight();
 });
 
 // ======================
@@ -35,6 +37,8 @@ function configurarPeriodo() {
 
     periodoAtual = valor;
     atualizarTudo();
+    carregarStatus();
+    carregarInsight();
   });
 }
 
@@ -120,6 +124,117 @@ function setTexto(dataId, texto, cor = null) {
 function atualizarGraficos(data) {
   renderGraficoLinha(data.grafico_linha);
   renderGraficoBarras(data.grafico_barras);
+}
+
+// ======================
+// STATUS DO NEGÓCIO
+// ======================
+function carregarStatus() {
+  fetch(`/api/status_negocio?periodo=${periodoAtual}`)
+    .then(r => {
+      if (!r.ok) throw new Error(`HTTP ${r.status}`);
+      return r.json();
+    })
+    .then(data => {
+      if (data.status && data.status !== 'erro') {
+        renderizarStatus(data);
+      } else {
+        renderizarStatusVazio();
+      }
+    })
+    .catch(err => {
+      console.error('Erro ao carregar status:', err);
+      renderizarStatusVazio();
+    });
+}
+
+function renderizarStatus(data) {
+  const container = document.getElementById('status-negocio-container');
+  const section = document.getElementById('status-negocio-section');
+  
+  if (!container || !section) return;
+
+  // Definir cor da borda e fundo da seção
+  let corBorda = '#10b981';
+  if (data.status === 'estavel') corBorda = '#f59e0b';
+  else if (data.status === 'em_perigo') corBorda = '#ef4444';
+
+  section.style.borderLeftColor = corBorda;
+
+  const html = `
+    <p><strong>${data.emoji} ${data.status.charAt(0).toUpperCase() + data.status.slice(1).replace('_', ' ')}:</strong> ${data.descricao}</p>
+    <div style="margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--borda); display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; font-size: 13px;">
+     
+    </div>
+  `;
+  // const html = `
+  //   <p><strong>${data.emoji} ${data.status.charAt(0).toUpperCase() + data.status.slice(1).replace('_', ' ')}:</strong> ${data.descricao}</p>
+  //   <div style="margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--borda); display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; font-size: 13px;">
+  //     <div>
+  //       <strong>Faturamento:</strong><br/>
+  //       R$ ${formatarMoedaSimples(data.faturamento_valor)}<br/>
+  //       <span style="color: ${data.faturamento_percentual >= 0 ? '#10b981' : '#ef4444'};">
+  //         ${data.faturamento_percentual >= 0 ? '↑' : '↓'} ${Math.abs(data.faturamento_percentual).toFixed(1)}%
+  //       </span>
+  //     </div>
+  //     <div>
+  //       <strong>Lucro:</strong><br/>
+  //       R$ ${formatarMoedaSimples(data.lucro_valor)}<br/>
+  //       <span style="color: ${data.lucro_percentual >= 0 ? '#10b981' : '#ef4444'};">
+  //         ${data.lucro_percentual >= 0 ? '↑' : '↓'} ${Math.abs(data.lucro_percentual).toFixed(1)}%
+  //       </span>
+  //     </div>
+  //     <div>
+  //       <strong>Despesas:</strong><br/>
+  //       R$ ${formatarMoedaSimples(data.despesa_valor)}<br/>
+  //       <span style="font-size: 12px; color: var(--texto-secundario);">${PERIODOS[data.periodo]}</span>
+  //     </div>
+  //   </div>
+  // `;
+
+
+  container.innerHTML = html;
+}
+
+function renderizarStatusVazio() {
+  const container = document.getElementById('status-negocio-container');
+  const section = document.getElementById('status-negocio-section');
+  
+  if (!container || !section) return;
+
+  section.style.borderLeftColor = '#9ca3af';
+  container.innerHTML = '<p style="color: var(--texto-secundario);">⚪ Sem dados: Carregue seus dados para análise automática do status.</p>';
+}
+
+// ======================
+// INSIGHT DA IA
+// ======================
+function carregarInsight() {
+  const containerInsights = document.getElementById('container-insights-ia');
+  if (!containerInsights) return;
+
+  // Mostrar skeleton de carregamento
+  containerInsights.innerHTML = `
+    <div class="p-3 rounded" style="background: var(--cartao); animation: pulse 2s infinite;">
+      <p class="p mb-0" style="color: var(--texto-secundario);"> A IA está analisando seus dados para gerar o insight do dia...</p>
+    </div>
+  `;
+
+  fetch(`/api/insight_diario?periodo=${periodoAtual}`)
+    .then(response => response.json())
+    .then(data => {
+      if(data.html) {
+        // Remove asteriscos (*) do conteúdo
+        let htmlLimpo = data.html.replace(/\*/g, '');
+        containerInsights.innerHTML = htmlLimpo;
+      } else {
+        containerInsights.innerHTML = "<div class='p-3 rounded' style='background: var(--cartao);'><p class='p mb-0'>Não foi possível carregar os insights hoje.</p></div>";
+      }
+    })
+    .catch(error => {
+      console.error('Erro ao buscar insight:', error);
+      containerInsights.innerHTML = "<div class='p-3 rounded' style='background: var(--cartao);'><p class='p mb-0 text-danger'>Erro de conexão com a IA.</p></div>";
+    });
 }
 
 // ======================
