@@ -19,6 +19,10 @@
         <i class="fa-solid fa-file-pdf"></i> Relatórios
     </a>
 
+    <a href="{{ url_for('pagina_ia') }}" {% if request.endpoint=='pagina_ia' %}aria-current="page" {% endif %}>
+        <i class="fa-solid fa-robot"></i> IA
+    </a>
+
     <a href="{{ url_for('pagina_perfil') }}" {% if request.endpoint=='pagina_perfil' %}aria-current="page" {% endif %}>
         <i class="fa-solid fa-user"></i> Perfil
     </a>
