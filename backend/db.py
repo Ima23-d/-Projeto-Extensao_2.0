@@ -5,17 +5,26 @@ import os
 from datetime import datetime
 load_dotenv()
 
-uri = os.getenv('URI')
+# Tenta pegar MONGO_URI (Docker) ou URI (Local/.env)
+uri = os.getenv('MONGO_URI') or os.getenv('URI')
 
-cliente = MongoClient(uri, tlsCAFile=certifi.where())
+# Só usa certifi se for uma conexão Atlas (contém '+srv')
+if uri and 'mongodb+srv' in uri:
+    cliente = MongoClient(uri, tlsCAFile=certifi.where())
+else:
+    cliente = MongoClient(uri)
 
 db = cliente["teste"]
 usuario = db["usuarios"]
 dados_colecao = db["dados"]
+chat_historico = db["chat_historico"]
+galeria = db["galeria"]
 
 def criar_index():
     usuario.create_index("email", unique=True)
     dados_colecao.create_index("criado_em")
+    chat_historico.create_index("usuario_id")
+    galeria.create_index("usuario_id")
 
 def salvar_dados(usuario_id, nome_planilha, colunas, dados):
     """Salva os dados no banco de dados"""
