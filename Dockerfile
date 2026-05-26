@@ -14,7 +14,7 @@ ENV PYTHONDONTWRITEBYTECODE=1 \
 WORKDIR /app
 
 # 4. Dependências do sistema (necessárias para algumas libs Python)
-RUN apt-get update && apt-get install -y --no-install-recommends \
+RUN apt-get update && apt-get install -y --no-install-recommends \ 
     build-essential \
     && rm -rf /var/lib/apt/lists/*
 
@@ -37,4 +37,4 @@ EXPOSE 5000
 
 # 10. Comando de arranque — Gunicorn com 2 workers
 #     app:app  →  ficheiro app.py, variável app (Flask instance)
-CMD ["gunicorn", "--bind", "0.0.0.0:5000", "--workers", "2", "--timeout", "120", "app:app"]
+CMD ["gunicorn", "--bind", "0.0.0.0:5001", "--workers", "2", "--timeout", "120", "app:app"]

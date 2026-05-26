@@ -14,7 +14,7 @@ if uri and 'mongodb+srv' in uri:
 else:
     cliente = MongoClient(uri)
 
-db = cliente["teste"]
+db = cliente["cadastro"]
 usuario = db["usuarios"]
 dados_colecao = db["dados"]
 chat_historico = db["chat_historico"]

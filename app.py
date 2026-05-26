@@ -23,7 +23,7 @@ from backend.perfil.pagina_de_perfil import pagina_perfil as pagina_perfil_backe
 from backend.perfil.vizualizar_relatorio import vizualizar_relatorio
 from backend.perfil.visualizar_analise import visualizar_analise
 # Importação home
-from backend.home.home import calcular_desempenho, obter_dados_graficos
+from backend.home.home import calcular_desempenho, obter_dados_graficos, gerar_status_negocio
 from backend.DashBoard.dashboard_rotas import dashboard_page, dashboard_dados
 # Importação mapeamento
 from backend.dados.mapeamento import obter_mapeamento, salvar_mapeamento
@@ -273,8 +273,7 @@ def api_graficos():
 @app.route('/api/status_negocio', methods=['GET'])
 @login_required
 def api_status_negocio():
-    """Retorna o status do negócio (Saudável, Estável ou Em Perigo)"""
-    from backend.home.home import gerar_status_negocio
+    """Retorna o status do negócio analisado"""
     periodo = request.args.get('periodo', '30_dias')
     return gerar_status_negocio(periodo)
 

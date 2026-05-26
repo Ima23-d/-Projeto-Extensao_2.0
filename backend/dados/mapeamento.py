@@ -1,5 +1,4 @@
 from flask import session, request, jsonify
-from flask import session, request, jsonify
 from backend.db import usuario
 from bson import ObjectId
 
@@ -22,7 +21,8 @@ def salvar_mapeamento():
         return jsonify({"mensagem": "Não autorizado"}), 401
     
     dados = request.get_json()
-    if not dados:
+    # Permitir dicionário vazio, mas não None
+    if dados is None:
         return jsonify({"mensagem": "Dados inválidos"}), 400
     
     # Mapeamento esperado: { "faturamento": "NomeColuna", "despesa": "NomeColuna", ... }

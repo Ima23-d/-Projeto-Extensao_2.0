@@ -50,7 +50,7 @@
       </div>
       <div class="modal-footer" style="border-top: 1px solid var(--borda);">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Configurar Depois</button>
-        <button type="button" class="btn btn-primary" onclick="salvarMapeamentoUsuario()">
+        <button type="button" class="btn btn-primary" onclick="salvarMapeamentoUsuario(event)">
           <i class="fa-solid fa-check me-1"></i> Confirmar Configuração
         </button>
       </div>
@@ -70,8 +70,9 @@
 <script>
 async function abrirModalMapeamento(colunas) {
   const selects = document.querySelectorAll('.select-coluna');
+  
+  // 1. Popular os selects com as colunas disponíveis
   selects.forEach(select => {
-    // Manter a primeira opção (vazia/default)
     const firstOption = select.options[0];
     select.innerHTML = '';
     select.appendChild(firstOption);
@@ -84,7 +85,19 @@ async function abrirModalMapeamento(colunas) {
     });
   });
 
-  // Tentar pré-selecionar baseado em nomes comuns
+  // 2. Tentar carregar o mapeamento salvo do servidor
+  let mapeamentoSalvo = {};
+  try {
+    const res = await fetch('/api/mapeamento');
+    if (res.ok) {
+      mapeamentoSalvo = await res.json();
+    }
+  } catch (err) {
+    console.error("Erro ao buscar mapeamento salvo:", err);
+  }
+
+  // 3. Preencher os selects com o que já foi salvo ou usar sugestões inteligentes
+  const keys = ['data', 'faturamento', 'despesa', 'lucro'];
   const sugestoes = {
     data: ['data', 'date', 'periodo', 'dia', 'mês'],
     faturamento: ['faturamento', 'venda', 'receita', 'total', 'valor'],
@@ -92,17 +105,35 @@ async function abrirModalMapeamento(colunas) {
     lucro: ['lucro', 'profit', 'resultado']
   };
 
-  for (const [key, termos] of Object.entries(sugestoes)) {
+  keys.forEach(key => {
     const select = document.querySelector(`select[name="${key}"]`);
-    const match = colunas.find(col => termos.some(t => col.toLowerCase().includes(t)));
-    if (match) select.value = match;
-  }
+    if (!select) return;
 
-  const myModal = new bootstrap.Modal(document.getElementById('modalMapeamento'));
+    // Se já existe um mapeamento salvo para essa chave e a coluna existe nos dados atuais
+    if (mapeamentoSalvo[key] && colunas.includes(mapeamentoSalvo[key])) {
+      select.value = mapeamentoSalvo[key];
+    } 
+    // Caso contrário, tenta usar a sugestão inteligente
+    else {
+      const termos = sugestoes[key];
+      const match = colunas.find(col => termos.some(t => col.toLowerCase().includes(t)));
+      if (match) select.value = match;
+    }
+  });
+
+  // 4. Mostrar o modal
+  const modalEl = document.getElementById('modalMapeamento');
+  let myModal = bootstrap.Modal.getInstance(modalEl);
+  if (!myModal) {
+    myModal = new bootstrap.Modal(modalEl);
+  }
   myModal.show();
 }
 
-async function salvarMapeamentoUsuario() {
+async function salvarMapeamentoUsuario(event) {
+  const btn = event.target.closest('button');
+  const originalHtml = btn.innerHTML;
+  
   const form = document.getElementById('formMapeamento');
   const formData = new FormData(form);
   const mapeamento = {};
@@ -112,6 +143,9 @@ async function salvarMapeamentoUsuario() {
   });
 
   try {
+    btn.disabled = true;
+    btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin me-1"></i> Salvando...';
+
     const res = await fetch('/api/mapeamento', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -119,14 +153,22 @@ async function salvarMapeamentoUsuario() {
     });
 
     if (res.ok) {
-      alert('Configuração salva! O sistema agora está adaptado aos seus dados.');
-      location.reload();
+      // Pequeno delay para feedback visual
+      setTimeout(() => {
+        alert('Configuração salva! O sistema agora está adaptado aos seus dados.');
+        location.reload();
+      }, 500);
     } else {
-      alert('Erro ao salvar configuração.');
+      const errorData = await res.json();
+      alert('Erro ao salvar configuração: ' + (errorData.mensagem || 'Erro desconhecido'));
+      btn.disabled = false;
+      btn.innerHTML = originalHtml;
     }
   } catch (e) {
     console.error(e);
-    alert('Erro de conexão.');
+    alert('Erro de conexão ao tentar salvar o mapeamento.');
+    btn.disabled = false;
+    btn.innerHTML = originalHtml;
   }
 }
 </script>

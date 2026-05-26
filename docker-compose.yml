@@ -10,18 +10,20 @@ services:
   # ──────────────────────────────────────────────
   #  SERVIÇO 1: Aplicação Flask (DataInsight)
   # ──────────────────────────────────────────────
+#   após o processo de geração do Docker, por favor não use o link gerado vá na sua aba de pesquisa
+#  e digite http://localhost:5001 ou EXP = localhost:xxxx dependendo do seu build
   web:
     build: .                        # Usa o Dockerfile na pasta actual
     container_name: datainsight_web
     restart: unless-stopped         # Reinicia automaticamente se o container cair
     ports:
-      - "5000:5000"                 # localhost:5000 → container:5000
+      - "5001:5001"                 # localhost:5000 → container:5000
     env_file:
       - .env                        # Lê as variáveis de ambiente do ficheiro .env
     environment:
       # URL de ligação ao MongoDB — usa o nome do serviço "mongo" como hostname
       # O Docker resolve "mongo" automaticamente dentro da rede interna
-      - MONGO_URI=mongodb://mongo:27017/datainsight
+      - URI=mongodb://mongo:27017/datainsight
     volumes:
       # Volume para uploads de ficheiros CSV — persiste mesmo se o container for recreado
       - ./uploads:/app/uploads

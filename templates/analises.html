@@ -4,49 +4,34 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>DataInsight • Métricas</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css">
+    <meta name="description" content="DataInsight — Análise de métricas e comparação entre períodos." />
+    <title>DataInsight • Análises</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
     <link rel="stylesheet" href="{{ url_for('static', filename='css/estilo.css') }}" />
-    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/apexcharts" defer></script>
 </head>
 
 <body>
-
+    <a href="#conteudo" class="skip-link">Ir para conteúdo</a>
     <div class="layout">
-        <aside class="sidebar" aria-label="Navegação principal">
-            <div class="sidebar__header">
-                <a class="marca" href="{{ url_for('pagina_landing') }}" aria-label="DataInsight - Início">
-                    <span class="marca__simbolo" aria-hidden="true">
-                        <i class="fa-solid fa-chart-column"></i>
-                    </span>
-                    DataInsight
-                </a>
-            </div>
-
-
-            <!-- Navegação lateral -->
+        <aside class="sidebar" id="sidebar" aria-label="Navegação principal">
             {% include 'partials/navbar.html' %}
-
         </aside>
-
-        <!-- Navegação móvel -->
-        {% include 'partials/navbar_mobile.html' %}
-
         <div class="main">
-            <header class="topbar">
+            <header class="topbar" role="banner">
+                <div class="topbar__left">
+                    <button class="topbar__btn topbar__mobile-toggle" onclick="abrirSidebar()"
+                        aria-label="Abrir menu"><i class="fa-solid fa-bars"></i></button>
+                    <span class="topbar__greeting">Olá, <strong>{{ session.usuario_nome }}</strong></span>
+                </div>
                 <div class="topbar__actions">
-                    <button class="botao botao--suave" type="button" onclick="alternarTema()"
-                        aria-label="Alternar tema">
-                        <i class="fa-solid fa-moon"></i>
-                    </button>
-                    <a class="botao botao--suave" href="{{ url_for('pagina_configuracoes') }}"
-                        aria-label="Abrir configurações">
-                        <i class="fa-solid fa-gear"></i>
-                    </a>
+                    <button class="topbar__btn" onclick="alternarTema()" aria-label="Alternar tema" id="btnTema"><i
+                            class="fa-solid fa-moon"></i></button>
+                    <a class="topbar__btn" href="{{ url_for('pagina_configuracoes') }}" title="Configurações"><i
+                            class="fa-solid fa-gear"></i></a>
                 </div>
             </header>
-
             <main id="conteudo" class="pagina" role="main">
                 <div class="container">
                     <header class="pagina__cabecalho">
@@ -93,9 +78,11 @@
                                 <div style="display: flex; justify-content: space-between; align-items: start;">
                                     <div>
                                         <h3 class="h3" style="margin: 0 0 8px;">Faturamento</h3>
-                                        <p class="p" style="margin: 0; font-size: 14px; color: var(--suave);">Receita total</p>
+                                        <p class="p" style="margin: 0; font-size: 14px; color: var(--suave);">Receita
+                                            total</p>
                                     </div>
-                                    <input type="checkbox" id="check-faturamento" class="metrica-checkbox"style="width: 20px; height: 20px; cursor: pointer;" />
+                                    <input type="checkbox" id="check-faturamento" class="metrica-checkbox"
+                                        style="width: 20px; height: 20px; cursor: pointer;" />
                                 </div>
 
                                 <div style="margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--borda);">
@@ -348,20 +335,14 @@
 
                         </div>
                     </section>
-
-
-                </div>
+                    <!-- Footer -->
+                    {% include 'partials/footer.html' %}
             </main>
         </div>
     </div>
 
-    <!-- Footer -->
-    {% include 'partials/footer.html' %}
-
-    <!-- Painel Acessibilidae -->
+    {% include 'partials/navbar_mobile.html' %}
     {% include 'partials/painel_acessibilidade.html' %}
-
-    <!-- Chatbot Flutuante -->
     {% include 'partials/chatbot.html' %}
 
     <div vw class="enabled" id="Vlibras">
@@ -372,17 +353,12 @@
     </div>
 
     <script src="https://vlibras.gov.br/app/vlibras-plugin.js"></script>
-
-    <script>
-        new window.VLibras.Widget('https://vlibras.gov.br/app');
-    </script>
-
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+    <script>new window.VLibras.Widget('https://vlibras.gov.br/app');</script>
     <script src="{{ url_for('static', filename='acessibilidade/acessibilidade.js') }}"></script>
     <script src="{{ url_for('static', filename='js/script.js') }}"></script>
-
     <script>
-        // Se existe análise selecionada, passar para o analise.js
+        function abrirSidebar() { document.getElementById('sidebar').classList.add('open'); document.getElementById('sidebarOverlay').classList.add('active'); }
+        function fecharSidebar() { document.getElementById('sidebar').classList.remove('open'); document.getElementById('sidebarOverlay').classList.remove('active'); }
         window.analise_selecionada = null;
         {% if session.get('analise_selecionada') %}
         window.analise_selecionada = {
@@ -391,10 +367,7 @@
         };
         {% endif %}
     </script>
-
     <script src="{{ url_for('static', filename='js/analise.js') }}"></script>
-
-</body>
 </body>
 
 </html>

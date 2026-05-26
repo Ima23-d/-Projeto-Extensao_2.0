@@ -4,6 +4,7 @@ bcrypt
 certifi
 python-dotenv
 wkhtmltopdf
+pdfkit
 pandas
 openpyxl
 Flask-Mail

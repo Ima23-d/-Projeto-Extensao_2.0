@@ -1,14 +1,16 @@
-/* ============================
-   DataInsight
-   ============================ */
+/* ============================================================================
+   DATAINSIGHT - PREMIUM REDESIGN v3.0
+   ============================================================================ */
 
-/* Fonte */
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
+/* IMPORTS */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+@import url('./premium.css');
 
-/* ============================
-   VARIÁVEIS GLOBAIS
-   ============================ */
+/* ============================================================================
+   1. MAPEAMENTO DE VARIÁVEIS (Compatibilidade com código existente)
+   ============================================================================ */
 :root {
+  /* CORES - Paleta Original (Mantida) */
   --primaria: #3B82F6;
   --fundo: #F9FAFB;
   --texto: #111827;
@@ -17,39 +19,130 @@
   --cartao: #FFFFFF;
   --sucesso: #16A34A;
   --perigo: #DC2626;
+  --aviso: #F59E0B;
 
-  --fonte: "Inter", sans-serif;
+  /* MAPEAMENTO PARA NOVO SISTEMA */
+  --color-primary: #3B82F6;
+  --color-primary-light: #DBEAFE;
+  --color-primary-dark: #1E40AF;
+  --color-success: #16A34A;
+  --color-danger: #DC2626;
+  --color-warning: #F59E0B;
+  --color-white: #FFFFFF;
+  --color-black: #111827;
+  --color-gray-50: #F9FAFB;
+  --color-gray-100: #F3F4F6;
+  --color-gray-200: #E5E7EB;
+  --color-gray-400: #9CA3AF;
+  --color-gray-500: #6B7280;
+  --color-gray-600: #4B5563;
+  --color-gray-900: #111827;
 
+  /* BACKGROUND */
+  --bg-primary: var(--color-white);
+  --bg-secondary: var(--color-gray-50);
+  --bg-tertiary: var(--color-gray-100);
+
+  /* TEXT */
+  --text-primary: var(--color-gray-900);
+  --text-secondary: var(--color-gray-600);
+  --text-tertiary: var(--color-gray-500);
+  --text-muted: var(--color-gray-400);
+  --text-inverse: var(--color-white);
+
+  /* BORDERS */
+  --border-color: var(--color-gray-200);
+
+  /* TIPOGRAFIA */
+  --fonte: "Inter", -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --font-size-sm: 0.875rem;
+  --font-size-base: 1rem;
+  --font-size-lg: 1.125rem;
+  --font-size-xl: 1.25rem;
+  --font-size-2xl: 1.5rem;
+  --font-size-3xl: 1.875rem;
+  --font-size-4xl: 2.25rem;
+
+  /* SPACING */
   --esp1: 8px;
   --esp2: 16px;
   --esp3: 24px;
   --esp4: 32px;
+  --sp-xs: 4px;
+  --sp-sm: 8px;
+  --sp-md: 16px;
+  --sp-lg: 24px;
+  --sp-xl: 32px;
+  --sp-2xl: 48px;
 
+  /* BORDER RADIUS */
   --raio: 8px;
-  --sombra: 0 6px 18px rgba(0, 0, 0, 0.08);
+  --radius-sm: 6px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-xl: 16px;
+  --radius-full: 9999px;
 
+  /* SHADOWS */
+  --sombra: 0 6px 18px rgba(0, 0, 0, 0.08);
+  --shadow-xs: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --shadow-sm: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+  --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+
+  /* TRANSITIONS */
+  --transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-base: 250ms cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-slow: 350ms cubic-bezier(0.4, 0, 0.2, 1);
+
+  /* LAYOUT */
   --container: 1200px;
-  --barra-topo: 72px;
+  --topbar-height: 64px;
+  --sidebar-width: 280px;
+  --footer-height: auto;
+
+  /* Z-INDEX */
+  --z-base: 1;
+  --z-dropdown: 100;
+  --z-sticky: 200;
+  --z-fixed: 300;
+  --z-modal-backdrop: 400;
+  --z-modal: 500;
+  --z-tooltip: 600;
+  --z-notification: 700;
 
   /* Escala dinâmica de fonte */
   --escala-fonte: 1;
 }
 
-/* ============================
-   DARK MODE
-   ============================ */
+/* ============================================================================
+   2. DARK MODE - Tema Escuro Melhorado
+   ============================================================================ */
+[data-theme="dark"],
 .tema-escuro {
-  --fundo: #000000;
-  --texto: #F9FAFB;
+  --primaria: #3B82F6;
+  --fundo: #0F172A;
+  --texto: #F1F5F9;
   --suave: #CBD5E1;
   --borda: #334155;
-  --cartao: #1d1d1d;
-  --primaria: #3B82F6;
+  --cartao: #0F172A;
+
+  /* Mapeamento novo sistema */
+  --bg-primary: #0F172A;
+  --bg-secondary: #1E293B;
+  --bg-tertiary: #334155;
+  --text-primary: #F1F5F9;
+  --text-secondary: #CBD5E1;
+  --text-tertiary: #94A3B8;
+  --text-muted: #64748B;
+  --border-color: #334155;
+  --color-primary-light: #0C4A6E;
+
+  color-scheme: dark;
 }
 
-/* ============================
-   GRÁFICOS APEXCHARTS - MODO ESCURO
-   ============================ */
+/* ApexCharts - Dark Mode */
 .tema-escuro .apexcharts-svg {
   background: var(--cartao) !important;
 }
@@ -69,12 +162,12 @@
 }
 
 .tema-escuro .apexcharts-tooltip {
-  background: #2a2a2a !important;
+  background: #1a1a1a !important;
   border: 1px solid var(--borda) !important;
 }
 
 .tema-escuro .apexcharts-tooltip-title {
-  background: #333 !important;
+  background: #2a2a2a !important;
   color: var(--texto) !important;
 }
 
@@ -84,10 +177,6 @@
 
 .tema-escuro .apexcharts-legend-text {
   color: var(--texto) !important;
-}
-
-.tema-escuro .apexcharts-serie-donut-slice {
-  filter: brightness(1.1);
 }
 
 
@@ -114,15 +203,19 @@ body {
    CONTAINER
    ============================ */
 .container {
-  width: var(--container);
+  width: 100%;
+  max-width: var(--container);
   margin: 0 auto;
 }
 
 .rodape {
   background-color: var(--cartao);
   color: var(--suave);
-  padding: 40px 20px;
+  padding: 24px 28px; 
   border-top: 1px solid var(--borda);
+  flex-shrink: 0;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .rodape__grid {
@@ -443,8 +536,10 @@ body {
 /* ============================
    PÁGINA
    ============================ */
+/* NOTA: flex, overflow-y, min-height e background são gerenciados pelo premium.css.
+   Apenas padding é definido aqui para não quebrar o layout de sidebar fixa. */
 .pagina {
-  padding: var(--esp4) 0;
+  padding: 0; /* Removido para que header/footer ocupem 100% da largura */
 }
 
 /* ============================
@@ -589,18 +684,40 @@ body {
 /* ============================
    CARTÃO
    ============================ */
+@keyframes surgeCartao {
+  0% {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  50% {
+    opacity: 0.5;
+    transform: scale(1.02);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
 .cartao {
   background: var(--cartao);
   border: 1px solid var(--borda);
   border-radius: var(--raio);
   padding: var(--esp2);
   box-shadow: var(--sombra);
+  animation: surgeCartao 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
 }
 
 .tema-escuro .cartao {
-  background: #1a1a1a;
+  background: #161e2e;
   border-color: #2a2a2a;
   box-shadow: 0 6px 18px rgba(0, 0, 0, 0.3);
+}
+
+.tema-escuro .botao--delet {
+  background: var(--perigo);
+  border: 1px solid #6b728066;
+  color: white;
 }
 
 .cartao__meta {
@@ -1121,17 +1238,7 @@ body {
   min-height: 100vh;
 }
 
-.sidebar {
-  background: var(--cartao);
-  border-right: 1px solid var(--borda);
-  padding: var(--esp3);
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-  position: sticky;
-  top: 0;
-  height: 100vh;
-}
+/* Sidebar gerenciada pelo premium.css */
 
 .sidebar__header {
   display: flex;
@@ -1187,6 +1294,7 @@ body {
   position: sticky;
   top: 0;
   z-index: 50;
+  border-radius: 10px;
 }
 
 .topbar__actions {
@@ -1304,19 +1412,7 @@ body {
   gap: 8px;
 }
 
-@media (max-width: 900px) {
-  .layout {
-    grid-template-columns: 1fr;
-  }
-
-  .sidebar {
-    display: none;
-  }
-
-  .topbar {
-    border-radius: 0;
-  }
-}
+/* Media query de layout removida - gerenciada pelo premium.css */
 
 
 .corpo-alto-contraste .acessibilidade-painel,
@@ -1904,7 +2000,7 @@ table td {
    DARK MODE - COMPONENTES ADNICIONAIS
    ============================ */
 .tema-escuro .card-opcao {
-  background: #1a1a1a;
+  background: #161e2e;
   border-color: #2a2a2a;
 }
 
@@ -1915,7 +2011,7 @@ table td {
 
 
 .tema-escuro table {
-  background: #1a1a1a;
+  background: #161e2e;
 }
 
 .tema-escuro table td {
@@ -1959,126 +2055,7 @@ table td {
    RESPONSIVIDADE FINAL
    ======================= */
 
-/* 📱 Mobile + Tablet (até 1024px) */
-@media (max-width: 1024px) {
-
-  .container {
-    width: 100%;
-    padding: 0 16px;
-  }
-
-  /* REMOVE sidebar */
-  .layout {
-    grid-template-columns: 1fr;
-  }
-
-  .sidebar {
-    display: none;
-  }
-
-  /* MOSTRA navbar/topbar normal */
-  .topbar {
-    display: flex;
-  }
-
-  /* Grids viram coluna */
-  .grade--2,
-  .grade--3,
-  .grade--4 {
-    grid-template-columns: 1fr;
-  }
-
-  /* Footer deve seguir isotropia */
-  .rodape {
-    padding: 30px 16px;
-  }
-
-  .rodape__grid {
-    grid-template-columns: 1fr;
-    max-width: 100%;
-    gap: 16px;
-    width: 100%;
-    margin: 0 auto;
-  }
-
-  .rodape__col {
-    min-width: 0;
-  }
-
-  /* KPIs */
-  .kpis-emlinha {
-    flex-direction: column;
-  }
-
-  html,
-  body {
-    max-width: 100%;
-    overflow-x: hidden;
-  }
-
-  .layout,
-  .main,
-  .container,
-  .rodape__grid,
-  .grade--4,
-  .cartao,
-  table {
-    min-width: 0;
-    width: 100%;
-  }
-
-  .rodape__grid {
-    overflow-x: hidden;
-  }
-
-  /* Perfil */
-  .perfil-resumo__top {
-    flex-direction: column;
-    align-items: flex-start;
-  }
-
-  .perfil-acoes {
-    width: 100%;
-  }
-
-  .perfil-acoes .botao {
-    width: 100%;
-  }
-
-  /* Form login */
-  .autenticacao__cartao {
-    width: 100%;
-  }
-
-}
-
-
-/* 💻 Notebook/Desktop (acima de 1024px) */
-@media (min-width: 1025px) {
-
-  .layout {
-    grid-template-columns: 280px 1fr;
-  }
-
-  .sidebar {
-    display: flex;
-  }
-
-  /* =======================
-   RECURSOS - INDEX
-   ======================= */
-  .grid-recursos {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 32px;
-  }
-
-  .recurso-conteudo {
-    display: flex;
-    align-items: flex-start;
-    gap: 16px;
-  }
-}
+/* Media queries de layout legadas removidas - gerenciadas pelo premium.css */
 
 @media (max-width: 1024px) {
   .grid-recursos {
@@ -2789,3 +2766,63 @@ table td {
   padding: 10px;
   border: 1px solid var(--borda);
 }
+
+.main {
+  flex: 1;
+  min-height: calc(100vh - var(--barra-topo));
+}
+
+/* Layout gerenciado pelo premium.css */
+/* Final do arquivo - Layout gerenciado pelo premium.css */
+
+/* ============================
+   BUSCA NA TABELA
+   ============================ */
+.busca-tabela-container {
+    position: relative;
+    display: flex;
+    align-items: center;
+    width: 200px;
+}
+
+.busca-tabela-icon {
+    position: absolute;
+    left: 10px;
+    font-size: 12px;
+    color: var(--suave);
+    pointer-events: none;
+}
+
+.entrada--busca {
+    padding: 6px 10px 6px 30px !important;
+    font-size: 13px !important;
+    height: 32px !important;
+    border-radius: 8px !important;
+    width: 100% !important;
+    background: var(--cartao) !important;
+    border: 1px solid var(--borda) !important;
+}
+
+.celula-destaque {
+    background: rgba(59, 130, 246, 0.4) !important;
+    border: 2px solid var(--primaria) !important;
+    box-shadow: 0 0 15px rgba(59, 130, 246, 0.5);
+    z-index: 5;
+    position: relative;
+    transition: all 0.3s ease;
+}
+
+.tema-escuro .celula-destaque {
+    background: rgba(59, 130, 246, 0.5) !important;
+    border-color: #60a5fa !important;
+}
+
+@keyframes flashHighlight {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+    100% { transform: scale(1); }
+}
+
+.celula-destaque-anima {
+    animation: flashHighlight 0.5s ease-in-out;
+}

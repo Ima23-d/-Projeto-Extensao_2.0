@@ -2,7 +2,7 @@
 // CONFIGURAÇÕES GLOBAIS
 // ===============================
 const CONFIG = {
-    LINHAS_POR_PAGINA: 5,
+    LINHAS_POR_PAGINA: 10,
     EXTENSOES_VALIDAS: {
         excel: ['.xlsx', '.xls'],
         csv: ['.csv'],
@@ -43,7 +43,8 @@ function inicializarElementos() {
         btnProximo: 'btnProximo',
         inicioPag: 'inicio-pag',
         fimPag: 'fim-pag',
-        totalPag: 'total-pag'
+        totalPag: 'total-pag',
+        inputBuscaTabela: 'inputBuscaTabela'
     };
 
     for (const [key, id] of Object.entries(elementosMap)) {
@@ -139,6 +140,11 @@ function configurarEventListeners() {
 
         // Adicionar navegação por teclado (estilo Excel)
         estado.elementos.dadosTbody.addEventListener('keydown', handleKeyboardNavigation);
+    }
+
+    // Busca na tabela
+    if (estado.elementos.inputBuscaTabela) {
+        estado.elementos.inputBuscaTabela.addEventListener('input', debounce(handleBuscaTabela, 300));
     }
 }
 
@@ -402,6 +408,9 @@ function exibirPagina() {
 
     const inicio = (estado.paginaAtual - 1) * CONFIG.LINHAS_POR_PAGINA;
     const dadosPagina = estado.todosDados.slice(inicio, inicio + CONFIG.LINHAS_POR_PAGINA);
+    
+    // Obter termo de busca atual para manter destaques durante a paginação
+    const termoBusca = estado.elementos.inputBuscaTabela ? estado.elementos.inputBuscaTabela.value.toLowerCase().trim() : '';
 
     if (dadosPagina.length === 0) {
         tbody.innerHTML = '';
@@ -410,11 +419,17 @@ function exibirPagina() {
 
     tbody.innerHTML = dadosPagina.map((linha, i) => {
         const numeroLinha = inicio + i + 1;
-        const celulas = colunas.map(col => `
-            <td>
-                <input type="text" class="entrada-linha" value="${escapeHtml(linha[col] ?? '')}" placeholder="Digite...">
-            </td>
-        `).join('');
+        const celulas = colunas.map(col => {
+            const valor = linha[col] ?? '';
+            const ehDestaque = termoBusca && String(valor).toLowerCase().includes(termoBusca);
+            const classeDestaque = ehDestaque ? 'celula-destaque' : '';
+            
+            return `
+                <td>
+                    <input type="text" class="entrada-linha ${classeDestaque}" value="${escapeHtml(valor)}" placeholder="Digite...">
+                </td>
+            `;
+        }).join('');
 
         return `
             <tr class="linha-dados">
@@ -759,6 +774,81 @@ function escapeHtml(texto) {
     const div = document.createElement('div');
     div.textContent = texto;
     return div.innerHTML;
+}
+
+// ===============================
+// BUSCA NA TABELA COM ANIMAÇÃO
+// ===============================
+async function handleBuscaTabela(event) {
+    const termo = event.target.value.toLowerCase().trim();
+    if (!termo) {
+        exibirPagina(); // Limpa destaques ao redesenhar
+        return;
+    }
+
+    const colunas = obterColunasValidas();
+    let indexEncontrado = -1;
+
+    // Procura o primeiro registro que contenha o termo em qualquer coluna
+    for (let i = 0; i < estado.todosDados.length; i++) {
+        const linha = estado.todosDados[i];
+        const encontrou = colunas.some(col => {
+            const valor = String(linha[col] || '').toLowerCase();
+            return valor.includes(termo);
+        });
+
+        if (encontrou) {
+            indexEncontrado = i;
+            break;
+        }
+    }
+
+    if (indexEncontrado !== -1) {
+        const paginaAlvo = Math.floor(indexEncontrado / CONFIG.LINHAS_POR_PAGINA) + 1;
+        
+        if (paginaAlvo !== estado.paginaAtual) {
+            await navegarAtePagina(paginaAlvo);
+        } else {
+            exibirPagina(); // Já está na página, apenas destaca
+        }
+    } else {
+        exibirPagina(); // Não encontrou nada, limpa destaques anteriores
+    }
+}
+
+async function navegarAtePagina(alvo) {
+    return new Promise((resolve) => {
+        const direcao = alvo > estado.paginaAtual ? 1 : -1;
+        
+        const intervalo = setInterval(() => {
+            if (estado.paginaAtual === alvo) {
+                clearInterval(intervalo);
+                resolve();
+            } else {
+                if (direcao === 1) {
+                    paginaProxima();
+                } else {
+                    paginaAnterior();
+                }
+            }
+        }, 150); // Velocidade da animação (150ms por página)
+    });
+}
+
+function removerDestaques() {
+    exibirPagina();
+}
+
+function debounce(func, wait) {
+    let timeout;
+    return function executedFunction(...args) {
+        const later = () => {
+            clearTimeout(timeout);
+            func(...args);
+        };
+        clearTimeout(timeout);
+        timeout = setTimeout(later, wait);
+    };
 }
 
 // ===============================

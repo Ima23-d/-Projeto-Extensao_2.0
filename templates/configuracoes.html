@@ -14,33 +14,31 @@
 
 
   <div class="layout">
-    <aside class="sidebar" aria-label="Navegação principal">
-      <div class="sidebar__header">
-        <a class="marca" href="{{ url_for('pagina_landing') }}" aria-label="DataInsight - Início">
-          <span class="marca__simbolo" aria-hidden="true">
-            <i class="fa-solid fa-chart-column"></i>
-          </span>
-          DataInsight
-        </a>
-      </div>
-
-
+    <!-- SIDEBAR - Navegação Fixa -->
+    <aside class="sidebar" aria-label="Navegação principal" id="sidebar">
       <!-- Navegação lateral -->
       {% include 'partials/navbar.html' %}
 
     </aside>
 
-    <!-- Navegação móvel -->
-    {% include 'partials/navbar_mobile.html' %}
 
     <div class="main">
-      <header class="topbar">
+      <header class="topbar" role="banner">
+        <div class="topbar__left">
+          <button class="topbar__btn topbar__mobile-toggle" onclick="abrirSidebar()" aria-label="Abrir menu">
+            <i class="fa-solid fa-bars"></i>
+          </button>
+          <span class="topbar__greeting">Olá, <strong>{{ session.usuario_nome }}</strong></span>
+        </div>
         <div class="topbar__actions">
-          <button class="botao botao--suave" type="button" onclick="alternarTema()" aria-label="Alternar tema">
+          <button class="topbar__btn" onclick="alternarTema()" aria-label="Alternar tema" id="btnTema">
             <i class="fa-solid fa-moon"></i>
           </button>
-          <a class="botao botao--suave" href="{{ url_for('pagina_configuracoes') }}" aria-label="Abrir configurações">
+          <a class="topbar__btn" href="{{ url_for('pagina_configuracoes') }}" title="Configurações">
             <i class="fa-solid fa-gear"></i>
+          </a>
+          <a class="topbar__btn" href="{{ url_for('pagina_perfil') }}" title="Perfil">
+            <i class="fa-solid fa-user"></i>
           </a>
         </div>
       </header>
@@ -104,18 +102,23 @@
           </section>
 
         </div>
+
+        <!-- Footer -->
+        {% include 'partials/footer.html' %}
+
       </main>
     </div>
   </div>
 
-  <!-- Footer -->
-  {% include 'partials/footer.html' %}
 
   <!-- Painel Acessibilidade -->
   {% include 'partials/painel_acessibilidade.html' %}
 
   <!-- Chatbot Flutuante -->
   {% include 'partials/chatbot.html' %}
+
+  <!-- Navegação móvel -->
+  {% include 'partials/navbar_mobile.html' %}
 
   <div vw class="enabled" id="Vlibras">
     <div vw-access-button class="active"></div>
@@ -135,22 +138,20 @@
   <script src="{{ url_for('static', filename='js/script.js') }}"></script>
 
   <script>
-    // Controlar o toggle de acessibilidade na página de configurações
+    // Controle de escala de fonte
     document.addEventListener('DOMContentLoaded', function() {
       const checkboxAcessibilidade = document.getElementById('toggleAcessibilidade');
       const botaoAumentar = document.getElementById('botaoAumentar');
       const botaoDiminuir = document.getElementById('botaoDiminuir');
       
-      // Carregar estado salvo da acessibilidade
       const acessibilidadeAtiva = localStorage.getItem('acessibilidadeAtiva') !== 'false';
-      checkboxAcessibilidade.checked = acessibilidadeAtiva;
-      
-      // Evento de mudança do checkbox
-      checkboxAcessibilidade.addEventListener('change', function() {
-        setAcessibilidadeAtiva(this.checked);
-      });
+      if (checkboxAcessibilidade) {
+        checkboxAcessibilidade.checked = acessibilidadeAtiva;
+        checkboxAcessibilidade.addEventListener('change', function() {
+          setAcessibilidadeAtiva(this.checked);
+        });
+      }
 
-      // Controle de escala de fonte
       const obterEscalaFonte = () => {
         const escala = document.documentElement.style.getPropertyValue('--escala-fonte') || '1';
         return parseFloat(escala);
@@ -162,22 +163,55 @@
         localStorage.setItem('escalaFonte', novaEscala);
       };
 
-      botaoAumentar.addEventListener('click', () => {
-        const escalaAtual = obterEscalaFonte();
-        definirEscalaFonte(escalaAtual + 0.1);
-      });
+      if (botaoAumentar) {
+        botaoAumentar.addEventListener('click', () => {
+          const escalaAtual = obterEscalaFonte();
+          definirEscalaFonte(escalaAtual + 0.1);
+        });
+      }
 
-      botaoDiminuir.addEventListener('click', () => {
-        const escalaAtual = obterEscalaFonte();
-        definirEscalaFonte(escalaAtual - 0.1);
-      });
+      if (botaoDiminuir) {
+        botaoDiminuir.addEventListener('click', () => {
+          const escalaAtual = obterEscalaFonte();
+          definirEscalaFonte(escalaAtual - 0.1);
+        });
+      }
 
-      // Aplicar escala de fonte salva ao carregar
       const escalaSalva = localStorage.getItem('escalaFonte');
       if (escalaSalva) {
         document.documentElement.style.setProperty('--escala-fonte', escalaSalva);
       }
     });
+
+    // Sidebar mobile toggle
+    function abrirSidebar() {
+      const sidebar = document.getElementById('sidebar');
+      const overlay = document.getElementById('sidebarOverlay');
+      if (sidebar) sidebar.classList.add('open');
+      if (overlay) overlay.classList.add('active');
+    }
+    function fecharSidebar() {
+      const sidebar = document.getElementById('sidebar');
+      const overlay = document.getElementById('sidebarOverlay');
+      if (sidebar) sidebar.classList.remove('open');
+      if (overlay) overlay.classList.remove('active');
+    }
+
+    // Ícone tema
+    document.addEventListener('DOMContentLoaded', () => {
+      const btn = document.getElementById('btnTema');
+      if (btn) {
+        const update = () => {
+          const dark = document.body.classList.contains('tema-escuro');
+          btn.innerHTML = dark
+            ? '<i class="fa-solid fa-sun"></i>'
+            : '<i class="fa-solid fa-moon"></i>';
+        };
+        update();
+        btn.addEventListener('click', () => setTimeout(update, 50));
+      }
+    });
   </script>
+</body>
 
 </html>

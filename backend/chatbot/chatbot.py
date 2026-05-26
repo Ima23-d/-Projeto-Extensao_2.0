@@ -181,14 +181,25 @@ def gerar_arquivo_download(tipo: str, periodo: str = '30_dias') -> str:
             
             resp_kpi = calcular_desempenho(periodo)
             resp_kpi_obj = resp_kpi[0] if isinstance(resp_kpi, tuple) else resp_kpi
-            kpis = resp_kpi_obj.get_json() if hasattr(resp_kpi_obj, 'get_json') else {}
+            kpis_response = resp_kpi_obj.get_json() if hasattr(resp_kpi_obj, 'get_json') else resp_kpi_obj
+            
+            # Garantir que kpis é um dict com os dados formatados
+            if isinstance(kpis_response, dict):
+                kpis = {
+                    'faturamento': f"{kpis_response.get('faturamento', {}).get('valor', 0):,.2f}",
+                    'lucro': f"{kpis_response.get('lucro', {}).get('valor', 0):,.2f}",
+                    'despesas': f"{kpis_response.get('despesa', {}).get('valor', 0):,.2f}",
+                    'crescimento': f"{kpis_response.get('crescimento', {}).get('valor', 0):.1f}%"
+                }
+            else:
+                kpis = {'faturamento': '0,00', 'lucro': '0,00', 'despesas': '0,00', 'crescimento': '0%'}
             
             resp_graf = obter_dados_graficos(periodo)
             resp_graf_obj = resp_graf[0] if isinstance(resp_graf, tuple) else resp_graf
-            graficos_data = resp_graf_obj.get_json() if hasattr(resp_graf_obj, 'get_json') else {}
+            graficos_data = resp_graf_obj.get_json() if hasattr(resp_graf_obj, 'get_json') else resp_graf_obj
             
             tabela_pdf = []
-            barras = graficos_data.get("grafico_barras", {})
+            barras = graficos_data.get("grafico_barras", {}) if isinstance(graficos_data, dict) else {}
             if barras and "labels" in barras:
                 for i, label in enumerate(barras["labels"]):
                     try:
@@ -197,7 +208,7 @@ def gerar_arquivo_download(tipo: str, periodo: str = '30_dias') -> str:
                         luc = barras["series"][2]["data"][i]
                         margem = f"{(luc / fat * 100):.1f}%" if fat > 0 else "0%"
                         tabela_pdf.append({
-                            "mes": label, "fat": fat, "luc": luc, "desp": desp, "margem": margem
+                            "mes": label, "fat": f"{fat:,.2f}", "luc": f"{luc:,.2f}", "desp": f"{desp:,.2f}", "margem": margem
                         })
                     except:
                         pass
@@ -217,15 +228,12 @@ def gerar_arquivo_download(tipo: str, periodo: str = '30_dias') -> str:
         except Exception as e:
             print("Erro ao preparar PDF pela IA:", e)
             
-        return "Pronto! Já preparei seu arquivo em PDF. Forneça o seguinte link para o usuário baixar o PDF:\n\n[Clique aqui para baixar seu relatório em PDF](/relatorio_pdf?auto=true)"
+        return "Pronto! Já preparei seu arquivo em PDF. Forneça o seguinte link para o usuário baixar o PDF:\n\n[Clique aqui para baixar seu relatório em PDF](/api/gerar-pdf-ia?periodo=" + periodo + ")"
     elif tipo in ['csv', 'excel', 'xlsx']:
         tipo_url = 'excel' if 'excel' in tipo or 'xlsx' in tipo else 'csv'
         return f"Pronto! Já preparei seu arquivo. Forneça o seguinte link para o usuário baixar o arquivo:\n\n[Clique aqui para baixar seu relatório em {tipo.upper()}](/api/download/{tipo_url})"
     else:
         return "Desculpe, só consigo gerar links para PDF, Excel ou CSV."
-
-from flask import send_file
-import io
 
 def exportar_dados_usuario(tipo):
     """Lógica do endpoint para gerar e retornar o arquivo real."""
